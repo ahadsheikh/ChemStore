@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Home</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container-md">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Welcome to the Home Page</h1>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <div class="container-md">
+        {% include 'partials/footer.html' %}
+    </div>
+{% endblock %}
