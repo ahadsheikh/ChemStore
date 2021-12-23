@@ -1,0 +1,21 @@
+.hidden-template{
+    display: none;
+}
+.btn-cs{
+    width: 13rem;
+    background-color: green;
+    color: white;
+    margin: 0.3em;
+}
+.login-form{
+    width: 60%;
+    margin: 7rem 0;
+}
+
+.searchForm{
+    margin-bottom: 1rem;
+}
+
+.list-content{
+    border: 1px yellowgreen solid ;
+}

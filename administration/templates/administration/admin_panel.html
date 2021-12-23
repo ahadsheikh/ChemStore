@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Admin Panel</title>
+{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'administration/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="d-flex">
+            <div class="sidebar">
+                <div>
+                    <ul class="sidebar-list">
+                        <li>
+                            <button class="btn btn-cs" onclick="addChemical()">Add Chemical</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-cs">Add GlassWare</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-cs">Add Instrument</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-cs">Make a Issue</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="content">
+                <div class="searchForm d-flex justify-content-center">
+                    <form action="">
+                        <div class="input-group">
+                            <div class="form-outline">
+                                <input type="search" id="form1" class="form-control" placeholder="Substance / Glassware / Instrument"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="list-content">
+                    <div class="chemicals">
+                        <h4>Chemicals</h4>
+                        <div class="chemical">
+                            <h5>Hydrogen Dioxide</h5>
+                            <p><b>Amount stored: </b> 13.5L</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="formTarget"></div>
+
+                {% include 'partials/chemical_form.html' %}
+                {% include 'partials/glassware_form.html' %}
+                {% include 'partials/instrument_form.html' %}
+                {% include 'partials/issue_form.html' %}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'administration/js/scripts.js' %}"></script>
+{% endblock %}

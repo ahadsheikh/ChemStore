@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Add Things</title>
+{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'administration/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="d-flex">
+            <div></div>
+            <form action="">
+                <label for="search_box">Search</label>
+                <input id="search_box" type="text">
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'administration/js/scripts.js' %}"></script>
+{% endblock %}
