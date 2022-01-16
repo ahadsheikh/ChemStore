@@ -75,6 +75,9 @@ class Store(models.Model):
     room_number = models.CharField(max_length=10)
     description = models.CharField(max_length=300, blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Chemical(models.Model):
     STATES_CHOICES = (
@@ -91,6 +94,26 @@ class Chemical(models.Model):
     manufacturer = models.CharField(max_length=50)
     supplier = models.CharField(max_length=50)
     state = models.CharField(max_length=6, choices=STATES_CHOICES)
-    amount = models.FloatField(blank=True)
+    amount = models.FloatField(default=0.0, blank=True)
 
+    def __str__(self):
+        return self.name
+
+
+class Glassware(models.Model):
+    store = models.ForeignKey(Store, on_delete=models.RESTRICT)
+    name = models.CharField(max_length=100)
+    manufacturer = models.CharField(max_length=50)
+    supplier = models.CharField(max_length=50)
+    size = models.CharField(max_length=50, blank=True)
+    material_type = models.CharField(max_length=50, default="Unknown", blank=True)
+    quantity = models.PositiveIntegerField(default=0, blank=True)
+
+
+class Instrument(models.Model):
+    store = models.ForeignKey(Store, on_delete=models.RESTRICT)
+    name = models.CharField(max_length=100)
+    manufacturer = models.CharField(max_length=50)
+    supplier = models.CharField(max_length=50)
+    quantity = models.PositiveIntegerField(default=0, blank=True)
 

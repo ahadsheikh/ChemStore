@@ -1,0 +1,22 @@
+<template id="search_form">
+    <div class="search-form d-flex justify-content-center">
+        <form id="searchForm" action="">
+            <div class="input-group">
+
+                <div >
+                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="option">
+                        <option value="1">Name</option>
+                        <option value="2">Formula</option>
+                        <option value="3">CAS No</option>
+                    </select>
+                </div>
+                <div class="form-outline">
+                    {% verbatim %}
+                    <input type="search" id="searchFormInput" class="form-control"
+                           placeholder="{{p_text}}" onchange=""/>
+                    {% endverbatim %}
+                </div>
+            </div>
+        </form>
+    </div>
+</template>

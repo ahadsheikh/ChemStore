@@ -36,18 +36,3 @@ body{
     text-decoration: none;
     color: black;
 }
-
-.searchForm{
-    width: 100%;
-}
-
-.chemicals{
-    padding: 0.5em;
-    background-color: #49494b;
-}
-
-.chemical{
-    padding: 0.5em;
-    background-color: #272728;
-    border-radius: 0.3em;
-}

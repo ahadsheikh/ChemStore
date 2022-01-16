@@ -1,0 +1,18 @@
+<template id="searchFormContent">
+    <div class="list-content">
+        <div class="chemicals">
+            <div>
+                <h4>Chemicals</h4>
+            </div>
+            {% verbatim %}
+             {{#chemicals}}
+            <div class="chemical">
+                <span id="contentID" style="display: none">{{ id }}</span>
+                <h5 onclick="searchItemSelection()" style="text-decoration: underline; color: #0a58ca; cursor: pointer">{{name}}</h5>
+                <p><b>Amount stored: </b> {{amount}}</p>
+            </div>
+            {{/chemicals}}
+            {% endverbatim %}
+        </div>
+    </div>
+</template>
