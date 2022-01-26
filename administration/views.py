@@ -1,22 +1,31 @@
-from rest_framework import views
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from administration.models import Chemical
-from administration.serializers import ChemicalSerializer
+from administration.models import Chemical, Glassware, Instrument, Store
+from administration.serializers import (
+    ChemicalSerializer,
+    GlasswareSerializer,
+    InstrumentSerializer,
+    StoreSerializer,
+)
 
 
-class Index(views.APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, requests):
-        return Response({"message": "hello world!"})
+class ChemicalViewSet(ModelViewSet):
+    queryset = Chemical.objects.all()
+    serializer_class = ChemicalSerializer
 
 
-class ChemicalAPI(ModelViewSet):
-    def get_queryset(self):
-        return Chemical.objects.all()
+class GlasswareViewSet(ModelViewSet):
+    queryset = Glassware.objects.all()
+    serializer_class = GlasswareSerializer
 
-    def get_serializer_class(self):
-        return ChemicalSerializer
+
+class InstrumentViewSet(ModelViewSet):
+    queryset = Instrument.objects.all()
+    serializer_class = InstrumentSerializer
+
+
+class StoreViewSet(ModelViewSet):
+    queryset = Store.objects.all()
+    serializer_class = StoreSerializer
+
+
 
