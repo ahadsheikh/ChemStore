@@ -7,4 +7,5 @@ class ChemicalSerializer(ModelSerializer):
 
     class Meta:
         model = Chemical
-        fields = '__all__'
+        fields = ['id', 'CAS_RN', 'name', 'molecular_formula', 'molecular_weight', 'purity',
+                  'manufacturer', 'supplier', 'state', 'amount']
