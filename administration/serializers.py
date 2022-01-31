@@ -30,3 +30,10 @@ class StoreSerializer(ModelSerializer):
     class Meta:
         model = Store
         fields = ['id', 'name', 'room_number', 'building_name', 'chemicals', 'glasswares', 'instruments']
+
+
+class ShipmentSerializer(ModelSerializer):
+
+    class Meta:
+        model = Shipment
+        fields = ['id', 'date', 'chemical', 'amount', 'destination']
