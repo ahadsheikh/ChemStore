@@ -3,9 +3,19 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from rest_framework.routers import DefaultRouter
 
-from .views import ChemicalViewSet, GlasswareViewSet, InstrumentViewSet, StoreViewSet, fuzzy_search, add_shipment
+from .views.base import (
+    ChemicalViewSet,
+    GlasswareViewSet,
+    InstrumentViewSet,
+    StoreViewSet,
+    fuzzy_search,
+    add_shipment
+)
+
+from .views.users import UserViewset
 
 router = DefaultRouter()
+router.register(r'users', UserViewset, basename='user')
 router.register(r'chemicals', ChemicalViewSet, basename='chemical')
 router.register(r'glasswares', GlasswareViewSet, basename='glassware')
 router.register(r'instruments', InstrumentViewSet, basename='instrument')
@@ -21,5 +31,7 @@ urlpatterns = [
 ]
 
 urlpatterns += router.urls
+
+print(router.urls)
 
 
