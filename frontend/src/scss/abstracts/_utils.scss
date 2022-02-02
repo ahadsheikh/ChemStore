@@ -1,0 +1,22 @@
+.color_danger {
+  background-color: var(--color-danger);
+  &:hover {
+    background-color: darken($color-danger, 5%);
+  }
+}
+.color_primary {
+  background-color: #0000ff;
+  &:hover {
+    background-color: darken(#0000ff, 5%);
+  }
+}
+
+.color_black {
+  background-color: $color-black;
+}
+.color_primary3 {
+  background-color: #4e5659;
+  &:hover {
+    background-color: darken(#4e5659, 5%);
+  }
+}

@@ -1,0 +1,38 @@
+.nav_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $color-white;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  padding: 1rem 0;
+  top: 0px;
+  position: sticky;
+  &_title {
+    padding-left: 2rem;
+  }
+  &_logout {
+    // width: 8rem;
+    margin-right: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // background-color: red;
+    padding: 0.5rem 0.8rem;
+    &_btn {
+      border: none;
+      outline: none;
+      font-family: $primary-font;
+
+      font-size: 1.6rem;
+      background-color: transparent;
+    }
+    &_icon {
+      //   padding: 0 0.5rem;
+      border: 1px solid transparent;
+      font-size: 2rem;
+      &:hover {
+        border: 1px solid black;
+      }
+    }
+  }
+}

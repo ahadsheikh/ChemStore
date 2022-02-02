@@ -1,0 +1,50 @@
+.second_modal {
+  &_container {
+    background-color: var(--color-primary-1);
+    padding: 1.6rem;
+    color: $color-white;
+  }
+  &_header_container {
+    div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0 0px;
+      p {
+        margin-bottom: 0;
+      }
+    }
+    &_title {
+      padding-left: 1rem;
+      font-weight: 700;
+    }
+    &_close_icon {
+      &:hover {
+        cursor: pointer;
+        color: var(--color-primary-3);
+      }
+    }
+    &_second_title {
+      font-size: 1.2rem;
+    }
+  }
+  &_main_container {
+    margin: 1.5rem 0;
+    background-color: var(--color-primary-2);
+    padding: 1.5rem;
+  }
+
+  &_btn {
+    border: none;
+    outline: none;
+    padding: 0.5rem 1.5rem;
+    color: $color-white;
+    border-radius: 0.3rem;
+    margin-left: 1rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    &_container {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}

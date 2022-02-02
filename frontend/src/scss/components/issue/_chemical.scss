@@ -1,0 +1,36 @@
+.issue_chemical {
+  &_container {
+    background-color: #4e5659;
+    border-radius: 0.3rem;
+    padding: 01rem;
+    margin-bottom: 1.6rem;
+  }
+  &_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: $color-white;
+    p {
+      margin-bottom: 0;
+      text-transform: uppercase;
+    }
+  }
+  &_delete {
+    transition: 0.2s all ease-out;
+    &:hover {
+      color: red;
+      cursor: pointer;
+    }
+  }
+  &_amount_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &_input {
+      width: 68%;
+    }
+    &_select {
+      width: 24%;
+    }
+  }
+}

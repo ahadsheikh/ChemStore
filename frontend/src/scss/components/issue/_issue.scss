@@ -1,0 +1,47 @@
+.issue {
+  &_container {
+    background-color: var(--color-primary-1);
+    width: 50%;
+    min-width: 50rem;
+    margin: 5rem 2rem 0;
+    border-radius: 0.2rem;
+  }
+  &_header_container {
+    background-color: var(--color-primary-3);
+    color: $color-white;
+    padding: 1rem;
+    p {
+      margin-bottom: 0;
+    }
+  }
+  &_content_container {
+    padding: 1rem;
+    &_top {
+      &_input {
+        border: none;
+        outline: none;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        background-color: var(--color-primary-2);
+        margin: 1rem 0;
+        color: $color-white;
+        &::placeholder {
+          color: $color-white;
+        }
+      }
+    }
+  }
+}
+
+.Select_input {
+  background-color: var(--color-primary-2);
+  padding: 0.8rem 1rem;
+  color: $color-white;
+}
+#dropdown-basic {
+  //   display: none;
+}
+
+#dropdown-basic::after {
+  display: none;
+}

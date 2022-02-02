@@ -1,0 +1,12 @@
+.input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  //   background-color: var(--color-primary-2);
+  margin: 1rem 0;
+  color: $color-white;
+  &::placeholder {
+    color: $color-white;
+  }
+}

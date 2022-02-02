@@ -1,0 +1,33 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.6;
+  color: var(--color-Grey-dark-2);
+  background-color: #3c4043;
+}
+
+::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-Grey-dark-3);
+  border-radius: 10rem;
+}

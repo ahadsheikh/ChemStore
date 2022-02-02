@@ -1,0 +1,59 @@
+.user_managment_table {
+  &_wrapper {
+    width: 90%;
+    margin: auto;
+    color: $color-white;
+    margin-top: 3rem;
+  }
+  &_main_header {
+    background-color: var(--color-primary-3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    &_main_title {
+      line-height: 0;
+      span {
+        padding-left: 0.5rem;
+      }
+    }
+  }
+}
+
+.user_managment_action_btn {
+  padding: 0.2rem 1rem;
+  margin: 0 0.5rem;
+  color: $color-white;
+  cursor: pointer;
+  border-radius: 0.2rem;
+}
+
+.detail {
+  background-color: #4e5659;
+  &:hover {
+    background-color: darken(#4e5659, 2%);
+  }
+}
+.delete {
+  background-color: #d36a5f;
+  &:hover {
+    background-color: darken(#d36a5f, 2%);
+  }
+}
+
+.user_managment_btn_container {
+  display: flex;
+  align-items: center;
+}
+.user_managment_table {
+  &_body {
+    &_row {
+      height: 5rem;
+      &_data {
+        height: inherit;
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
+  }
+}
