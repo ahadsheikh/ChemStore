@@ -6,7 +6,7 @@ from administration.serializers import (
     ChemicalSerializer,
     GlasswareSerializer,
     InstrumentSerializer,
-    StoreSerializer,
+    StoreSerializer, ChemicalCreateSerializer,
 )
 
 from thefuzz import fuzz
@@ -15,7 +15,12 @@ from itertools import chain
 
 class ChemicalViewSet(ModelViewSet):
     queryset = Chemical.objects.all()
-    serializer_class = ChemicalSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update':
+            return ChemicalCreateSerializer
+        else:
+            return ChemicalSerializer
 
 
 class GlasswareViewSet(ModelViewSet):

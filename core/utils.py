@@ -21,7 +21,78 @@ MM_of_Elements = {'H': 1.00794, 'He': 4.002602, 'Li': 6.941, 'Be': 9.012182, 'B'
                   '': 0}
 
 
+def is_bracket_safe(name: str) -> bool:
+    """
+    :name = a compound name
+    Return is string have safe brackets.
+    """
+    stack = ''
+    for char in name:
+        if char == '(':
+            stack += '('
+        elif char == ')':
+            if len(stack) == 0:
+                return False
+            stack = stack[:-1]
+
+    if len(stack) > 0:
+        return False
+    return True
+
+
+def is_safe_compound_name(name: str) -> bool:
+    """
+    Check if a compound name is safe to use in the database.
+
+    :name: the compound name
+    return: True if the name is safe, False otherwise
+    """
+
+    if name == '':
+        return False
+
+    if name[0].isdigit():
+        return False
+
+    check_b = False
+    for char in name:
+        if not char.isalnum() and char != '(' and char != ')':
+            check_b = True
+            break
+
+    if check_b:
+        return False
+
+    if len(name) == 1:
+        return name in MM_of_Elements.keys()
+
+    if not is_bracket_safe(name):
+        return False
+    else:
+        name = name.replace('(', '').replace(')', '')
+
+    stack = ''
+    for i in range(len(name)):
+        if ((name[i].isalpha() and name[i].isupper()) or name[i].isdigit()) and len(stack) > 0:
+            if not (stack in MM_of_Elements.keys()):
+                return False
+            stack = ''
+
+        if name[i].isalpha():
+            stack += name[i]
+
+    if len(stack) > 0:
+        if not (stack in MM_of_Elements.keys()):
+            return False
+
+    return True
+
+
 def molar_mass(compound: str, decimal_places=None) -> float:
+    """
+    :compound = a compound name
+    Return molar mass of a compound.
+    """
     is_polyatomic = end = multiply = False
     polyatomic_mass, m_m, multiplier = 0, 0, 1
     element = ''

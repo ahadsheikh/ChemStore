@@ -1,7 +1,7 @@
 #ChemStore API
 
 ## Users 
-1. [Users](http://chemstore.azurewebsites.net/api/users/)
+1. [Users](http://chemstore.azurewebsites.net/api/management/users/)
 2. [Get Token](http://chemstore.azurewebsites.net/api/token/)
 3. [Refresh Access Token](http://chemstore.azurewebsites.net/api/token/refresh/)
 4. [Set Password](http://chemstore.azurewebsites.net/api/management/users/1/set_password/)
