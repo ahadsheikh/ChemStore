@@ -70,38 +70,29 @@ class User(AbstractUser):
     objects = UserManager()
 
 
-class Store(models.Model):
-    name = models.CharField(max_length=30)
-    room_number = models.CharField(max_length=10)
-    description = models.CharField(max_length=300, blank=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Chemical(models.Model):
     STATES_CHOICES = (
         ('SOLID', 'Solid'),
         ('LIQUID', 'Liquid'),
         ('GAS', 'Gas'),
     )
-    store = models.ForeignKey(Store, on_delete=models.RESTRICT)
     CAS_RN = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=300)
     molecular_formula = models.CharField(max_length=300)
     molecular_weight = models.FloatField(blank=True)
-    purity = models.CharField(max_length=20, blank=True)
+    purity = models.CharField(max_length=30, blank=True)
     manufacturer = models.CharField(max_length=50)
     supplier = models.CharField(max_length=50)
     state = models.CharField(max_length=6, choices=STATES_CHOICES)
     amount = models.FloatField(default=0.0, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
 
 
 class Glassware(models.Model):
-    store = models.ForeignKey(Store, on_delete=models.RESTRICT)
     name = models.CharField(max_length=100)
     manufacturer = models.CharField(max_length=50)
     supplier = models.CharField(max_length=50)
@@ -109,11 +100,131 @@ class Glassware(models.Model):
     material_type = models.CharField(max_length=50, default="Unknown", blank=True)
     quantity = models.PositiveIntegerField(default=0, blank=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Instrument(models.Model):
-    store = models.ForeignKey(Store, on_delete=models.RESTRICT)
     name = models.CharField(max_length=100)
     manufacturer = models.CharField(max_length=50)
     supplier = models.CharField(max_length=50)
     quantity = models.PositiveIntegerField(default=0, blank=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Store(models.Model):
+    name = models.CharField(max_length=30)
+    room_number = models.CharField(max_length=10)
+    building_name = models.CharField(max_length=100)
+    chemicals = models.ManyToManyField(Chemical)
+    glasswares = models.ManyToManyField(Glassware)
+    instruments = models.ManyToManyField(Instrument)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Shipment(models.Model):
+    shipment_date = models.DateField()
+    note = models.CharField(max_length=200, blank=True, default="Write something about the shipment in 200 characters")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Shipment {self.id}"
+
+
+class ChemicalShipment(models.Model):
+    chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
+    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
+    quantity = models.FloatField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Chemical Shipment with quantity {self.quantity}"
+
+
+class GlasswareShipment(models.Model):
+    glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
+    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Glassware Shipment with quantity {self.quantity}"
+
+
+class InstrumentShipment(models.Model):
+    instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
+    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Instrument Shipment with quantity {self.quantity}"
+
+
+class StoreConsumer(models.Model):
+    name = models.CharField(max_length=100)
+    room_number = models.CharField(max_length=10)
+    building_name = models.CharField(max_length=100)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class StoreIssue(models.Model):
+    issue_date = models.DateField()
+    note = models.CharField(max_length=200, blank=True, default="Write something about the issue in 200 characters")
+    store_consumer = models.ForeignKey(StoreConsumer, on_delete=models.PROTECT)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Store Issue {self.id}"
+
+
+class ChemicalIssue(models.Model):
+    chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
+    issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
+    quantity = models.FloatField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Chemical Issue with quantity {self.quantity}"
+
+
+class GlasswareIssue(models.Model):
+    glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
+    issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Glassware Issue with quantity {self.quantity}"
+
+
+class InstrumentIssue(models.Model):
+    instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
+    issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Instrument Issue with quantity {self.quantity}"
