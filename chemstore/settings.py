@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',           # WhiteNoiseMiddleware || serving static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",                # For cors control
     'django.middleware.common.CommonMiddleware',
@@ -170,3 +171,5 @@ SIMPLE_JWT = {
 
 LOGIN_REDIRECT_URL = 'admin_home'
 LOGIN_URL = 'login'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
