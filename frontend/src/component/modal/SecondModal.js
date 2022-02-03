@@ -26,7 +26,7 @@ const SecondModal = (props) => {
           </div>
           {props.children}
           <div className="second_modal_btn_container">
-            <button className="second_modal_btn color_primary3">
+            <button className="second_modal_btn color_primary3" onClick={props.submitHandler}>
               {props.btn_text}
             </button>
           </div>
