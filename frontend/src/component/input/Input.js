@@ -6,6 +6,9 @@ function Input(props) {
       className={["input", props.bckColor].join(" ")}
       type={props.type}
       placeholder={props.placeholder}
+      name={props.name}
+      value={props.value}
+      onChange={props.handler}
     />
   );
 }
