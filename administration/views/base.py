@@ -1,16 +1,27 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from administration.models import Chemical, Glassware, Instrument, Store
+from django.core.exceptions import ObjectDoesNotExist
+
+from thefuzz import fuzz
+from itertools import chain
+
 from administration.serializers import (
     ChemicalSerializer,
     GlasswareSerializer,
     InstrumentSerializer,
-    StoreSerializer, ChemicalCreateSerializer,
+    StoreSerializer,
+    ChemicalCreateSerializer,
+    AddShipmentSerializer, ShipmentSerializer
 )
 
-from thefuzz import fuzz
-from itertools import chain
+from administration.models import (
+    Chemical, Glassware, Instrument, Store, Shipment,
+    ChemicalShipment,
+    GlasswareShipment,
+    InstrumentShipment
+)
+from core.utils import molar_mass
 
 
 class ChemicalViewSet(ModelViewSet):
@@ -130,4 +141,137 @@ def fuzzy_search(request):
 
 @api_view(['POST'])
 def add_shipment(request):
-    pass
+    """
+    Return a shipment, Check Doc;
+    """
+    serializer = AddShipmentSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    res = {
+        "message": "Shipment Added",
+        "partial_update": False,
+        "errors": {}
+    }
+
+    note = "No Note"
+    if 'note' in serializer.validated_data:
+        note = serializer.validated_data['note']
+
+    shipment = Shipment.objects.create(
+        shipment_date=serializer.validated_data['shipment_date'],
+        note=note
+    )
+
+    # For chemicals
+    chem_error = []
+    for old in serializer.validated_data['chemical']['old']:
+        try:
+            chem = Chemical.objects.get(pk=old['id'])
+        except ObjectDoesNotExist:
+            er = {
+                "id": old['id'],
+                "message": "Not Found"
+            }
+            res['partial_update'] = True
+            chem_error.append(er)
+            continue
+
+        chem_shipment = ChemicalShipment.objects.create(
+            chemical=chem,
+            shipment=shipment,
+            old_quantity=chem.amount,
+            new_quantity=chem.amount+old['amount']
+        )
+
+        chem.amount += old['amount']
+        chem.save()
+
+    if len(chem_error) > 0:
+        res['errors']['chemical'] = chem_error
+
+    for new in serializer.validated_data['chemical']['new']:
+        chem = Chemical(**new)
+        chem.molecular_weight = molar_mass(chem.molecular_formula)
+        chem.save()
+
+        chem_shipment = ChemicalShipment.objects.create(
+            chemical=chem,
+            shipment=shipment,
+            old_quantity=0,
+            new_quantity=chem.amount
+        )
+
+    # For glassware
+    glass_error = []
+    for old in serializer.validated_data['glassware']['old']:
+        try:
+            glass = Glassware.objects.get(pk=old['id'])
+        except ObjectDoesNotExist:
+            er = {
+                "id": old['id'],
+                "message": "Not Found"
+            }
+            res['partial_update'] = True
+            glass_error.append(er)
+            continue
+
+        glass_shipment = GlasswareShipment.objects.create(
+            glassware=glass,
+            shipment=shipment,
+            old_quantity=glass.quantity,
+            new_quantity=glass.quantity + old['amount']
+        )
+        glass.quantity += old['amount']
+        glass.save()
+
+    if len(glass_error) > 0:
+        res['errors']['glassware'] = glass_error
+
+    for new in serializer.validated_data['glassware']['new']:
+        glass = Glassware.objects.create(**new)
+        glass_shipment = GlasswareShipment.objects.create(
+            glassware=glass,
+            shipment=shipment,
+            old_quantity=0,
+            new_quantity=glass.quantity
+        )
+
+    # For instrument
+    inst_error = []
+    for old in serializer.validated_data['instrument']['old']:
+        try:
+            inst = Instrument.objects.get(pk=old['id'])
+        except ObjectDoesNotExist:
+            er = {
+                "id": old['id'],
+                "message": "Not Found"
+            }
+            res['partial_update'] = True
+            inst_error.append(er)
+            continue
+
+        inst_shipment = InstrumentShipment.objects.create(
+            instrument=inst,
+            shipment=shipment,
+            old_quantity=inst.quantity,
+            new_quantity=inst.quantity + old['amount']
+        )
+
+        inst.quantity += old['amount']
+        inst.save()
+
+    if len(inst_error) > 0:
+        res['errors']['instrument'] = inst_error
+
+    for new in serializer.validated_data['instrument']['new']:
+        inst = Instrument.objects.create(**new)
+        inst_shipment = InstrumentShipment.objects.create(
+            instrument=inst,
+            shipment=shipment,
+            old_quantity=0,
+            new_quantity=inst.quantity
+        )
+
+    res['shipment'] = ShipmentSerializer(shipment).data
+
+    return Response(res)

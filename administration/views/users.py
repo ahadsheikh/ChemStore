@@ -15,8 +15,6 @@ class UserViewset(ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create':
             return UserCreateSerializer
-        elif 'set_password' in self.request.get_full_path() and self.request.method == 'POST':
-            return UserPasswordSerializer
         else:
             return UserSerializer
 
@@ -38,7 +36,7 @@ class UserViewset(ModelViewSet):
     @action(detail=True, methods=['post'])
     def set_password(self, request, pk):
         user = get_object_or_404(User, pk=pk)
-        serializer = self.get_serializer(data=request.POST)
+        serializer = UserPasswordSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
         user.set_password(serializer.validated_data['password'])
         user.save()

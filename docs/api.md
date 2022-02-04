@@ -14,4 +14,3 @@
 
 ## Links
 1. [Fuzzy Search](http://chemstore.azurewebsites.net/api/management/fuzzysearch/)
-2. [Add Shipment](http://chemstore.azurewebsites.net/api/management/add-shipment/)

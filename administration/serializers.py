@@ -89,4 +89,30 @@ class ShipmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Shipment
-        fields = ['id', 'date', 'chemical', 'amount', 'destination']
+        fields = ['id', 'shipment_date', 'note']
+
+
+# Serializers for AddShipmentSerializer
+class OldData(serializers.Serializer):
+    id = serializers.IntegerField()
+    amount = serializers.FloatField()
+
+class ChemicalShipment(serializers.Serializer):
+    old = OldData(many=True)
+    new = ChemicalCreateSerializer(many=True)
+
+class GlasswareShipment(serializers.Serializer):
+    old = OldData(many=True)
+    new = GlasswareSerializer(many=True)
+
+class InstrumentShipment(serializers.Serializer):
+    old = OldData(many=True)
+    new = InstrumentSerializer(many=True)
+
+
+class AddShipmentSerializer(serializers.Serializer):
+    shipment_date = serializers.DateField()
+    note = serializers.CharField(max_length=200, required=False)
+    chemical = ChemicalShipment()
+    glassware = GlasswareShipment()
+    instrument = InstrumentShipment()
