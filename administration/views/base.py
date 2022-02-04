@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import status
 
 from thefuzz import fuzz
 from itertools import chain
@@ -12,14 +13,14 @@ from administration.serializers import (
     InstrumentSerializer,
     StoreSerializer,
     ChemicalCreateSerializer,
-    AddShipmentSerializer, ShipmentSerializer
+    AddShipmentSerializer, ShipmentSerializer, MakeIssueSerializer
 )
 
 from administration.models import (
     Chemical, Glassware, Instrument, Store, Shipment,
     ChemicalShipment,
     GlasswareShipment,
-    InstrumentShipment
+    InstrumentShipment, StoreIssue, StoreConsumer, ChemicalIssue, GlasswareIssue, InstrumentIssue
 )
 from core.utils import molar_mass
 
@@ -273,5 +274,85 @@ def add_shipment(request):
         )
 
     res['shipment'] = ShipmentSerializer(shipment).data
+
+    return Response(res)
+
+
+@api_view(['POST'])
+def make_issue(request):
+    serializer = MakeIssueSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    material_type = ["CHEMICAL", "GLASSWARE", "INSTRUMENT"]
+
+    res = {
+        "errors": []
+    }
+
+    try:
+        consumer = StoreConsumer.objects.get(pk=serializer.validated_data['consumer_id'])
+    except ObjectDoesNotExist:
+        res['errors'].append("Consumer not found")
+        return Response(res, status=status.HTTP_404_NOT_FOUND)
+
+    note = "No Note"
+    if 'note' in serializer.validated_data:
+        note = serializer.validated_data['note']
+
+    issue = StoreIssue.objects.create(
+        issue_date=serializer.validated_data['issue_date'],
+        note=note,
+        store_consumer=consumer
+    )
+
+    for obj in serializer.validated_data['objects']:
+        if obj['material_type'] not in material_type:
+            res["errors"].append("Some material type is invalid. Valid type is CHEMICAL/GLASSWARE/INSTRUMENT.")
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
+        flag = False
+        if obj['material_type'] == material_type[0]:
+            flag = not Chemical.objects.filter(pk=obj['id']).exists()
+        elif obj['material_type'] == material_type[1]:
+            flag = not Glassware.objects.filter(pk=obj['id']).exists()
+        elif obj['material_type'] == material_type[2]:
+            flag = not Instrument.objects.filter(pk=obj['id']).exists()
+
+        if flag:
+            res["errors"].append("Some material is not found.")
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
+    for obj in serializer.validated_data['objects']:
+        if obj['material_type'] == material_type[0]:
+            chem = Chemical.objects.get(pk=obj['id'])
+            ChemicalIssue.objects.create(
+                chemical=chem,
+                issue=issue,
+                old_quantity=chem.amount,
+                new_quantity=chem.amount - obj['amount']
+            )
+            chem.amount = chem.amount - obj['amount']
+            chem.save()
+        elif obj['material_type'] == material_type[1]:
+            glass = Glassware.objects.get(pk=obj['id'])
+            GlasswareIssue.objects.create(
+                glassware=glass,
+                issue=issue,
+                old_quantity=glass.quantity,
+                new_quantity=glass.quantity-obj['amount']
+            )
+            glass.quantity = glass.quantity - obj['amount']
+            glass.save()
+        elif obj['material_type'] == material_type[2]:
+            inst = Instrument.objects.get(pk=obj['id'])
+            InstrumentIssue.objects.create(
+                instrument=inst,
+                issue=issue,
+                old_quantity=inst.quantity,
+                new_quantity=inst.quantity - obj['amount']
+            )
+            inst.quantity = inst.quantity - obj['amount']
+            inst.save()
+
+        res['message'] = 'Issue Created'
 
     return Response(res)

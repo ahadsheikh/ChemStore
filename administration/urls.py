@@ -9,7 +9,8 @@ from .views.base import (
     InstrumentViewSet,
     StoreViewSet,
     fuzzy_search,
-    add_shipment
+    add_shipment,
+    make_issue
 )
 
 from .views.users import UserViewset
@@ -28,6 +29,7 @@ urlpatterns = [
     # path('add-things/', AddThingsPage.as_view(), name="add_things_page"),
     path('fuzzysearch/', fuzzy_search, name="fuzzy_search"),
     path('add-shipment/', add_shipment, name="add_shipment"),
+    path('make-issue/', make_issue, name="make_issue")
 ]
 
 urlpatterns += router.urls

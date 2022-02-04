@@ -97,13 +97,16 @@ class OldData(serializers.Serializer):
     id = serializers.IntegerField()
     amount = serializers.FloatField()
 
+
 class ChemicalShipment(serializers.Serializer):
     old = OldData(many=True)
     new = ChemicalCreateSerializer(many=True)
 
+
 class GlasswareShipment(serializers.Serializer):
     old = OldData(many=True)
     new = GlasswareSerializer(many=True)
+
 
 class InstrumentShipment(serializers.Serializer):
     old = OldData(many=True)
@@ -116,3 +119,20 @@ class AddShipmentSerializer(serializers.Serializer):
     chemical = ChemicalShipment()
     glassware = GlasswareShipment()
     instrument = InstrumentShipment()
+
+
+# Serializers for
+class IssueSerializer(serializers.Serializer):
+    """
+    material_type: ["CHEMICAL", "GLASSWARE", "INSTRUMENT"]
+    """
+    id = serializers.IntegerField()
+    material_type = serializers.CharField(max_length=10)
+    amount = serializers.FloatField()
+
+
+class MakeIssueSerializer(serializers.Serializer):
+    issue_date = serializers.DateField()
+    note = serializers.CharField(max_length=200, required=False)
+    consumer_id = serializers.IntegerField()
+    objects = IssueSerializer(many=True)

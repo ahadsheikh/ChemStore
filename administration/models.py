@@ -179,7 +179,12 @@ class InstrumentShipment(models.Model):
 
 
 class StoreConsumer(models.Model):
+    consumer_type_choices = (
+        ('Lab', 'LAB'),
+        ('Researcher', 'RESEARCHER')
+    )
     name = models.CharField(max_length=100)
+    consumer_type = models.CharField(max_length=20, choices=consumer_type_choices)
     room_number = models.CharField(max_length=10)
     building_name = models.CharField(max_length=100)
 
@@ -203,31 +208,34 @@ class StoreIssue(models.Model):
 class ChemicalIssue(models.Model):
     chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
     issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
-    quantity = models.FloatField()
+    old_quantity = models.FloatField()
+    new_quantity = models.FloatField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Chemical Issue with quantity {self.quantity}"
+        return f"Chemical Issue with quantity {self.new_quantity - self.old_quantity}"
 
 
 class GlasswareIssue(models.Model):
     glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
     issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
+    old_quantity = models.PositiveIntegerField()
+    new_quantity = models.PositiveIntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Glassware Issue with quantity {self.quantity}"
+        return f"Glassware Issue with quantity {self.new_quantity - self.old_quantity}"
 
 
 class InstrumentIssue(models.Model):
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
+    old_quantity = models.PositiveIntegerField()
+    new_quantity = models.PositiveIntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Instrument Issue with quantity {self.quantity}"
+        return f"Instrument Issue with quantity {self.new_quantity - self.old_quantity}"
