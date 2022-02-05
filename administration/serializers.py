@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from administration.models import Chemical, Glassware, Instrument, Store, Shipment
+from administration.models import Chemical, Glassware, Instrument, Store, Shipment, StoreConsumer
 from administration.validators import compound_name_validator
 from core.utils import molar_mass
 
@@ -136,3 +136,10 @@ class MakeIssueSerializer(serializers.Serializer):
     note = serializers.CharField(max_length=200, required=False)
     consumer_id = serializers.IntegerField()
     objects = IssueSerializer(many=True)
+
+
+class StoreConsumerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StoreConsumer
+        fields = ['id', 'name', 'consumer_type', 'room_number', 'building_name']

@@ -8,6 +8,7 @@ from .views.base import (
     GlasswareViewSet,
     InstrumentViewSet,
     StoreViewSet,
+    StoreConsumerViewset,
     fuzzy_search,
     add_shipment,
     make_issue
@@ -21,6 +22,7 @@ router.register(r'chemicals', ChemicalViewSet, basename='chemical')
 router.register(r'glasswares', GlasswareViewSet, basename='glassware')
 router.register(r'instruments', InstrumentViewSet, basename='instrument')
 router.register(r'stores', StoreViewSet, basename='store')
+router.register(r'store-consumers', StoreConsumerViewset, basename='store_consumer')
 
 urlpatterns = [
     # path('', login_required(AdminHome.as_view()), name="admin_home"),

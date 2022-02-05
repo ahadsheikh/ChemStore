@@ -13,7 +13,7 @@ from administration.serializers import (
     InstrumentSerializer,
     StoreSerializer,
     ChemicalCreateSerializer,
-    AddShipmentSerializer, ShipmentSerializer, MakeIssueSerializer
+    AddShipmentSerializer, ShipmentSerializer, MakeIssueSerializer, StoreConsumerSerializer
 )
 
 from administration.models import (
@@ -48,6 +48,11 @@ class InstrumentViewSet(ModelViewSet):
 class StoreViewSet(ModelViewSet):
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
+
+
+class StoreConsumerViewset(ModelViewSet):
+    queryset = StoreConsumer.objects.all()
+    serializer_class = StoreConsumerSerializer
 
 
 def fuzzy_util(objects, query, limit=10, with_score=False):

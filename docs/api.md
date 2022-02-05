@@ -11,6 +11,7 @@
 2. [Glassware](http://chemstore.azurewebsites.net/api/management/glasswares/)
 3. [Instrument](http://chemstore.azurewebsites.net/api/management/instruments/)
 4. [Store](http://chemstore.azurewebsites.net/api/management/stores/)
+5. [StoreConsumer](http://chemstore.azurewebsites.net/api/management/store-consumers/)
 
 ## Links
 1. [Fuzzy Search](http://chemstore.azurewebsites.net/api/management/fuzzysearch/)
