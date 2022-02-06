@@ -22,6 +22,8 @@ DEBUG = os.environ.get('DEBUG', False) == 'True'
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['https://*.azurewebsites.net', 'https://*.127.0.0.1']
+
 
 # Application definition
 
