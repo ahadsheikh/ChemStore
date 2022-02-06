@@ -180,8 +180,8 @@ class InstrumentShipment(models.Model):
 
 class StoreConsumer(models.Model):
     consumer_type_choices = (
-        ('Lab', 'LAB'),
-        ('Researcher', 'RESEARCHER')
+        ('LAB', 'Lab'),
+        ('RESEARCHER', 'Researcher')
     )
     name = models.CharField(max_length=100)
     consumer_type = models.CharField(max_length=20, choices=consumer_type_choices)
