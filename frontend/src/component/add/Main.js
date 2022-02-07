@@ -13,6 +13,13 @@ const chemical = [
   { name: "oxygen", weight: 0, group: "a" },
   { name: "Hydrozen", weight: 0, group: "a" },
   { name: "H20", weight: 0, group: "a" },
+  { name: "oxygen", weight: 0, group: "a" },
+  { name: "Hydrozen", weight: 0, group: "a" },
+  { name: "H20", weight: 0, group: "a" },
+  { name: "oxygen", weight: 0, group: "a" },
+  { name: "Hydrozen", weight: 0, group: "a" },
+  { name: "H20", weight: 0, group: "a" },
+  { name: "oxygen", weight: 0, group: "a" },
 ];
 
 const instrument = [
@@ -96,7 +103,7 @@ const Main = () => {
   };
 
   ////////SHOW UI TO USER
-  console.log(chemical, instrument, glassWare);
+
   return (
     <>
       {/* MODAL FOR ADDING CHEMICAL */}
@@ -133,25 +140,6 @@ const Main = () => {
         />
       </Modal>
       <div>
-        <CollapseItem>
-          <div>
-            <Button
-              title="Add Chemical"
-              argument="chemical"
-              handler={openModalHandler}
-            />
-            <Button
-              title="Add Instrument"
-              argument="instrument"
-              handler={openModalHandler}
-            />
-            <Button
-              title="Add GlassWare"
-              argument="glassWare"
-              handler={openModalHandler}
-            />
-          </div>
-        </CollapseItem>
         {/* CONDITIONALLY RENDERING  */}
         <div>
           {credential.map((el, i) => {
@@ -160,6 +148,8 @@ const Main = () => {
                 <AddChemical
                   key={i}
                   removeHandler={() => removeCredentialHandler(i)}
+                  value={chemicalCredential.chemical}
+                  options={chemical}
                 />
               );
             } else if (el.type === "instrument") {

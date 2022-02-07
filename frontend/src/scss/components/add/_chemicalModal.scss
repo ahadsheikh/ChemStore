@@ -1,0 +1,45 @@
+.add_chemical_modal {
+  //   background-color: var(--color-primary-1);
+  //   width: 50%;
+  min-width: 50rem;
+  border-radius: 0.2rem;
+  position: relative;
+}
+
+.add_chemical_modal_input {
+  width: 100%;
+  padding: 0.5rem 0.8rem;
+  border: none;
+  outline: none;
+
+  border: 1px solid var(--color-primary-2);
+}
+
+.model_suggestion_ul {
+  width: 100%;
+  //   background-color: var(--color-primary-3);
+  background-color: white;
+  list-style: none;
+  //   margin: 0 2rem;
+  //   padding: 0 4rem;
+  li {
+    padding: 0.6rem 0;
+    &:hover {
+      //   background-color: var(--color-primary-2);
+      color: black;
+      cursor: pointer;
+    }
+  }
+}
+
+.add_chemical_create_btn {
+  padding: 0.5rem 1rem;
+  background-color: yellow;
+  border: none;
+  outline: none;
+  color: white;
+  float: right;
+  position: absolute;
+  top: 5%;
+  left: 5%;
+}

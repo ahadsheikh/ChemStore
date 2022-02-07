@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import CollapseItem from "../component/collapse/CollapseItem";
-import { Collapse, Button } from "react-bootstrap";
+import { Collapse } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { openModal } from "../redux/Container";
 
@@ -46,10 +45,16 @@ const Sidebar = (props) => {
         onClick={() => props.handlePage(2)}
         className="sidebar_container_btn"
       >
-        Create an Issue
+        Location
       </button>
       <button
         onClick={() => props.handlePage(3)}
+        className="sidebar_container_btn"
+      >
+        Create an Issue
+      </button>
+      <button
+        onClick={() => props.handlePage(4)}
         className="sidebar_container_btn"
       >
         User Managment

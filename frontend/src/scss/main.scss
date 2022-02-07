@@ -13,14 +13,19 @@
 
 ////PAGES
 @import "pages/login";
+@import "pages/home/home";
 
 ////COMPONENT
 @import "components/input/input";
 @import "components/add/main";
 @import "components/add/addChemical";
+@import "components/add/chemicalModal";
+@import "components/add/header";
 @import "components/button/button";
 @import "components/modal/secondModal";
 @import "components/modal/modal";
 @import "components/issue/issue";
 @import "components/issue/chemical";
 @import "components/userManagment/userManagment";
+
+@import "components/location/location";

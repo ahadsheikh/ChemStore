@@ -1,0 +1,11 @@
+.add_header_container {
+  background-color: var(--color-primary-3);
+  color: $color-white;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  p {
+    margin-bottom: 0;
+  }
+}

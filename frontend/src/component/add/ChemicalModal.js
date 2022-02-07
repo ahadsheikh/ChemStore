@@ -1,9 +1,11 @@
 import React from "react";
+import Input from "../input/Input";
 
 const ChemicalModal = (props) => {
   return (
-    <div>
+    <div className="add_chemical_modal">
       <input
+        className="add_chemical_modal_input"
         type="text"
         placeholder={props.placeholder}
         name={props.name}
@@ -11,7 +13,7 @@ const ChemicalModal = (props) => {
         onChange={props.inputHandler}
       />
       {props.value.length > 0 ? (
-        <ul>
+        <ul className="model_suggestion_ul">
           {props.options.map((el) => (
             <li
               key={el.name}
@@ -22,6 +24,7 @@ const ChemicalModal = (props) => {
           ))}
         </ul>
       ) : null}
+      {/* <button className="add_chemical_create_btn">Create</button> */}
     </div>
   );
 };

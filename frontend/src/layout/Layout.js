@@ -6,10 +6,11 @@ import UserManagment from "../component/userManagment/UserManagment";
 
 import Add from "../pages/add/Add";
 import Issue from "../component/issue/Issue";
+import Location from "../component/location/Location";
 
 const Layout = () => {
   const [id, setId] = useState(0);
-  let arr = [<Contemt />, <Add />, <Issue />, <UserManagment />];
+  let arr = [<Contemt />, <Add />, <Location />, <Issue />, <UserManagment />];
   let pages = arr[id];
   const handlePage = (id) => {
     setId(id);
