@@ -11,8 +11,9 @@ from .views.base import (
     StoreConsumerViewset,
     fuzzy_search,
     add_shipment,
-    make_issue
+    make_issue,
 )
+from .views.utils import consumer_store_types
 
 from .views.users import UserViewset
 
@@ -31,7 +32,8 @@ urlpatterns = [
     # path('add-things/', AddThingsPage.as_view(), name="add_things_page"),
     path('fuzzysearch/', fuzzy_search, name="fuzzy_search"),
     path('add-shipment/', add_shipment, name="add_shipment"),
-    path('make-issue/', make_issue, name="make_issue")
+    path('make-issue/', make_issue, name="make_issue"),
+    path('consumer-store-types/', consumer_store_types, name="consumer_store_types")
 ]
 
 urlpatterns += router.urls

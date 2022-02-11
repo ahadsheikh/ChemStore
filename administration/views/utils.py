@@ -1,0 +1,15 @@
+from rest_framework.decorators import api_view
+from administration.models import consumer_type_choices
+from rest_framework.response import Response
+
+
+@api_view(['GET'])
+def consumer_store_types(request):
+    """
+    Return List of Consumer types.
+    """
+    res = {}
+    for types in consumer_type_choices:
+        res[types[0]] = types[1]
+
+    return Response(res)

@@ -3,6 +3,14 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib import auth
 
 
+consumer_type_choices = (
+        ('Physical_LAB', 'Physical Lab'),
+        ('Organic_LAB', 'Organic Lab'),
+        ('Inorganic_LAB', 'Inorganic Lab'),
+        ('PERSONAL', 'Personal')
+    )
+
+
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
 
@@ -179,10 +187,6 @@ class InstrumentShipment(models.Model):
 
 
 class StoreConsumer(models.Model):
-    consumer_type_choices = (
-        ('LAB', 'Lab'),
-        ('RESEARCHER', 'Researcher')
-    )
     name = models.CharField(max_length=100)
     consumer_type = models.CharField(max_length=20, choices=consumer_type_choices)
     room_number = models.CharField(max_length=10)
