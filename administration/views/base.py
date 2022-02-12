@@ -303,8 +303,13 @@ def make_issue(request):
     if 'note' in serializer.validated_data:
         note = serializer.validated_data['note']
 
+    carrier_name = "Unknown"
+    if 'carrier_name' in serializer.validated_data:
+        carrier_name = serializer.validated_data['carrier_name']
+
     issue = StoreIssue.objects.create(
         issue_date=serializer.validated_data['issue_date'],
+        carrier_name=carrier_name,
         note=note,
         store_consumer=consumer
     )

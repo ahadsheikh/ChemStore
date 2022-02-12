@@ -133,6 +133,7 @@ class IssueSerializer(serializers.Serializer):
 
 class MakeIssueSerializer(serializers.Serializer):
     issue_date = serializers.DateField()
+    carrier_name = serializers.CharField(max_length=30, required=False)
     note = serializers.CharField(max_length=200, required=False)
     consumer_id = serializers.IntegerField()
     objects = IssueSerializer(many=True)
