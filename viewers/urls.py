@@ -1,6 +1,9 @@
 from django.urls import path
-import viewers.views as views
+
+from .views import (
+    issues
+)
 
 urlpatterns = [
-    path('', view=views.index, name='index'),
+    path('issues/<int:consumer_id>/', view=issues, name='issues'),
 ]

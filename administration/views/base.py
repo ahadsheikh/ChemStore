@@ -307,6 +307,7 @@ def make_issue(request):
     if 'carrier_name' in serializer.validated_data:
         carrier_name = serializer.validated_data['carrier_name']
 
+    # Creating issue object
     issue = StoreIssue.objects.create(
         issue_date=serializer.validated_data['issue_date'],
         carrier_name=carrier_name,
@@ -315,20 +316,45 @@ def make_issue(request):
     )
 
     for obj in serializer.validated_data['objects']:
+
         if obj['material_type'] not in material_type:
             res["errors"].append("Some material type is invalid. Valid type is CHEMICAL/GLASSWARE/INSTRUMENT.")
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
         flag = False
+
+        # Checking if objects are exists in store
         if obj['material_type'] == material_type[0]:
-            flag = not Chemical.objects.filter(pk=obj['id']).exists()
+            chem = Chemical.objects.filter(pk=obj['id'])
+            if chem.exists():
+                if chem[0].amount < obj['amount']:
+                    res['errors'].append(f"{chem[0].name} is not enough.")
+                    flag = True
+            else:
+                flag = True
+                res["errors"].append("Some material is not found.")
+
         elif obj['material_type'] == material_type[1]:
-            flag = not Glassware.objects.filter(pk=obj['id']).exists()
+            glass = Glassware.objects.filter(pk=obj['id'])
+            if glass.exists():
+                if glass[0].quantity < int(obj['amount']):
+                    res['errors'].append(f"{glass[0].name} is not enough.")
+                    flag = True
+            else:
+                flag = True
+                res["errors"].append("Some material is not found.")
+
         elif obj['material_type'] == material_type[2]:
-            flag = not Instrument.objects.filter(pk=obj['id']).exists()
+            inst = Instrument.objects.filter(pk=obj['id'])
+            if inst.exists():
+                if inst[0].quantity < int(obj['amount']):
+                    res['errors'].append(f"{inst[0].name} is not enough.")
+                    flag = True
+            else:
+                flag = True
+                res["errors"].append("Some material is not found.")
 
         if flag:
-            res["errors"].append("Some material is not found.")
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
     for obj in serializer.validated_data['objects']:
@@ -348,7 +374,7 @@ def make_issue(request):
                 glassware=glass,
                 issue=issue,
                 old_quantity=glass.quantity,
-                new_quantity=glass.quantity-obj['amount']
+                new_quantity=glass.quantity - obj['amount']
             )
             glass.quantity = glass.quantity - obj['amount']
             glass.save()
