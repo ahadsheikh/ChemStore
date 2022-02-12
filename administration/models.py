@@ -200,6 +200,7 @@ class StoreConsumer(models.Model):
 
 class StoreIssue(models.Model):
     issue_date = models.DateField()
+    carrier_name = models.CharField(max_length=30, blank=True, default='Unknown')
     note = models.CharField(max_length=200, blank=True, default="Write something about the issue in 200 characters")
     store_consumer = models.ForeignKey(StoreConsumer, on_delete=models.PROTECT)
 
