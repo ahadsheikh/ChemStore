@@ -285,6 +285,9 @@ def add_shipment(request):
 
 @api_view(['POST'])
 def make_issue(request):
+    """
+    Create an issue for materials
+    """
     serializer = MakeIssueSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     material_type = ["CHEMICAL", "GLASSWARE", "INSTRUMENT"]
@@ -306,14 +309,6 @@ def make_issue(request):
     carrier_name = "Unknown"
     if 'carrier_name' in serializer.validated_data:
         carrier_name = serializer.validated_data['carrier_name']
-
-    # Creating issue object
-    issue = StoreIssue.objects.create(
-        issue_date=serializer.validated_data['issue_date'],
-        carrier_name=carrier_name,
-        note=note,
-        store_consumer=consumer
-    )
 
     for obj in serializer.validated_data['objects']:
 
@@ -356,6 +351,14 @@ def make_issue(request):
 
         if flag:
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
+    # Creating issue object
+    issue = StoreIssue.objects.create(
+        issue_date=serializer.validated_data['issue_date'],
+        carrier_name=carrier_name,
+        note=note,
+        store_consumer=consumer
+    )
 
     for obj in serializer.validated_data['objects']:
         if obj['material_type'] == material_type[0]:

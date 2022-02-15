@@ -10,7 +10,7 @@ class IssueSerializer(ModelSerializer):
 
     class Meta:
         model = StoreIssue
-        fields = ['issue_date', 'carrier_name', 'note']
+        fields = ['id', 'issue_date', 'carrier_name', 'note']
 
 
 @api_view(['GET'])
@@ -37,31 +37,37 @@ def issues(request, consumer_id):
 
         obj = {}  # for holding individual material issue object
 
-        print(dir(store_issues))
         chemical_issues = issue.chemicalissue_set.all()
         chems = []
         for chem in chemical_issues:
+            obj['id'] = chem.chemical.id
             obj['name'] = chem.chemical.name
             obj['amount'] = chem.old_quantity - chem.new_quantity
             chems.append(obj)
+            obj = {}
 
         issue_dict['chemicals'] = chems
 
         glassware_issues = issue.glasswareissue_set.all()
         glasses = []
         for glass_issue in glassware_issues:
+            obj['id'] = glass_issue.glassware.id
             obj['name'] = glass_issue.glassware.name
             obj['amount'] = glass_issue.old_quantity - glass_issue.new_quantity
             glasses.append(obj)
+            obj = {}
+
 
         issue_dict['glasswares'] = glasses
 
         isntrument_issues = issue.instrumentissue_set.all()
         instruments = []
         for ins_issue in isntrument_issues:
+            obj['id'] = ins_issue.instrument.id
             obj['name'] = ins_issue.instrument.name
             obj['amount'] = ins_issue.old_quantity - ins_issue.new_quantity
             instruments.append(obj)
+            obj = {}
 
         issue_dict['instruments'] = instruments
 
