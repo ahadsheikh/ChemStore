@@ -93,6 +93,7 @@ def molar_mass(compound: str, decimal_places=None) -> float:
     :compound = a compound name
     Return molar mass of a compound.
     """
+    # Ion will not work
     is_polyatomic = end = multiply = False
     polyatomic_mass, m_m, multiplier = 0, 0, 1
     element = ''
