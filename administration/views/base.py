@@ -54,6 +54,15 @@ class StoreConsumerViewset(ModelViewSet):
     queryset = StoreConsumer.objects.all()
     serializer_class = StoreConsumerSerializer
 
+    def list(self, request, *args, **kwargs):
+        param = request.GET.get('type', None)
+        objects = StoreConsumer.objects.all()
+        if param:
+            objects = objects.filter(consumer_type=param)
+        serializer = StoreSerializer(objects, many=True)
+        print("Hello")
+        return Response(serializer.data)
+
 
 def fuzzy_util(objects, query, limit=10, with_score=False):
     """
