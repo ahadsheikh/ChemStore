@@ -60,8 +60,7 @@ class StoreConsumerViewset(ModelViewSet):
         objects = StoreConsumer.objects.all()
         if param:
             objects = objects.filter(consumer_type=param)
-        serializer = StoreSerializer(objects, many=True)
-        print("Hello")
+        serializer = StoreConsumerSerializer(objects, many=True)
         return Response(serializer.data)
 
 
