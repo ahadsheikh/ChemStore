@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
+from rest_framework import serializers
 
 from thefuzz import fuzz
 from itertools import chain
@@ -62,6 +63,31 @@ class StoreConsumerViewset(ModelViewSet):
         serializer = StoreSerializer(objects, many=True)
         print("Hello")
         return Response(serializer.data)
+
+
+@api_view(['GET'])
+def consumers_tree(request):
+    """
+    return all consumers by consumer type category
+    """
+    pLabs = StoreConsumer.objects.filter(consumer_type='PHYSICAL').values('id', 'name')
+    orLabs = StoreConsumer.objects.filter(consumer_type='ORGANIC').values('id', 'name')
+    inLabs = StoreConsumer.objects.filter(consumer_type='INORGANIC').values('id', 'name')
+    perLabs = StoreConsumer.objects.filter(consumer_type='PERSONAL').values('id', 'name')
+
+    class DataSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = StoreConsumer
+            fields = ['id', 'name']
+
+    res = {
+        'PhysicalLab': DataSerializer(pLabs, many=True).data,
+        'OrganicLab': DataSerializer(orLabs, many=True).data,
+        'InorganicLab': DataSerializer(inLabs, many=True).data,
+        'Personal': DataSerializer(perLabs, many=True).data
+    }
+
+    return Response(res)
 
 
 def fuzzy_util(objects, query, limit=10, with_score=False):

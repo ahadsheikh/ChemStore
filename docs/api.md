@@ -17,3 +17,4 @@
 1. [Fuzzy Search](http://chemstore.azurewebsites.net/api/management/fuzzysearch/)
 2. [Consumer Types List](http://chemstore.azurewebsites.net/api/management/consumer-store-types/)
 3. [Issues by Consumer](http://chemstore.azurewebsites.net/api/userview/issues/consumer/1/)
+4. [consumers_tree](http://chemstore.azurewebsites.net/api/management/consumers-tree/)

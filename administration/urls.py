@@ -12,6 +12,7 @@ from .views.base import (
     fuzzy_search,
     add_shipment,
     make_issue,
+    consumers_tree
 )
 from .views.utils import consumer_store_types
 
@@ -33,7 +34,8 @@ urlpatterns = [
     path('fuzzysearch/', fuzzy_search, name="fuzzy_search"),
     path('add-shipment/', add_shipment, name="add_shipment"),
     path('make-issue/', make_issue, name="make_issue"),
-    path('consumer-store-types/', consumer_store_types, name="consumer_store_types")
+    path('consumer-store-types/', consumer_store_types, name="consumer_store_types"),
+    path('consumers-tree/', consumers_tree, name='consumers_tree')
 ]
 
 urlpatterns += router.urls

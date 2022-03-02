@@ -4,9 +4,9 @@ from django.contrib import auth
 
 
 consumer_type_choices = (
-        ('Physical_LAB', 'Physical Lab'),
-        ('Organic_LAB', 'Organic Lab'),
-        ('Inorganic_LAB', 'Inorganic Lab'),
+        ('PHYSICAL', 'Physical Lab'),
+        ('ORGANIC', 'Organic Lab'),
+        ('INORGANIC', 'Inorganic Lab'),
         ('PERSONAL', 'Personal')
     )
 
