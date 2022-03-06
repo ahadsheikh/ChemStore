@@ -1,5 +1,6 @@
 from django.db import models
 
+from administration.models import Chemical
 
 class Category(models.Model):
     name = models.CharField(max_length=20)
@@ -12,7 +13,8 @@ class Category(models.Model):
 
 
 class File(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    categories = models.ManyToManyField(Category)
+    chemicals = models.ManyToManyField(Chemical)
     file = models.FileField(upload_to='files/')
 
     created_at = models.DateTimeField(auto_now_add=True)

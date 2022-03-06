@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # Project Apps
     'viewers.apps.ViewersConfig',
     'administration.apps.AdministrationConfig',
+    'filemanager.apps.FilemanagerConfig',
 ]
 
 MIDDLEWARE = [

@@ -24,7 +24,11 @@ from rest_framework_simplejwt.views import (
 )
 from administration.views.users import CustomTokenObtainPairView
 
-urlpatterns = [
+urlpatterns = []
+if settings.DEBUG:
+    urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
     path('admin/', admin.site.urls),
 
     # JWT Auth
@@ -32,10 +36,8 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/userview/', include('viewers.urls')),
     path('api/management/', include('administration.urls')),
+    path('api/filemanager/', include('filemanager.urls')),
 
     re_path(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
     re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name='index.html'), name='index'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
