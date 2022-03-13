@@ -6,29 +6,67 @@
   }
   &_right {
     flex-grow: 1;
-    // background-color: red;
     margin-left: 400px;
   }
 }
-// .sidebar_container {
-//   width: 300px;
-//   background-color: $color-white;
-//   //   position: fixed;
-//   position: sticky;
-//   top: 30px;
-//   height: 100vh;
-//   overflow: hidden;
-// }
 
 .sidebar_container {
   width: 300px;
+  margin-top: 3rem;
   &_btn {
     display: block;
+    background-color: var(--color-primary-3);
+    color: $color-white;
+    border-radius: 0.4rem;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset;
+    border: 1px solid var(--color-primary-2);
     text-decoration: none;
     width: 80%;
+    text-align: left;
     margin: 0.8rem auto;
-    border: 1px solid red;
-    text-align: center;
-    padding: 0.8rem 0;
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+.add_chemical_btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-primary-3);
+  color: $color-white;
+  border-top-left-radius: 0.4rem;
+  border-top-right-radius: 0.4rem;
+  // border-radius: 0.4rem;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset;
+  border: 1px solid var(--color-primary-2);
+  text-decoration: none;
+  width: 80%;
+  text-align: left;
+  margin: 0.8rem auto;
+  padding: 0.8rem 1.5rem;
+}
+
+.add_chemical_collaps_btn_div {
+  width: 80%;
+  background-color: var(--color-primary-2);
+  margin: auto;
+  margin-top: -1rem;
+
+  ul {
+    list-style: none;
+    margin-left: -2rem;
+
+    li {
+      cursor: pointer;
+      padding: 0.8rem 0;
+      border-bottom: 0.5px solid var(--color-primary-1);
+      span {
+        padding-left: 1rem;
+      }
+      &:hover {
+        color: $color-white;
+        background-color: var(--color-primary-1);
+      }
+    }
   }
 }

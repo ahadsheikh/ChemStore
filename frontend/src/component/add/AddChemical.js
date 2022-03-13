@@ -9,77 +9,100 @@ const AddChemical = (props) => {
     <div className="add_chemical_container">
       <Header text="Add Chemical">
         <button
-          className="add_chemical_header_container_remove_btn"
+          className="central_header_remove_btn"
           onClick={props.removeHandler}
         >
-          <FontAwesomeIcon icon={faTrashAlt} /> Remove
+          <FontAwesomeIcon icon={faTrashAlt} /> <span>Remove</span>
         </button>
       </Header>
       <div className="add_chemical_input_container">
         <div className="test">
-          <Input type="text" placeholder="CAS RN" bckColor="color_black " />
-          {/* <div className="test1">
-            {props.value.length === 0 ? (
-              <ul className="model_suggestion_ul">
-                {props.options.map((el) => (
-                  <li
-                    key={el.name}
-                    onClick={() =>
-                      props.foundChemicalHandler(el.name, props.name)
-                    }
-                  >
-                    {el.name}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div> */}
+          <Input
+            type="text"
+            placeholder="CAS RN"
+            bckColor="color_black "
+            name="CAS_RN"
+            value={props.valueObj.CAS_RN}
+            handler={props.handler}
+            readOnly={props.readOnly}
+          />
         </div>
-        <Input type="text" placeholder="Name" bckColor="color_black " />
-        <Input type="text" placeholder="Purity" bckColor="color_black " />
+        <Input
+          type="text"
+          placeholder="Name"
+          bckColor="color_black "
+          name="name"
+          value={props.valueObj.name}
+          handler={props.handler}
+          readOnly={props.readOnly}
+        />
+        <Input
+          type="text"
+          placeholder="Purity"
+          bckColor="color_black "
+          name="purity"
+          value={props.valueObj.purity}
+          handler={props.handler}
+          readOnly={props.readOnly}
+        />
         <Input
           type="text"
           placeholder="Moliqular FOrmula"
           bckColor="color_black "
+          name="molecular_formula"
+          value={props.valueObj.molecular_formula}
+          handler={props.handler}
+          readOnly={props.readOnly}
         />
-        <Input type="text" placeholder="Manufacturer" bckColor="color_black " />
-        <Input type="text" placeholder="Supplier" bckColor="color_black " />
+        <Input
+          type="text"
+          placeholder="Manufacturer"
+          bckColor="color_black "
+          name="manufacturer"
+          value={props.valueObj.manufacturer}
+          handler={props.handler}
+          readOnly={props.readOnly}
+        />
+        <Input
+          type="text"
+          placeholder="Supplier"
+          bckColor="color_black "
+          name="supplier"
+          value={props.valueObj.supplier}
+          handler={props.handler}
+          readOnly={props.readOnly}
+        />
         <select
           className="issue_content_container_top_input"
-          name="cars"
-          id="cars"
+          name="state"
+          value={props.valueObj.state}
+          onChange={props.handler}
+          disabled={props.readOnly}
         >
-          <option value="solid">Solid</option>
-          <option value="liquid">Liquid</option>
-          <option value="gas">Gas</option>
+          <option value="SOLID">Solid</option>
+          <option value="LIQUID">Liquid</option>
+          <option value="GAS">Gas</option>
         </select>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              width: "68%",
-            }}
-          >
-            <Input type="number" placeholder="Amount" bckColor="color_black " />
+        <div className="add_chemical_select_div">
+          <div className="add_chemical_select_div_left_div">
+            <Input
+              type="number"
+              placeholder="Amount"
+              bckColor="color_black "
+              name="amount"
+              value={props.valueObj.amount}
+              handler={props.handler}
+              readOnly={false}
+            />
           </div>
-          <div
-            style={{
-              width: "28%",
-            }}
-          >
+          <div className="add_chemical_select_div_right_div">
             <select
               className="issue_content_container_top_input"
               name="cars"
               id="cars"
             >
-              <option value="solid">Solid</option>
-              <option value="liquid">Liquid</option>
-              <option value="gas">Gas</option>
+              <option value="liquid">ml</option>
+              <option value="solid">l</option>
             </select>
           </div>
         </div>

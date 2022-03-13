@@ -34,3 +34,25 @@
     }
   }
 }
+
+.chemical_fuzzy_div {
+  position: relative;
+  width: 100%;
+}
+
+.chemical_fuzzy_ul {
+  position: absolute;
+  left: 0;
+  top: 5rem;
+  background-color: white;
+  width: 100%;
+  list-style: none;
+
+  li {
+    padding: 0.5rem 0;
+    &:hover {
+      color: #4e5659;
+      cursor: pointer;
+    }
+  }
+}

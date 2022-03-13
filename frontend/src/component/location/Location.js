@@ -1,48 +1,43 @@
 import React, { useState, useEffect } from "react";
+import { storeTypes, storeStructure } from "./utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronRight,
+  faFolderOpen,
+} from "@fortawesome/free-solid-svg-icons";
 import { Collapse } from "react-bootstrap";
-import Header from "../add/Header";
+
 import SecondModal from "../modal/SecondModal";
 import Input from "../input/Input";
 import axios from "../../axios/axios";
+import LocationHeader from "./LocationHeader";
+import Error from "../error/Error";
 
-const Location = () => {
+const Location = ({ isShow = true }) => {
   const [open, setOpen] = useState({
-    store: false,
-    person: false,
+    PhysicalLab: false,
+    OrganicLab: false,
+    InorganicLab: false,
+    Personal: false,
   });
-  const [store, setStore] = useState([]);
-  const [person, setPerson] = useState([]);
-  const [show, setShow] = useState({
-    create: false,
-  });
-  const [credential, setCredential] = useState({
-    name: "",
-    consumer_type: "LAB",
-    room_number: "",
-    building_name: "",
-  });
+  const [storeType, setStoreType] = useState({});
+  const [storeTypeFlag, setStoreTypeFlag] = useState(false);
+  const [show, setShow] = useState({ create: false });
+  const [credential, setCredential] = useState(storeStructure);
+  const [error, setError] = useState({ isError: false, message: "" });
+
+  //////GET STORE TYPES
   useEffect(() => {
     axios
-      .get("/api/management/stores/")
+      .get(`/api/management/consumers-tree/`)
       .then((res) => {
-        setStore(res.data);
+        setStoreType(res.data);
+        setStoreTypeFlag(true);
       })
       .catch((err) => {
-        console.log(err);
+        alert(`Something Went Wrong`);
       });
-  }, []);
-  useEffect(() => {
-    axios
-      .get(`/api/management/store-consumers/`)
-      .then((res) => {
-        setPerson(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  }, [show.create]);
 
   const handleCollapse = (name) => {
     setOpen({ ...open, [name]: !open[name] });
@@ -57,19 +52,32 @@ const Location = () => {
     const { name, value } = e.target;
     setCredential({ ...credential, [name]: value });
   };
+
+  ///// FOR CREATING NEW LAB OR PERSON
   const submitHandler = () => {
-    axios
-      .post("/api/management/store-consumers/", credential)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    console.log(credential);
+    if (
+      credential.name !== "" &&
+      credential.building_name !== "" &&
+      credential.consumer_type !== "" &&
+      credential.room_number !== ""
+    ) {
+      axios
+        .post("/api/management/store-consumers/", credential)
+        .then((res) => {
+          setCredential(storeStructure);
+          handleClose();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setError({ isError: true, message: "Please fill all Field!!" });
+    }
   };
+
   return (
     <>
+      {/* FOR RENDERING MODAL */}
       <SecondModal
         show={show.create}
         handleClose={handleClose}
@@ -96,8 +104,11 @@ const Location = () => {
             id="cars"
             style={{ backgroundColor: "black" }}
           >
-            <option value="LAB">LAB</option>
-            <option value="RESEARCHER">RESEARCHER</option>
+            {storeTypes.map((el) => (
+              <option key={el.name} value={el.value}>
+                {el.name}
+              </option>
+            ))}
           </select>
           <Input
             type="text"
@@ -118,39 +129,96 @@ const Location = () => {
         </div>
       </SecondModal>
 
+      {/* HEADER  */}
+
       <div>
-        <div className="location_container">
-          <Header text="Add Location">
-            <button
-              className="add_chemical_header_container_remove_btn"
-              onClick={() => showModalHandler("create")}
-            >
-              <FontAwesomeIcon icon={faTrashAlt} /> Edit
-            </button>
-          </Header>
-          <div>
-            <p onClick={() => handleCollapse("store")}>Store</p>
-            <Collapse in={open.store}>
-              <div>
-                {store.map((el) => (
-                  <p key={el.id}>
-                    <FontAwesomeIcon icon={faChevronRight} /> {el.name}
-                  </p>
-                ))}
-              </div>
-            </Collapse>
-          </div>
-          <div>
-            <p onClick={() => handleCollapse("person")}>Person</p>
-            <Collapse in={open.person}>
-              <div>
-                {person.map((el) => (
-                  <p key={el.id}>
-                    <FontAwesomeIcon icon={faChevronRight} /> {el.name}
-                  </p>
-                ))}
-              </div>
-            </Collapse>
+        <div
+          className="location_container"
+          style={{
+            width: isShow ? "30%" : "100%",
+            margin: isShow ? "4rem 1rem" : "1rem .5rem",
+          }}
+        >
+          <LocationHeader showModalHandler={showModalHandler} isShow={isShow} />
+
+          {/* FOR RENDERING LAB CATEGORY */}
+
+          <div className="location_content_div">
+            <div>
+              <p
+                className="location_title"
+                onClick={() => handleCollapse("PhysicalLab")}
+              >
+                {" "}
+                <FontAwesomeIcon icon={faFolderOpen} /> Physical Lab
+              </p>
+              <Collapse in={open.PhysicalLab}>
+                <div className="location_title_item">
+                  {storeTypeFlag &&
+                    storeType.PhysicalLab.map((el) => (
+                      <p key={el.id}>
+                        <FontAwesomeIcon icon={faChevronRight} /> {el.name}
+                      </p>
+                    ))}
+                </div>
+              </Collapse>
+            </div>
+            <div>
+              <p
+                className="location_title"
+                onClick={() => handleCollapse("OrganicLab")}
+              >
+                {" "}
+                <FontAwesomeIcon icon={faFolderOpen} /> Organic Lab
+              </p>
+              <Collapse in={open.OrganicLab}>
+                <div className="location_title_item">
+                  {storeTypeFlag &&
+                    storeType.OrganicLab.map((el) => (
+                      <p key={el.id}>
+                        <FontAwesomeIcon icon={faChevronRight} /> {el.name}
+                      </p>
+                    ))}
+                </div>
+              </Collapse>
+            </div>
+            <div>
+              <p
+                className="location_title"
+                onClick={() => handleCollapse("InorganicLab")}
+              >
+                {" "}
+                <FontAwesomeIcon icon={faFolderOpen} /> Inorganic Lab
+              </p>
+              <Collapse in={open.InorganicLab}>
+                <div className="location_title_item">
+                  {storeTypeFlag &&
+                    storeType.InorganicLab.map((el) => (
+                      <p key={el.id}>
+                        <FontAwesomeIcon icon={faChevronRight} /> {el.name}
+                      </p>
+                    ))}
+                </div>
+              </Collapse>
+            </div>
+            <div>
+              <p
+                className="location_title"
+                onClick={() => handleCollapse("Personal")}
+              >
+                <FontAwesomeIcon icon={faFolderOpen} /> Personal
+              </p>
+              <Collapse in={open.Personal}>
+                <div className="location_title_item">
+                  {storeTypeFlag &&
+                    storeType.Personal.map((el) => (
+                      <p key={el.id}>
+                        <FontAwesomeIcon icon={faChevronRight} /> {el.name}
+                      </p>
+                    ))}
+                </div>
+              </Collapse>
+            </div>
           </div>
         </div>
       </div>

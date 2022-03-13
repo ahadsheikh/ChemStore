@@ -16,6 +16,7 @@ const SecondModal = (props) => {
                 </span>
               </h4>
               <FontAwesomeIcon
+                onClick={props.handleClose}
                 icon={faTimes}
                 className="second_modal_header_container_close_icon"
               />
@@ -26,7 +27,10 @@ const SecondModal = (props) => {
           </div>
           {props.children}
           <div className="second_modal_btn_container">
-            <button className="second_modal_btn color_primary3" onClick={props.submitHandler}>
+            <button
+              className="second_modal_btn color_primary3"
+              onClick={props.submitHandler}
+            >
               {props.btn_text}
             </button>
           </div>

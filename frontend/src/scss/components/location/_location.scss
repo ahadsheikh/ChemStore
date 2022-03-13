@@ -1,3 +1,20 @@
 .location_container {
-  width: 40%;
+  background-color: var(--color-primary-2);
+  color: $color-white;
+}
+
+.location_title {
+  cursor: pointer;
+  font-weight: 400;
+  font-weight: 300;
+}
+
+.location_content_div {
+  padding: 1rem;
+  font-weight: 400;
+}
+
+.location_title_item {
+  padding-left: 2rem;
+  font-weight: 300;
 }

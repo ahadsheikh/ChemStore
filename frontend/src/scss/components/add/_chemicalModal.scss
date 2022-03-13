@@ -6,6 +6,11 @@
   position: relative;
 }
 
+.add_chemical_modal_div {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .add_chemical_modal_input {
   width: 100%;
   padding: 0.5rem 0.8rem;
@@ -33,13 +38,10 @@
 }
 
 .add_chemical_create_btn {
-  padding: 0.5rem 1rem;
-  background-color: yellow;
+  padding: 0.5rem 2rem 1rem;
   border: none;
   outline: none;
+  background-color: black;
   color: white;
-  float: right;
-  position: absolute;
-  top: 5%;
-  left: 5%;
+  // color: white;
 }

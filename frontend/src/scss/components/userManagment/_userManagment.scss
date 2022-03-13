@@ -1,9 +1,10 @@
 .user_managment_table {
   &_wrapper {
     width: 90%;
-    margin: auto;
+    // margin: auto;
     color: $color-white;
-    margin-top: 3rem;
+    margin-top: 4rem;
+    margin-left: 2rem;
   }
   &_main_header {
     background-color: var(--color-primary-3);
@@ -56,4 +57,10 @@
       }
     }
   }
+}
+
+.user_managment_table_loading_div {
+  background-color: #2c3034;
+  width: 100%;
+  padding-top: 10rem;
 }

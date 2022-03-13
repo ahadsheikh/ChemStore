@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Collapse } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { openModal } from "../redux/Container";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = (props) => {
   const dispatch = useDispatch();
@@ -21,24 +23,26 @@ const Sidebar = (props) => {
       <button
         onClick={claa}
         // onClick={() => props.handlePage(1)}
-        className="sidebar_container_btn"
+        className="add_chemical_btn"
         // onClick={() => setOpen(!open)}
         aria-controls="example-collapse-text"
         aria-expanded={open}
       >
-        Add Chemical
+        Add Chemical <FontAwesomeIcon icon={faAngleDown} />
       </button>
       <Collapse in={open}>
-        <div id="example-collapse-text">
-          <button onClick={() => dispatch(openModal("chemical"))}>
-            Add Chemical
-          </button>
-          <button onClick={() => dispatch(openModal("instrument"))}>
-            Add Instrument
-          </button>
-          <button onClick={() => dispatch(openModal("glassWare"))}>
-            Add Glass Ware
-          </button>
+        <div className="add_chemical_collaps_btn_div">
+          <ul>
+            <li onClick={() => dispatch(openModal("chemical"))}>
+              <span>Add Chemical</span>
+            </li>
+            <li onClick={() => dispatch(openModal("instrument"))}>
+              <span> Add Instrument</span>
+            </li>
+            <li onClick={() => dispatch(openModal("glassWare"))}>
+              <span> Add Glass Ware</span>
+            </li>
+          </ul>
         </div>
       </Collapse>
       <button

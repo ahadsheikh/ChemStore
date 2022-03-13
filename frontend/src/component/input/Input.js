@@ -9,6 +9,7 @@ function Input(props) {
       name={props.name}
       value={props.value}
       onChange={props.handler}
+      readOnly={props.readOnly}
     />
   );
 }

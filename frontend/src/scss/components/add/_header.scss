@@ -1,11 +1,16 @@
 .add_header_container {
   background-color: var(--color-primary-3);
   color: $color-white;
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset;
+  border: 1px solid var(--color-primary-2);
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
   p {
     margin-bottom: 0;
+    font-size: 1.6rem;
   }
 }
