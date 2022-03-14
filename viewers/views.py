@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from rest_framework.serializers import ModelSerializer
 
-from administration.models import StoreConsumer, StoreIssue, ChemicalIssue
+from administration.models import StoreConsumer, StoreIssue
 
 
 class IssueSerializer(ModelSerializer):

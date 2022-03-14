@@ -4,6 +4,8 @@ from rest_framework.viewsets import ModelViewSet
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework import serializers
+from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
 
 from thefuzz import fuzz
 from itertools import chain
@@ -14,7 +16,8 @@ from administration.serializers import (
     InstrumentSerializer,
     StoreSerializer,
     ChemicalCreateSerializer,
-    AddShipmentSerializer, ShipmentSerializer, MakeIssueSerializer, StoreConsumerSerializer
+    AddShipmentSerializer, ShipmentSerializer, MakeIssueSerializer, StoreConsumerSerializer, ChemicalUpdateSerializer,
+    GlasswareCreateSerializer, InstrumentCreateSerializer
 )
 
 from administration.models import (
@@ -30,25 +33,76 @@ class ChemicalViewSet(ModelViewSet):
     queryset = Chemical.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'create' or self.action == 'update':
+        print(self.action)
+        if self.action == 'create':
             return ChemicalCreateSerializer
+        elif self.action == 'update':
+            return ChemicalUpdateSerializer
         else:
             return ChemicalSerializer
 
 
 class GlasswareViewSet(ModelViewSet):
     queryset = Glassware.objects.all()
-    serializer_class = GlasswareSerializer
+
+    def get_serializer_class(self):
+        print(self.action)
+        if self.action == 'create':
+            return GlasswareCreateSerializer
+        else:
+            return GlasswareSerializer
 
 
 class InstrumentViewSet(ModelViewSet):
     queryset = Instrument.objects.all()
-    serializer_class = InstrumentSerializer
+
+    def get_serializer_class(self):
+        print(self.action)
+        if self.action == 'create':
+            return InstrumentCreateSerializer
+        else:
+            return InstrumentSerializer
 
 
 class StoreViewSet(ModelViewSet):
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
+
+    @action(detail=True, methods=['GET'])
+    def chemicals(self, request, pk):
+        """
+        List all chemical in a store
+        """
+        store = get_object_or_404(Store, pk=pk)
+        chemicals = store.chemicals.all()
+
+        chem_datas = ChemicalSerializer(instance=chemicals, many=True)
+
+        return Response(chem_datas.data)
+
+    @action(detail=True, methods=['GET'])
+    def glasswares(self, request, pk):
+        """
+        List all glassware in a store
+        """
+        store = get_object_or_404(Store, pk=pk)
+        glasswares = store.glasswares.all()
+
+        glass_datas = GlasswareSerializer(instance=glasswares, many=True)
+
+        return Response(glass_datas.data)
+
+    @action(detail=True, methods=['GET'])
+    def instruments(self, request, pk):
+        """
+        List all instrument in a store
+        """
+        store = get_object_or_404(Store, pk=pk)
+        instruments = store.instruments.all()
+
+        instru_datas = InstrumentSerializer(instance=instruments, many=True)
+
+        return Response(instru_datas.data)
 
 
 class StoreConsumerViewset(ModelViewSet):

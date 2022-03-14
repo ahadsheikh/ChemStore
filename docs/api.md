@@ -1,4 +1,4 @@
-#ChemStore API
+# ChemStore API
 
 ## Users 
 1. [Users](http://chemstore.azurewebsites.net/api/management/users/)
@@ -11,6 +11,9 @@
 2. [Glassware](http://chemstore.azurewebsites.net/api/management/glasswares/)
 3. [Instrument](http://chemstore.azurewebsites.net/api/management/instruments/)
 4. [Store](http://chemstore.azurewebsites.net/api/management/stores/)
+   1. [Chemicals](http://chemstore.azurewebsites.net/api/management/stores/1/chemicals/)
+   2. [Glasswares](http://chemstore.azurewebsites.net/api/management/stores/1/glasswares/)
+   3. [Instruments](http://chemstore.azurewebsites.net/api/management/stores/1/instruments/)
 5. [StoreConsumer](http://chemstore.azurewebsites.net/api/management/store-consumers/)
 6. [Category](http://chemstore.azurewebsites.net/api/filemanager/categories/)
 7. [File](http://chemstore.azurewebsites.net/api/filemanager/files/)
