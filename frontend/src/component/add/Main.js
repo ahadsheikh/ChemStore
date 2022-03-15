@@ -7,19 +7,7 @@ import AddGlassWare from "./AddGlassWare";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../../redux/Container";
 import axios from "../../axios/axios";
-
-// const chemical = [
-//   { name: "oxygen", weight: 0, group: "a" },
-//   { name: "Hydrozen", weight: 0, group: "a" },
-//   { name: "H20", weight: 0, group: "a" },
-//   { name: "oxygen", weight: 0, group: "a" },
-//   { name: "Hydrozen", weight: 0, group: "a" },
-//   { name: "H20", weight: 0, group: "a" },
-//   { name: "oxygen", weight: 0, group: "a" },
-//   { name: "Hydrozen", weight: 0, group: "a" },
-//   { name: "H20", weight: 0, group: "a" },
-//   { name: "oxygen", weight: 0, group: "a" },
-// ];
+import Textarea from "../input/Textarea";
 
 const dummyChemical = {
   CAS_RN: "",
@@ -53,6 +41,8 @@ const Main = (props) => {
     instrument: "",
     glassWare: "",
   });
+  const [notes, setNotes] = useState("");
+  const notesHandler = (e) => setNotes(e.target.value);
 
   ///// MAKE SERVER REQUEST
   const fuzzySearchHandler = (value, name) => {
@@ -128,9 +118,12 @@ const Main = (props) => {
 
   //// SUBMIT SHIPMENT
   const submitShipmentHandler = () => {
+    const date = new Date();
     let finalObj = {
-      shipment_date: Date.now(),
-      note: "This is a great shipment",
+      shipment_date: `${date.getFullYear()}-${
+        date.getMonth() + 1
+      }-${date.getDate()}`,
+      note: notes,
       chemical: {
         old: [],
         new: [],
@@ -196,13 +189,18 @@ const Main = (props) => {
       delete finalObj.old;
     } catch {}
 
+    axios
+      .post(`/api/management/add-shipment/`, finalObj)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
     console.log(finalObj);
   };
 
   ////////SHOW UI TO USER
-  const checkDataHandler = () => {
-    console.log(credential);
-  };
 
   return (
     <>
@@ -244,9 +242,16 @@ const Main = (props) => {
           isProcessing={fuzzySearch.isProcessing}
         />
       </Modal>
-      <div>
+      <div className="add_credential_element_container">
+        <div className="add_credential_notes_container">
+          <Textarea
+            placeholder="Notes ..."
+            handler={notesHandler}
+            value={notes}
+          />
+        </div>
         {/* CONDITIONALLY RENDERING  */}
-        <div>
+        <div className="">
           {credential.map((el, i) => {
             if (el.type === "chemical") {
               return (
@@ -284,6 +289,14 @@ const Main = (props) => {
               );
             }
           })}
+          {credential.length > 0 && (
+            <button
+              onClick={submitShipmentHandler}
+              className="add_credential_submit_btn"
+            >
+              Submit
+            </button>
+          )}
         </div>
       </div>
     </>

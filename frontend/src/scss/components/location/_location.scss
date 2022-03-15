@@ -17,4 +17,21 @@
 .location_title_item {
   padding-left: 2rem;
   font-weight: 300;
+  p {
+    cursor: pointer;
+  }
+}
+
+.location_container_div {
+  display: flex;
+  align-items: flex-start;
+}
+
+.location_specfic_container {
+  margin-top: 4rem;
+  background-color: var(--color-primary-2);
+  color: $color-white;
+  margin-right: 2rem;
+  flex-grow: 1;
+  // height: 90rem;
 }

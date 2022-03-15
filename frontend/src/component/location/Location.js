@@ -12,6 +12,7 @@ import Input from "../input/Input";
 import axios from "../../axios/axios";
 import LocationHeader from "./LocationHeader";
 import Error from "../error/Error";
+import SpecficIssue from "./SpecficIssue";
 
 const Location = ({ isShow = true }) => {
   const [open, setOpen] = useState({
@@ -25,6 +26,10 @@ const Location = ({ isShow = true }) => {
   const [show, setShow] = useState({ create: false });
   const [credential, setCredential] = useState(storeStructure);
   const [error, setError] = useState({ isError: false, message: "" });
+  const [specficLabContent, setSpecficLabContent] = useState({
+    content: [],
+    loading: false,
+  });
 
   //////GET STORE TYPES
   useEffect(() => {
@@ -73,6 +78,19 @@ const Location = ({ isShow = true }) => {
     } else {
       setError({ isError: true, message: "Please fill all Field!!" });
     }
+  };
+
+  const specficLabHandler = (id) => {
+    setSpecficLabContent({ content: [], loading: true });
+    axios
+      .get(`/api/userview/issues/consumer/${id}/`)
+      .then((res) => {
+        setSpecficLabContent({ content: res.data, loading: false });
+      })
+      .catch((err) => {
+        console.log(err.response);
+        setSpecficLabContent({ content: [], loading: false });
+      });
   };
 
   return (
@@ -131,7 +149,7 @@ const Location = ({ isShow = true }) => {
 
       {/* HEADER  */}
 
-      <div>
+      <div className="location_container_div">
         <div
           className="location_container"
           style={{
@@ -156,7 +174,7 @@ const Location = ({ isShow = true }) => {
                 <div className="location_title_item">
                   {storeTypeFlag &&
                     storeType.PhysicalLab.map((el) => (
-                      <p key={el.id}>
+                      <p key={el.id} onClick={() => specficLabHandler(el.id)}>
                         <FontAwesomeIcon icon={faChevronRight} /> {el.name}
                       </p>
                     ))}
@@ -175,7 +193,7 @@ const Location = ({ isShow = true }) => {
                 <div className="location_title_item">
                   {storeTypeFlag &&
                     storeType.OrganicLab.map((el) => (
-                      <p key={el.id}>
+                      <p key={el.id} onClick={() => specficLabHandler(el.id)}>
                         <FontAwesomeIcon icon={faChevronRight} /> {el.name}
                       </p>
                     ))}
@@ -194,7 +212,7 @@ const Location = ({ isShow = true }) => {
                 <div className="location_title_item">
                   {storeTypeFlag &&
                     storeType.InorganicLab.map((el) => (
-                      <p key={el.id}>
+                      <p key={el.id} onClick={() => specficLabHandler(el.id)}>
                         <FontAwesomeIcon icon={faChevronRight} /> {el.name}
                       </p>
                     ))}
@@ -212,13 +230,20 @@ const Location = ({ isShow = true }) => {
                 <div className="location_title_item">
                   {storeTypeFlag &&
                     storeType.Personal.map((el) => (
-                      <p key={el.id}>
+                      <p key={el.id} onClick={() => specficLabHandler(el.id)}>
                         <FontAwesomeIcon icon={faChevronRight} /> {el.name}
                       </p>
                     ))}
                 </div>
               </Collapse>
             </div>
+          </div>
+        </div>
+        <div className="location_specfic_container">
+          <div>
+            {specficLabContent.content.map((el, i) => (
+              <SpecficIssue key={i} item={el} />
+            ))}
           </div>
         </div>
       </div>

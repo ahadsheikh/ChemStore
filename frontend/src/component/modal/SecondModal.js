@@ -1,4 +1,4 @@
-import { Modal } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
@@ -31,7 +31,8 @@ const SecondModal = (props) => {
               className="second_modal_btn color_primary3"
               onClick={props.submitHandler}
             >
-              {props.btn_text}
+              {props.loading && <Spinner animation="border" variant="light" />}
+              <span style={{ paddingLeft: ".8rem" }}>{props.btn_text}</span>
             </button>
           </div>
         </div>
