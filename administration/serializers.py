@@ -108,7 +108,6 @@ class GlasswareCreateSerializer(serializers.ModelSerializer):
 
 
 class InstrumentSerializer(serializers.ModelSerializer):
-    store = serializers.IntegerField(required=True)
 
     class Meta:
         model = Instrument
