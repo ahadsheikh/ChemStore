@@ -377,12 +377,18 @@ def make_issue(request):
     Create an issue for materials
     """
     serializer = MakeIssueSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+
     material_type = ["CHEMICAL", "GLASSWARE", "INSTRUMENT"]
 
     res = {
         "errors": []
     }
+
+    if not serializer.is_valid():
+        for key, val in serializer.errors.items():
+            val = ', '.join(val)
+            res['errors'].append(f'{key}: {val}')
+        return Response(res)
 
     try:
         consumer = StoreConsumer.objects.get(pk=serializer.validated_data['consumer_id'])
