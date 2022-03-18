@@ -1,6 +1,15 @@
 .location_container {
   background-color: var(--color-primary-2);
   color: $color-white;
+  width: 30%;
+  @media (max-width: 950px) {
+    width: 96%;
+    margin: auto;
+  }
+}
+
+.location_container-issue {
+  width: 100%;
 }
 
 .location_title {
@@ -25,6 +34,10 @@
 .location_container_div {
   display: flex;
   align-items: flex-start;
+  flex-direction: row;
+  @media (max-width: 950px) {
+    flex-direction: column;
+  }
 }
 
 .location_specfic_container {
@@ -33,5 +46,9 @@
   color: $color-white;
   margin-right: 2rem;
   flex-grow: 1;
+  @media (max-width: 950px) {
+    width: 96%;
+    margin: auto;
+  }
   // height: 90rem;
 }

@@ -4,3 +4,11 @@
   top: $top;
   transform: translate(-50%, -50%);
 }
+
+@mixin responsive {
+  @media (max-width: 800px) {
+    width: 96%;
+    margin: 4rem auto;
+    min-width: 0;
+  }
+}

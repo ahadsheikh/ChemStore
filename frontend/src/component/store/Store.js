@@ -65,7 +65,7 @@ const Store = () => {
       {activeStore === -1 ? (
         <p></p>
       ) : (
-        <div className="user_managment_table_wrapper">
+        <div className="store_managment_table_wrapper">
           <div className="user_managment_table_main_header">
             <h3 className="user_managment_table_main_header_main_title">
               {/* <FontAwesomeIcon icon={faUserAlt} /> */}

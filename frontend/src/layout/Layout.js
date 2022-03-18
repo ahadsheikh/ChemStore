@@ -9,8 +9,10 @@ import Issue from "../component/issue/Issue";
 import Location from "../component/location/Location";
 import Search from "../component/search/Search";
 import axios from "../axios/axios";
+import OverLaySideBar from "./OverLaySideBar";
 
 const Layout = () => {
+  const [showBackModal, setShowBlockModal] = useState(false);
   const [id, setId] = useState(0);
   const [storeList, setStoreList] = useState([]);
   let arr = [
@@ -21,6 +23,10 @@ const Layout = () => {
     <Issue />,
     <UserManagment />,
   ];
+
+  const sideDrawerHandler = () => {
+    setShowBlockModal((preState) => !preState);
+  };
 
   useEffect(() => {
     axios
@@ -40,14 +46,26 @@ const Layout = () => {
 
   return (
     <>
-      <Navigation />
+      <OverLaySideBar isShow={showBackModal} hanlder={sideDrawerHandler}>
+        <Sidebar
+          name="overLay_sidebar"
+          handlePage={handlePage}
+          storeList={storeList}
+        />
+      </OverLaySideBar>
+      <Navigation handler={sideDrawerHandler} />
       <div className="layout">
-        <Sidebar handlePage={handlePage} storeList={storeList} />
+        <Sidebar
+          isShow={showBackModal}
+          name="sidebar_container"
+          handlePage={handlePage}
+          storeList={storeList}
+        />
 
         <div
           style={{
             width: "100%",
-            height: "50rem",
+            // height: "50rem",
           }}
         >
           {pages}

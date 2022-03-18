@@ -1,14 +1,24 @@
+.add_credential_container {
+  min-width: 50rem;
+  width: 50%;
+  margin-top: 3rem;
+  margin-left: 2rem;
+  @media (max-width: 800px) {
+    width: 96%;
+    margin: 3rem auto;
+    min-width: 0rem;
+  }
+}
 .add_credential_notes_container {
   margin-top: 3rem;
-  // margin-left: 2rem;
-  // width: 50%;
   margin-bottom: -3rem;
-  min-width: 50rem;
+  // min-width: 50rem;
 }
 
 .add_credential_element_container {
-  width: 50%;
-  margin-left: 2rem;
+  // width: 50%;
+  width: 100%;
+  // margin-left: 2rem;
   margin-bottom: 10rem;
 }
 
@@ -19,6 +29,6 @@
   border: none;
   padding: 0.8rem 0;
   width: 100%;
-  min-width: 50rem;
+  // min-width: 50rem;
   color: black;
 }

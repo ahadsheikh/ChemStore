@@ -5,6 +5,11 @@
     min-width: 50rem;
     margin: 4rem 2rem 0;
     border-radius: 0.2rem;
+    @include responsive;
+    // @media (max-width: 800px) {
+    //   width: 96%;
+    //   margin: 4rem auto;
+    // }
   }
   &_header_container {
     background-color: var(--color-primary-3);

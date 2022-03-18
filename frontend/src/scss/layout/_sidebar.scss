@@ -1,18 +1,11 @@
-.layout {
-  display: flex;
-  &_left {
-    width: 400px;
-    position: fixed;
-  }
-  &_right {
-    flex-grow: 1;
-    margin-left: 400px;
-  }
-}
-
 .sidebar_container {
   width: 300px;
   margin-top: 3rem;
+
+  @media (max-width: 800px) {
+    width: 0px;
+    display: none;
+  }
   &_btn {
     display: block;
     background-color: var(--color-primary-3);
@@ -25,6 +18,16 @@
     text-align: left;
     margin: 0.8rem auto;
     padding: 0.8rem 1.5rem;
+  }
+}
+
+.overLay_sidebar {
+  width: 300px;
+  margin-top: 3rem;
+
+  @media (min-width: 801px) {
+    width: 0px;
+    display: none;
   }
 }
 

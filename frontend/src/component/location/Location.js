@@ -6,6 +6,8 @@ import {
   faFolderOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import { Collapse } from "react-bootstrap";
+import { issueLabHandler } from "../../redux/StoreManagment";
+import { useDispatch } from "react-redux";
 
 import SecondModal from "../modal/SecondModal";
 import Input from "../input/Input";
@@ -15,6 +17,7 @@ import Error from "../error/Error";
 import SpecficIssue from "./SpecficIssue";
 
 const Location = ({ isShow = true }) => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState({
     PhysicalLab: false,
     OrganicLab: false,
@@ -81,6 +84,8 @@ const Location = ({ isShow = true }) => {
   };
 
   const specficLabHandler = (id) => {
+    dispatch(issueLabHandler(id));
+    id = 2;
     setSpecficLabContent({ content: [], loading: true });
     axios
       .get(`/api/userview/issues/consumer/${id}/`)
@@ -151,9 +156,13 @@ const Location = ({ isShow = true }) => {
 
       <div className="location_container_div">
         <div
-          className="location_container"
+          className={
+            isShow
+              ? "location_container "
+              : "location_container location_container-issue"
+          }
           style={{
-            width: isShow ? "30%" : "100%",
+            // width: isShow ? "30%" : "100%",
             margin: isShow ? "4rem 1rem" : "1rem .5rem",
           }}
         >

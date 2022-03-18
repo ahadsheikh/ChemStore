@@ -14,7 +14,7 @@ const Sidebar = (props) => {
     setOpen({ ...open, [name]: !open[name] });
   };
   return (
-    <div className="sidebar_container">
+    <div className={props.name}>
       <button
         onClick={() => props.handlePage(0)}
         className="sidebar_container_btn"

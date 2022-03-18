@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { Button, Dropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -8,8 +8,13 @@ import GlassWare from "./GlassWare";
 import Location from "../location/Location";
 import axios from "../../axios/axios";
 import Header from "../add/Header";
+import { issueLabHandler } from "../../redux/StoreManagment";
+import { useDispatch, useSelector } from "react-redux";
+import Error from "./Error";
 
 const Issue = () => {
+  const dispatch = useDispatch();
+  const { issueLab } = useSelector((state) => state.StoreManagment);
   const [issueList, setIssueList] = useState([]);
   const [fuzzySearchResult, setFuzzySearchResult] = useState({
     index: -1,
@@ -17,6 +22,18 @@ const Issue = () => {
     options: [],
     isloading: true,
   });
+
+  const [isError, setIssError] = useState({ message: "", error: false });
+
+  const [issueCredential, setIssueCredential] = useState({
+    carrier_name: "",
+    note: "",
+    issue_date: "",
+  });
+
+  useLayoutEffect(() => {
+    dispatch(issueLabHandler(""));
+  }, []);
 
   const issueHandler = (name) => {
     const issueListCopy = [...issueList];
@@ -69,7 +86,26 @@ const Issue = () => {
   };
 
   const submitIssueHandler = () => {
-    console.log(issueList);
+    const issueCredentialCopy = { ...issueCredential, consumer_id: issueLab };
+    const issueListCopy = [...issueList];
+    issueListCopy.forEach((issue) => {
+      if (issue.material_type === "CHEMICAL") delete issue.chemical;
+      else if (issue.material_type === "INSTRUMENT") delete issue.instrument;
+      else if (issue.material_type === "GLASSWARE") delete issue.glassware;
+    });
+    issueCredentialCopy.objects = issueListCopy;
+    setIssError({ message: "", error: false });
+    axios
+      .post(`/api/management/make-issue/`, issueCredentialCopy)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err.response);
+        setIssError({ message: err.response.data.errors[0], error: true });
+      });
+
+    console.log(issueCredentialCopy);
   };
 
   const foundCredentialHandler = (value, id, index, name) => {
@@ -93,8 +129,14 @@ const Issue = () => {
     setIssueList(issueListCopy);
   };
 
+  const issueInputHandler = (e) => {
+    const { name, value } = e.target;
+    setIssueCredential({ ...issueCredential, [name]: value });
+  };
+
   return (
     <>
+      {isError.error && <Error message={isError.message} />}
       <div className="issue_container">
         <Header text="Create An Issue" />
         <div className="issue_content_container">
@@ -103,9 +145,11 @@ const Issue = () => {
               className="issue_content_container_top_input"
               type="text"
               placeholder="Refferer Name"
-              id="refferer "
+              name="carrier_name"
+              value={issueCredential.carrier_name}
+              onChange={issueInputHandler}
             />
-            <select
+            {/* <select
               className="issue_content_container_top_input"
               name="cars"
               id="cars"
@@ -114,17 +158,23 @@ const Issue = () => {
               <option value="saab">Saab</option>
               <option value="mercedes">Mercedes</option>
               <option value="audi">Audi</option>
-            </select>
+            </select> */}
             <input
               className="issue_content_container_top_input"
               type="date"
               id="timeAndDate"
+              name="issue_date"
+              value={issueCredential.issue_date}
+              onChange={issueInputHandler}
             />
             <textarea
               className="issue_content_container_top_input"
               type="text"
               placeholder="Notes"
               id="comments"
+              name="note"
+              value={issueCredential.note}
+              onChange={issueInputHandler}
             />
             <p>Location : </p>
             <div
@@ -156,14 +206,32 @@ const Issue = () => {
                 return (
                   <Instrument
                     key={i}
-                    handler={inputHandler}
+                    inputHandler={(e) => inputHandler(e, i)}
+                    data={el}
                     options={fuzzySearchResult.options}
                     isFuzzy={fuzzySearchResult.index === i}
                     loading={fuzzySearchResult.isloading}
+                    removeIssue={() => removeIssueHandler(i)}
+                    foundCredentialHandler={(value, id) =>
+                      foundCredentialHandler(value, id, i, "instrument")
+                    }
                   />
                 );
               } else if (el.material_type === "GLASSWARE") {
-                return <GlassWare key={i} />;
+                return (
+                  <GlassWare
+                    key={i}
+                    inputHandler={(e) => inputHandler(e, i)}
+                    data={el}
+                    options={fuzzySearchResult.options}
+                    isFuzzy={fuzzySearchResult.index === i}
+                    loading={fuzzySearchResult.isloading}
+                    removeIssue={() => removeIssueHandler(i)}
+                    foundCredentialHandler={(value, id) =>
+                      foundCredentialHandler(value, id, i, "glassware")
+                    }
+                  />
+                );
               }
             })}
             <Dropdown>

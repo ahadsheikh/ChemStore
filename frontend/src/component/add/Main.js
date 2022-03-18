@@ -242,61 +242,63 @@ const Main = (props) => {
           isProcessing={fuzzySearch.isProcessing}
         />
       </Modal>
-      <div className="add_credential_element_container">
-        <div className="add_credential_notes_container">
-          <Textarea
-            placeholder="Notes ..."
-            handler={notesHandler}
-            value={notes}
-          />
-        </div>
-        {/* CONDITIONALLY RENDERING  */}
-        <div className="">
-          {credential.map((el, i) => {
-            if (el.type === "chemical") {
-              return (
-                <AddChemical
-                  key={i}
-                  removeHandler={() => removeCredentialHandler(i)}
-                  handler={(e) => inputDataHandler(e, i)}
-                  valueObj={el}
-                  readOnly={el.isNew}
-                  value={chemicalCredential.chemical}
-                  // options={chemical}
-                />
-              );
-            } else if (el.type === "instrument") {
-              return (
-                <AddInstrument
-                  key={i}
-                  removeHandler={() => removeCredentialHandler(i)}
-                  handler={(e) => inputDataHandler(e, i)}
-                  valueObj={el}
-                  readOnly={el.isNew}
-                  value={chemicalCredential.instrument}
-                />
-              );
-            } else if (el.type === "glassware") {
-              return (
-                <AddGlassWare
-                  key={i}
-                  removeHandler={() => removeCredentialHandler(i)}
-                  handler={(e) => inputDataHandler(e, i)}
-                  valueObj={el}
-                  readOnly={el.isNew}
-                  value={chemicalCredential.glassWare}
-                />
-              );
-            }
-          })}
-          {credential.length > 0 && (
-            <button
-              onClick={submitShipmentHandler}
-              className="add_credential_submit_btn"
-            >
-              Submit
-            </button>
-          )}
+      <div className="add_credential_container">
+        <div className="add_credential_element_container">
+          <div className="add_credential_notes_container">
+            <Textarea
+              placeholder="Notes ..."
+              handler={notesHandler}
+              value={notes}
+            />
+          </div>
+          {/* CONDITIONALLY RENDERING  */}
+          <div className="">
+            {credential.map((el, i) => {
+              if (el.type === "chemical") {
+                return (
+                  <AddChemical
+                    key={i}
+                    removeHandler={() => removeCredentialHandler(i)}
+                    handler={(e) => inputDataHandler(e, i)}
+                    valueObj={el}
+                    readOnly={el.isNew}
+                    value={chemicalCredential.chemical}
+                    // options={chemical}
+                  />
+                );
+              } else if (el.type === "instrument") {
+                return (
+                  <AddInstrument
+                    key={i}
+                    removeHandler={() => removeCredentialHandler(i)}
+                    handler={(e) => inputDataHandler(e, i)}
+                    valueObj={el}
+                    readOnly={el.isNew}
+                    value={chemicalCredential.instrument}
+                  />
+                );
+              } else if (el.type === "glassware") {
+                return (
+                  <AddGlassWare
+                    key={i}
+                    removeHandler={() => removeCredentialHandler(i)}
+                    handler={(e) => inputDataHandler(e, i)}
+                    valueObj={el}
+                    readOnly={el.isNew}
+                    value={chemicalCredential.glassWare}
+                  />
+                );
+              }
+            })}
+            {credential.length > 0 && (
+              <button
+                onClick={submitShipmentHandler}
+                className="add_credential_submit_btn"
+              >
+                Submit
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </>

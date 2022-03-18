@@ -307,14 +307,17 @@ const UserManagment = () => {
         </div>
       </SecondModal>
       <div className="user_managment_table_wrapper">
-        <Header text="User Accounts">
-          <button
-            className="central_header_remove_btn"
-            onClick={() => handleShow("newUser")}
-          >
-            <FontAwesomeIcon icon={faUserAlt} /> <span> New User </span>
-          </button>
-        </Header>
+        <div>
+          <Header text="User Accounts">
+            <button
+              className="central_header_remove_btn"
+              onClick={() => handleShow("newUser")}
+            >
+              <FontAwesomeIcon icon={faUserAlt} /> <span> New User </span>
+            </button>
+          </Header>
+        </div>
+
         <div>
           <Table striped bordered hover variant="dark">
             <thead>
