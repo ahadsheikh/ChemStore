@@ -4,7 +4,7 @@ from django.test import TestCase
 User = get_user_model()
 
 
-class AnimalTestCase(TestCase):
+class FuzzySearchTestCase(TestCase):
     def setUp(self):
         User.objects.create(email='aaa@chemstore.com', password="hahaha")
 

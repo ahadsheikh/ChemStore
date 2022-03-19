@@ -25,26 +25,23 @@ from core.utils import *
 
 
 class UtilityTest(TestCase):
-
-    def setUp(self):
-        self.compounds = [
-            ("CH3COOH", 60.052),
-            ("HCl", 36.458),
-            ("H2SO4", 98.072),
-            ("NH3", 17.031),
-            ("HNO3", 63.012),
-            ("H3PO4", 97.994),
-            ("Na3PO4", 119.976),
-            ("CaCO3", 100.086),
-            ("(NH4)2SO4", 132.134)
-        ]
+    compounds = [
+        ("CH3COOH", 60.052),
+        ("HCl", 36.458),
+        ("H2SO4", 98.072),
+        ("NH3", 17.031),
+        ("HNO3", 63.012),
+        ("H3PO4", 97.994),
+        ("Na3PO4", 163.940),
+        ("CaCO3", 100.086),
+        ("(NH4)2SO4", 132.134)
+    ]
 
     def test_is_bracket_safe(self):
         """
         Check is a compound is bracket safe
         """
         for com, _ in self.compounds:
-            print(f"Compound Name: {com}")
             self.assertTrue(is_bracket_safe(com))
 
     def test_is_safe_compound_name(self):
@@ -52,7 +49,6 @@ class UtilityTest(TestCase):
         Test validity of a compound name
         """
         for com, _ in self.compounds:
-            print(f"Compound Name: {com}")
             self.assertTrue(is_safe_compound_name(com))
 
     def test_molar_mass(self):
@@ -60,6 +56,4 @@ class UtilityTest(TestCase):
         Test molar mass of a compound
         """
         for com, mass in self.compounds:
-            print(f"{com} : {mass}")
-            print(molar_mass(com))
             self.assertGreaterEqual(0.01, molar_mass(com)-mass)
