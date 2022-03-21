@@ -42,7 +42,7 @@ def issues(request, consumer_id):
         for chem in chemical_issues:
             obj['id'] = chem.chemical.id
             obj['name'] = chem.chemical.name
-            obj['amount'] = chem.old_quantity - chem.new_quantity
+            obj['quantity'] = chem.old_quantity - chem.new_quantity
             chems.append(obj)
             obj = {}
 
@@ -53,7 +53,7 @@ def issues(request, consumer_id):
         for glass_issue in glassware_issues:
             obj['id'] = glass_issue.glassware.id
             obj['name'] = glass_issue.glassware.name
-            obj['amount'] = glass_issue.old_quantity - glass_issue.new_quantity
+            obj['quantity'] = glass_issue.old_quantity - glass_issue.new_quantity
             glasses.append(obj)
             obj = {}
 
@@ -65,7 +65,7 @@ def issues(request, consumer_id):
         for ins_issue in isntrument_issues:
             obj['id'] = ins_issue.instrument.id
             obj['name'] = ins_issue.instrument.name
-            obj['amount'] = ins_issue.old_quantity - ins_issue.new_quantity
+            obj['quantity'] = ins_issue.old_quantity - ins_issue.new_quantity
             instruments.append(obj)
             obj = {}
 

@@ -239,13 +239,17 @@ def add_shipment(request):
     Return a shipment, Check Doc;
     """
     serializer = AddShipmentSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-
     res = {
         "message": "Shipment Added",
         "partial_update": False,
-        "errors": {}
+        "errors": []
     }
+
+    if not serializer.is_valid():
+        for key, val in serializer.errors.items():
+            val = ', '.join(val)
+            res['errors'].append(f'{key}: {val}')
+        return Response(res)
 
     note = "No Note"
     if 'note' in serializer.validated_data:
@@ -273,11 +277,11 @@ def add_shipment(request):
         chem_shipment = ChemicalShipment.objects.create(
             chemical=chem,
             shipment=shipment,
-            old_quantity=chem.amount,
-            new_quantity=chem.amount+old['amount']
+            old_quantity=chem.quantity,
+            new_quantity=chem.quantity+old['quantity']
         )
 
-        chem.amount += old['amount']
+        chem.quantity += old['quantity']
         chem.save()
 
     if len(chem_error) > 0:
@@ -292,7 +296,7 @@ def add_shipment(request):
             chemical=chem,
             shipment=shipment,
             old_quantity=0,
-            new_quantity=chem.amount
+            new_quantity=chem.quantity
         )
 
     # For glassware
@@ -313,9 +317,9 @@ def add_shipment(request):
             glassware=glass,
             shipment=shipment,
             old_quantity=glass.quantity,
-            new_quantity=glass.quantity + old['amount']
+            new_quantity=glass.quantity + old['quantity']
         )
-        glass.quantity += old['amount']
+        glass.quantity += old['quantity']
         glass.save()
 
     if len(glass_error) > 0:
@@ -348,10 +352,10 @@ def add_shipment(request):
             instrument=inst,
             shipment=shipment,
             old_quantity=inst.quantity,
-            new_quantity=inst.quantity + old['amount']
+            new_quantity=inst.quantity + old['quantity']
         )
 
-        inst.quantity += old['amount']
+        inst.quantity += old['quantity']
         inst.save()
 
     if len(inst_error) > 0:
@@ -416,7 +420,7 @@ def make_issue(request):
         if obj['material_type'] == material_type[0]:
             chem = Chemical.objects.filter(pk=obj['id'])
             if chem.exists():
-                if chem[0].amount < obj['amount']:
+                if chem[0].quantity < obj['quantity']:
                     res['errors'].append(f"{chem[0].name} is not enough.")
                     flag = True
             else:
@@ -426,7 +430,7 @@ def make_issue(request):
         elif obj['material_type'] == material_type[1]:
             glass = Glassware.objects.filter(pk=obj['id'])
             if glass.exists():
-                if glass[0].quantity < int(obj['amount']):
+                if glass[0].quantity < int(obj['quantity']):
                     res['errors'].append(f"{glass[0].name} is not enough.")
                     flag = True
             else:
@@ -436,7 +440,7 @@ def make_issue(request):
         elif obj['material_type'] == material_type[2]:
             inst = Instrument.objects.filter(pk=obj['id'])
             if inst.exists():
-                if inst[0].quantity < int(obj['amount']):
+                if inst[0].quantity < int(obj['quantity']):
                     res['errors'].append(f"{inst[0].name} is not enough.")
                     flag = True
             else:
@@ -460,10 +464,10 @@ def make_issue(request):
             ChemicalIssue.objects.create(
                 chemical=chem,
                 issue=issue,
-                old_quantity=chem.amount,
-                new_quantity=chem.amount - obj['amount']
+                old_quantity=chem.quantity,
+                new_quantity=chem.quantity - obj['quantity']
             )
-            chem.amount = chem.amount - obj['amount']
+            chem.quantity = chem.quantity - obj['quantity']
             chem.save()
         elif obj['material_type'] == material_type[1]:
             glass = Glassware.objects.get(pk=obj['id'])
@@ -471,9 +475,9 @@ def make_issue(request):
                 glassware=glass,
                 issue=issue,
                 old_quantity=glass.quantity,
-                new_quantity=glass.quantity - obj['amount']
+                new_quantity=glass.quantity - obj['quantity']
             )
-            glass.quantity = glass.quantity - obj['amount']
+            glass.quantity = glass.quantity - obj['quantity']
             glass.save()
         elif obj['material_type'] == material_type[2]:
             inst = Instrument.objects.get(pk=obj['id'])
@@ -481,9 +485,9 @@ def make_issue(request):
                 instrument=inst,
                 issue=issue,
                 old_quantity=inst.quantity,
-                new_quantity=inst.quantity - obj['amount']
+                new_quantity=inst.quantity - obj['quantity']
             )
-            inst.quantity = inst.quantity - obj['amount']
+            inst.quantity = inst.quantity - obj['quantity']
             inst.save()
 
         res['message'] = 'Issue Created'
