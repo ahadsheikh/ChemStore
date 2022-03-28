@@ -12,12 +12,12 @@
         {
             "id": 1,
             "material_type": "CHEMICAL",
-            "amount": 1
+            "quantity": 1
         },
         {
             "id": 1,
             "material_type": "GLASSWARE",
-            "amount": 2
+            "quantity": 2
         }
     ]
 }

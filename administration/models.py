@@ -142,7 +142,7 @@ class Store(models.Model):
 
 class Shipment(models.Model):
     shipment_date = models.DateField()
-    note = models.CharField(max_length=200, blank=True, default="Write something about the shipment in 200 characters")
+    note = models.CharField(max_length=200, blank=True, default="Not not given.")
 
     created_at = models.DateTimeField(auto_now_add=True)
 
