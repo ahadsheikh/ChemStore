@@ -240,18 +240,12 @@ def add_shipment(request):
     """
     serializer = AddShipmentSerializer(data=request.data)
     res = {
-        "message": "Shipment Added",
-        "partial_update": False,
         "errors": []
     }
 
-    if not serializer.is_valid():
-        for key, val in serializer.errors.items():
-            val = ', '.join(val)
-            res['errors'].append(f'{key}: {val}')
-        return Response(res, status=status.HTTP_400_BAD_REQUEST)
+    serializer.is_valid(raise_exception=True)
 
-    note = "No Note"
+    note = "Note not given."
     if 'note' in serializer.validated_data:
         note = serializer.validated_data['note']
 
@@ -384,15 +378,11 @@ def make_issue(request):
 
     material_type = ["CHEMICAL", "GLASSWARE", "INSTRUMENT"]
 
-    res = {
-        "errors": []
-    }
+    serializer.is_valid(raise_exception=True)
 
-    if not serializer.is_valid():
-        for key, val in serializer.errors.items():
-            val = ', '.join(val)
-            res['errors'].append(f'{key}: {val}')
-        return Response(res)
+    res = {
+        'errors': []
+    }
 
     try:
         consumer = StoreConsumer.objects.get(pk=serializer.validated_data['consumer_id'])
