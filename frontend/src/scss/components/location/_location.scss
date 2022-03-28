@@ -46,7 +46,6 @@
 
 .location_specfic_container {
   margin-top: 4rem;
-  background-color: var(--color-primary-2);
   color: $color-white;
   margin-right: 2rem;
   flex-grow: 1;
@@ -54,5 +53,18 @@
     width: 96%;
     margin: auto;
   }
-  // height: 90rem;
+  
+}
+
+.location_specfic_message {
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
+  color: $color-white;
+  margin-right: 2rem;
+  flex-grow: 1;
+  @media (max-width: 950px) {
+    width: 96%;
+    margin: auto;
+  }
 }

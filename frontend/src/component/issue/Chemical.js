@@ -5,6 +5,7 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 const unitOption = ["ml"];
 
 const Chemical = (props) => {
+
   return (
     <div className="issue_chemical_container">
       <div className="issue_chemical_header">
@@ -46,8 +47,8 @@ const Chemical = (props) => {
             className="issue_content_container_top_input"
             type="number"
             placeholder="Amount"
-            name="amount"
-            value={props.data.amount}
+            name="quantity"
+            value={props.data.quantity}
             onChange={props.inputHandler}
           />
         </div>

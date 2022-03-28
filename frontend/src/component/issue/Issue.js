@@ -40,7 +40,7 @@ const Issue = (props) => {
 
   const issueHandler = (name) => {
     const issueListCopy = [...issueList];
-    issueListCopy.push({ material_type: name, amount: "", id: "" });
+    issueListCopy.push({ material_type: name, quantity: "", id: "" });
     setIssueList(issueListCopy);
   };
 
@@ -126,12 +126,23 @@ const Issue = (props) => {
     axios
       .post(`/api/management/make-issue/`, issueCredentialCopy)
       .then((res) => {
+        if(res.data.errors.length === 0) 
+          (() => toast(`Shipment Added.`))()
+        setIssueList([]);
+        setIssueCredential({
+          carrier_name: "",
+          note: "",
+          issue_date: "",
+        })
+        setIssError({ message: "Shipment Added", error: true });
         setLoading(false);
         console.log(res);
       })
       .catch((err) => {
+        if(err.response.data?.errors.length > 0) 
+          (() => toast(err.response.data?.errors[0]))()
         setLoading(false);
-        (() => toast(`Something Went Wrong`))()
+        
         console.log(err.response);
         setIssError({ message: "Something Went Wrong", error: true });
       });
@@ -177,7 +188,7 @@ const Issue = (props) => {
             <input
               className="issue_content_container_top_input"
               type="text"
-              placeholder="Refferer Name"
+              placeholder="Name"
               name="carrier_name"
               value={issueCredential.carrier_name}
               onChange={issueInputHandler}

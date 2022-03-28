@@ -42,8 +42,8 @@ const Instrument = (props) => {
         className="issue_content_container_top_input"
         type="number"
         placeholder="Amount"
-        name="amount"
-        value={props.data.amount}
+        name="quantity"
+        value={props.data.quantity}
         onChange={props.inputHandler}
       />
     </div>

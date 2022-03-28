@@ -24,6 +24,8 @@ const Location = ({ isShow = true }) => {
     InorganicLab: false,
     Personal: false,
   });
+  const [loading, setLoading] = useState(false);
+  const [flag, setFlag] = useState(false);
   const [seletedLab, setSelectedLab] = useState(-1);
   const [storeType, setStoreType] = useState({});
   const [storeTypeFlag, setStoreTypeFlag] = useState(false);
@@ -85,16 +87,21 @@ const Location = ({ isShow = true }) => {
   };
 
   const specficLabHandler = (id) => {
+    setFlag(false);
+    setLoading(true);
     dispatch(issueLabHandler(id));
     setSelectedLab(id);
-    id = 2;
+    setLoading(true);
     setSpecficLabContent({ content: [], loading: true });
     axios
       .get(`/api/userview/issues/consumer/${id}/`)
       .then((res) => {
+        setLoading(false);
+        setFlag(true);
         setSpecficLabContent({ content: res.data, loading: false });
       })
       .catch((err) => {
+        setLoading(false);
         console.log(err.response);
         setSpecficLabContent({ content: [], loading: false });
       });
@@ -274,8 +281,18 @@ const Location = ({ isShow = true }) => {
             </div>
           </div>
         </div>
+        {isShow && loading && (
+          <div className="location_specfic_message">
+          <div className="spinner-border text-light" style={{width: "5rem", height: "5rem"}} role="status">
+            <span className="visually-hidden text-center">Loading...</span>
+          </div>
+          </div>
+        )}
+        {isShow && flag && specficLabContent.content.length === 0 && <div className="location_specfic_message">
+        <h1 style={{textAlign: "center"}}>Nothing Found</h1>
+        </div> }
         {isShow && (
-          <div className="location_specfic_container">
+          <div className="location_specfic_container background_color_black">
             <div>
               {specficLabContent.content.map((el, i) => (
                 <SpecficIssue key={i} item={el} />

@@ -252,13 +252,13 @@ const Main = (props) => {
       .post(`/api/management/add-shipment/`, finalObj)
       .then((res) => {
         setIsError({error: true, message: `Successfully Added Shipment`})
-        if(res.data.errors.length === 0)
+        if(res.data?.errors.length === 0)
           (() => toast(`Successfully Added Shipment`))() 
         setCredential([])
         setLoading(false)
       })
       .catch((err) => {
-        if(err.response.data.errors.length>0) 
+        if(err.response.data?.errors.length>0) 
           (() => toast(`Please provide Valid Data.`))()
         setLoading(false)
         setIsError({error: true, message: "Please provide Valid Data."})

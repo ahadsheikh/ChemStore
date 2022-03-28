@@ -18,7 +18,7 @@ const SpecficIssue = (props) => {
             {props.item.chemicals.map((el, i) => (
               <div key={i} className="specfic_issue_one_item">
                 <p className="specfic_issue_one_item_name">{el.name}</p>
-                <p className="specfic_issue_one_item_amount">{el.amount}</p>
+                <p className="specfic_issue_one_item_amount">{el.quantity} ml</p>
               </div>
             ))}
           </div>
@@ -32,7 +32,7 @@ const SpecficIssue = (props) => {
             {props.item.instruments.map((el, i) => (
               <div key={i} className="specfic_issue_one_item">
                 <p className="specfic_issue_one_item_name">{el.name}</p>
-                <p className="specfic_issue_one_item_amount">{el.amount}</p>
+                <p className="specfic_issue_one_item_amount">{el.quantity} pieces</p>
               </div>
             ))}
           </div>
@@ -45,7 +45,7 @@ const SpecficIssue = (props) => {
             {props.item.glasswares.map((el, i) => (
               <div key={i} className="specfic_issue_one_item">
                 <p className="specfic_issue_one_item_name">{el.name}</p>
-                <p className="specfic_issue_one_item_amount">{el.amount}</p>
+                <p className="specfic_issue_one_item_amount">{el.quantity} pieces</p>
               </div>
             ))}
           </div>
