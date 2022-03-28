@@ -82,6 +82,7 @@ const UserManagment = () => {
 
   ///// FOR UPDATEING USER
   const updateUserHandler = () => {
+    
     setResp({ message: "", loading: true, error: false });
     axios
       .patch(`/api/management/users/${user.id}/`, user)
@@ -121,16 +122,22 @@ const UserManagment = () => {
   };
 
   const createNewUserHandler = () => {
-    console.log(newUser);
+    setResp({ message: "", loading: true, error: false });
     axios
       .post(`/api/management/users/`, newUser)
       .then((res) => {
         getUserFirstTimeHandler();
         console.log(res);
         handleClose();
+        setResp({ message: "", loading: false, error: false });
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
+        setResp({
+          message: "Something Went Wrong",
+          loading: false,
+          error: false,
+        });
       });
   };
   return (
@@ -362,7 +369,8 @@ const UserManagment = () => {
                     </td>
                     <td className="user_managment_table_body_row_data">
                       <div className="user_managment_btn_container">
-                        <div
+                        <button
+                          disabled={el.is_superuser}
                           className="user_managment_action_btn detail"
                           onClick={() => handleShow("password")}
                         >
@@ -370,8 +378,9 @@ const UserManagment = () => {
                             style={{ fontSize: "1.1rem" }}
                             icon={faLock}
                           />
-                        </div>
-                        <div
+                        </button>
+                        <button
+                        disabled={el.is_superuser}
                           className="user_managment_action_btn detail"
                           onClick={() =>
                             handleShow(
@@ -387,8 +396,9 @@ const UserManagment = () => {
                             style={{ fontSize: "1.1rem" }}
                             icon={faPencilAlt}
                           />
-                        </div>
-                        <div
+                        </button>
+                        <button
+                        disabled={el.is_superuser}
                           className="user_managment_action_btn delete"
                           onClick={() =>
                             handleShow(
@@ -404,7 +414,7 @@ const UserManagment = () => {
                             style={{ fontSize: "1.1rem" }}
                             icon={faTimes}
                           />
-                        </div>
+                        </button>
                       </div>
                     </td>
                   </tr>

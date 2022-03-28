@@ -50,3 +50,12 @@
 #dropdown-basic::after {
   display: none;
 }
+
+.issue_button {
+  width: 100%;
+  padding: 1rem 0;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}

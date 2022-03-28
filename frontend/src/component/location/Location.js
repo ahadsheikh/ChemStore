@@ -24,6 +24,7 @@ const Location = ({ isShow = true }) => {
     InorganicLab: false,
     Personal: false,
   });
+  const [seletedLab, setSelectedLab] = useState(-1);
   const [storeType, setStoreType] = useState({});
   const [storeTypeFlag, setStoreTypeFlag] = useState(false);
   const [show, setShow] = useState({ create: false });
@@ -85,6 +86,7 @@ const Location = ({ isShow = true }) => {
 
   const specficLabHandler = (id) => {
     dispatch(issueLabHandler(id));
+    setSelectedLab(id);
     id = 2;
     setSpecficLabContent({ content: [], loading: true });
     axios
@@ -183,7 +185,13 @@ const Location = ({ isShow = true }) => {
                 <div className="location_title_item">
                   {storeTypeFlag &&
                     storeType.PhysicalLab.map((el) => (
-                      <p key={el.id} onClick={() => specficLabHandler(el.id)}>
+                      <p
+                        className={
+                          el.id === seletedLab ? "seleted_location" : ""
+                        }
+                        key={el.id}
+                        onClick={() => specficLabHandler(el.id)}
+                      >
                         <FontAwesomeIcon icon={faChevronRight} /> {el.name}
                       </p>
                     ))}
@@ -202,7 +210,13 @@ const Location = ({ isShow = true }) => {
                 <div className="location_title_item">
                   {storeTypeFlag &&
                     storeType.OrganicLab.map((el) => (
-                      <p key={el.id} onClick={() => specficLabHandler(el.id)}>
+                      <p
+                        className={
+                          el.id === seletedLab ? "seleted_location" : ""
+                        }
+                        key={el.id}
+                        onClick={() => specficLabHandler(el.id)}
+                      >
                         <FontAwesomeIcon icon={faChevronRight} /> {el.name}
                       </p>
                     ))}
@@ -221,7 +235,13 @@ const Location = ({ isShow = true }) => {
                 <div className="location_title_item">
                   {storeTypeFlag &&
                     storeType.InorganicLab.map((el) => (
-                      <p key={el.id} onClick={() => specficLabHandler(el.id)}>
+                      <p
+                        className={
+                          el.id === seletedLab ? "seleted_location" : ""
+                        }
+                        key={el.id}
+                        onClick={() => specficLabHandler(el.id)}
+                      >
                         <FontAwesomeIcon icon={faChevronRight} /> {el.name}
                       </p>
                     ))}
@@ -239,7 +259,13 @@ const Location = ({ isShow = true }) => {
                 <div className="location_title_item">
                   {storeTypeFlag &&
                     storeType.Personal.map((el) => (
-                      <p key={el.id} onClick={() => specficLabHandler(el.id)}>
+                      <p
+                        className={
+                          el.id === seletedLab ? "seleted_location" : ""
+                        }
+                        key={el.id}
+                        onClick={() => specficLabHandler(el.id)}
+                      >
                         <FontAwesomeIcon icon={faChevronRight} /> {el.name}
                       </p>
                     ))}
@@ -248,13 +274,15 @@ const Location = ({ isShow = true }) => {
             </div>
           </div>
         </div>
-        <div className="location_specfic_container">
-          <div>
-            {specficLabContent.content.map((el, i) => (
-              <SpecficIssue key={i} item={el} />
-            ))}
+        {isShow && (
+          <div className="location_specfic_container">
+            <div>
+              {specficLabContent.content.map((el, i) => (
+                <SpecficIssue key={i} item={el} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

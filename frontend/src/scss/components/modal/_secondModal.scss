@@ -42,6 +42,9 @@
     border-radius: 0.3rem;
     margin-left: 1rem;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     &_container {
       display: flex;
       justify-content: flex-end;

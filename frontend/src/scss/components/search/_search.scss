@@ -2,6 +2,10 @@
   &_container {
     width: 80%;
     margin: 4rem auto;
+
+    @media (max-width: 800px) {
+      width: 96%;
+    }
   }
 
   &_input_box_container {
@@ -31,6 +35,24 @@
         font-size: 1.8rem;
       }
     }
+  }
+}
+
+.search_result_table {
+  &_container {
+    width: 80%;
+    margin: auto;
+    @media (max-width: 800px) {
+      width: 96%;
+    }
+  }
+
+  &_header {
+    background-color: var(--color-primary-3);
+    &_title {
+      padding: 1rem 0;
+    }
+
   }
 }
 
