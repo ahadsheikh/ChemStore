@@ -249,7 +249,7 @@ def add_shipment(request):
         for key, val in serializer.errors.items():
             val = ', '.join(val)
             res['errors'].append(f'{key}: {val}')
-        return Response(res)
+        return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
     note = "No Note"
     if 'note' in serializer.validated_data:
