@@ -27,7 +27,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "django_build": "react-scripts build && rm -rf ../templates/* && rm -rf ../static/* && cp -r build/static/* ../static/ && rm -rf ../templates/static",
+    "django_build": "react-scripts build && rm -rf ../templates/* && rm -rf ../static/* && cp -r build/* ../templates/ && cp -r build/static/* ../static/ && rm -rf ../templates/static",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
