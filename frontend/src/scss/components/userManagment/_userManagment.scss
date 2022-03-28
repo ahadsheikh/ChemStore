@@ -32,6 +32,17 @@
   color: $color-white;
   cursor: pointer;
   border-radius: 0.2rem;
+  border: none;
+  outline: none;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: var(--color-Grey-light-4);
+  }
+  &:hover:disabled {
+    cursor: not-allowed;
+    background-color: var(--color-Grey-light-4);
+  }
 }
 
 .detail {

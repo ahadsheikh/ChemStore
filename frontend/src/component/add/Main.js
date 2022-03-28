@@ -8,6 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../../redux/Container";
 import axios from "../../axios/axios";
 import Textarea from "../input/Textarea";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {} from "../..";
 
 const dummyChemical = {
   CAS_RN: "",
@@ -21,6 +24,22 @@ const dummyChemical = {
   state: "",
   supplier: "",
   type: "",
+};
+
+const dummyInstrument = {
+  name: "",
+  manufacturer: "",
+  supplier: "",
+  quantity: "",
+};
+
+const dummyGlassware = {
+  name: "",
+  manufacturer: "",
+  supplier: "",
+  size: "",
+  material_type: "",
+  quantity: "",
 };
 
 const Main = (props) => {
@@ -41,8 +60,11 @@ const Main = (props) => {
     instrument: "",
     glassWare: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState({error: false, message: ""})
   const [notes, setNotes] = useState("");
   const notesHandler = (e) => setNotes(e.target.value);
+  const [gotError, setGotError] = useState(false)
 
   ///// MAKE SERVER REQUEST
   const fuzzySearchHandler = (value, name) => {
@@ -83,17 +105,38 @@ const Main = (props) => {
 
   //////IF ELEMENT EAIST THEN THEN CONSITIONALLY ADD THAT TYPE OF CREDENTIAL
   const foundChemicalHandler = (name, type, isNew, el = dummyChemical) => {
+    console.log(el, isNew, type);
     const copyCredential = [...credential];
-    if (!isNew) {
-      el.name = name;
-    }
-    if (type === "chemical") {
+
+    if (type === "chemical" && isNew) {
       copyCredential.push({ ...el, type: "chemical", isNew });
-    } else if (type === "instrument") {
+    } else if (type === "chemical" && !isNew) {
+      copyCredential.push({
+        ...dummyChemical,
+        name: name,
+        type: "chemical",
+        isNew,
+      });
+    } else if (type === "instrument" && isNew) {
       copyCredential.push({ ...el, type: "instrument", isNew });
-    } else {
+    } else if (type === "instrument" && !isNew) {
+      copyCredential.push({
+        ...dummyInstrument,
+        name: name,
+        type: "instrument",
+        isNew,
+      });
+    } else if (type === "glassWare" && isNew) {
       copyCredential.push({ ...el, type: "glassware", isNew });
+    } else if (type === "glassWare" && !isNew) {
+      copyCredential.push({
+        ...dummyGlassware,
+        name: name,
+        type: "glassware",
+        isNew,
+      });
     }
+    console.log(copyCredential);
     setFuzzySearch([]);
     setCredential(copyCredential);
     closeModalHandler();
@@ -118,6 +161,7 @@ const Main = (props) => {
 
   //// SUBMIT SHIPMENT
   const submitShipmentHandler = () => {
+    setLoading(true)
     const date = new Date();
     let finalObj = {
       shipment_date: `${date.getFullYear()}-${
@@ -144,19 +188,28 @@ const Main = (props) => {
         finalObj = {
           ...finalObj,
           ...finalObj.chemical,
-          new: finalObj.chemical.new.push(item),
+          new: finalObj.chemical.new.push({
+            ...item,
+            store: process.env.REACT_APP_STORE_ID,
+          }),
         };
       } else if (item.type === "chemical" && item.isNew) {
         finalObj = {
           ...finalObj,
           ...finalObj.chemical,
-          old: finalObj.chemical.old.push({ id: item.id, amount: item.amount }),
+          old: finalObj.chemical.old.push({
+            id: item.id,
+            quantity: item.quantity,
+          }),
         };
       } else if (item.type === "instrument" && !item.isNew) {
         finalObj = {
           ...finalObj,
           ...finalObj.instrument,
-          new: finalObj.instrument.new.push(item),
+          new: finalObj.instrument.new.push({
+            ...item,
+            store: process.env.REACT_APP_STORE_ID,
+          }),
         };
       } else if (item.type === "instrument" && item.isNew) {
         finalObj = {
@@ -164,14 +217,17 @@ const Main = (props) => {
           ...finalObj.instrument,
           old: finalObj.instrument.old.push({
             id: item.id,
-            amount: item.amount,
+            quantity: item.quantity,
           }),
         };
       } else if (item.type === "glassware" && !item.isNew) {
         finalObj = {
           ...finalObj,
           ...finalObj.glassware,
-          new: finalObj.glassware.new.push(item),
+          new: finalObj.glassware.new.push({
+            ...item,
+            store: process.env.REACT_APP_STORE_ID,
+          }),
         };
       } else if (item.type === "glassware" && item.isNew) {
         finalObj = {
@@ -179,7 +235,7 @@ const Main = (props) => {
           ...finalObj.glassware,
           old: finalObj.glassware.old.push({
             id: item.id,
-            amount: item.amount,
+            quantity: item.quantity,
           }),
         };
       }
@@ -189,21 +245,32 @@ const Main = (props) => {
       delete finalObj.old;
     } catch {}
 
+    setTimeout(() => {
+
+   
     axios
       .post(`/api/management/add-shipment/`, finalObj)
       .then((res) => {
-        console.log(res.data);
+        setIsError({error: true, message: `Successfully Added Shipment`})
+        if(res.data.errors.length === 0)
+          (() => toast(`Successfully Added Shipment`))() 
+        setCredential([])
+        setLoading(false)
       })
       .catch((err) => {
-        console.log(err.response);
+        if(err.response.data.errors.length>0) 
+          (() => toast(`Please provide Valid Data.`))()
+        setLoading(false)
+        setIsError({error: true, message: "Please provide Valid Data."})
       });
-    console.log(finalObj);
+    }, 1000)
   };
 
   ////////SHOW UI TO USER
 
   return (
     <>
+    {isError.error && <ToastContainer />}
       {/* MODAL FOR ADDING CHEMICAL */}
       {/* <button onClick={checkDataHandler}>Check</button>
       <button onClick={submitShipmentHandler}>Submit</button> */}
@@ -294,6 +361,7 @@ const Main = (props) => {
               <button
                 onClick={submitShipmentHandler}
                 className="add_credential_submit_btn"
+                disabled={loading}
               >
                 Submit
               </button>

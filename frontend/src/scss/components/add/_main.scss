@@ -31,4 +31,8 @@
   width: 100%;
   // min-width: 50rem;
   color: black;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 }

@@ -25,6 +25,7 @@ const AddChemical = (props) => {
             value={props.valueObj.CAS_RN}
             handler={props.handler}
             readOnly={props.readOnly}
+            isRequired={true}
           />
         </div>
         <Input
@@ -35,6 +36,7 @@ const AddChemical = (props) => {
           value={props.valueObj.name}
           handler={props.handler}
           readOnly={props.readOnly}
+          isRequired={true}
         />
         <Input
           type="text"
@@ -44,6 +46,7 @@ const AddChemical = (props) => {
           value={props.valueObj.purity}
           handler={props.handler}
           readOnly={props.readOnly}
+          isRequired={true}
         />
         <Input
           type="text"
@@ -53,6 +56,7 @@ const AddChemical = (props) => {
           value={props.valueObj.molecular_formula}
           handler={props.handler}
           readOnly={props.readOnly}
+          isRequired={true}
         />
         <Input
           type="text"
@@ -62,6 +66,7 @@ const AddChemical = (props) => {
           value={props.valueObj.manufacturer}
           handler={props.handler}
           readOnly={props.readOnly}
+          isRequired={true}
         />
         <Input
           type="text"
@@ -71,6 +76,7 @@ const AddChemical = (props) => {
           value={props.valueObj.supplier}
           handler={props.handler}
           readOnly={props.readOnly}
+          isRequired={true}
         />
         <select
           className="issue_content_container_top_input"
@@ -78,7 +84,9 @@ const AddChemical = (props) => {
           value={props.valueObj.state}
           onChange={props.handler}
           disabled={props.readOnly}
+          required
         >
+           <option value="" disabled selected>Please Choose...</option>
           <option value="SOLID">Solid</option>
           <option value="LIQUID">Liquid</option>
           <option value="GAS">Gas</option>
@@ -89,10 +97,11 @@ const AddChemical = (props) => {
               type="number"
               placeholder="Amount"
               bckColor="color_black "
-              name="amount"
-              value={props.valueObj.amount}
+              name="quantity"
+              value={props.valueObj.quantity}
               handler={props.handler}
               readOnly={false}
+              isRequired={true}
             />
           </div>
           <div className="add_chemical_select_div_right_div">

@@ -10,6 +10,7 @@ function Input(props) {
       value={props.value}
       onChange={props.handler}
       readOnly={props.readOnly}
+      required={props.isRequired}
     />
   );
 }

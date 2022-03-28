@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
-import { Button, Dropdown } from "react-bootstrap";
+import { Button, Dropdown, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import Chemical from "./Chemical";
@@ -7,12 +7,15 @@ import Instrument from "./Instrument";
 import GlassWare from "./GlassWare";
 import Location from "../location/Location";
 import axios from "../../axios/axios";
+import { withRouter } from "react-router";
 import Header from "../add/Header";
 import { issueLabHandler } from "../../redux/StoreManagment";
 import { useDispatch, useSelector } from "react-redux";
-import Error from "./Error";
+import Error from "../../component/error/Error";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Issue = () => {
+const Issue = (props) => {
   const dispatch = useDispatch();
   const { issueLab } = useSelector((state) => state.StoreManagment);
   const [issueList, setIssueList] = useState([]);
@@ -24,7 +27,7 @@ const Issue = () => {
   });
 
   const [isError, setIssError] = useState({ message: "", error: false });
-
+  const [loading, setLoading] = useState(false);
   const [issueCredential, setIssueCredential] = useState({
     carrier_name: "",
     note: "",
@@ -86,23 +89,51 @@ const Issue = () => {
   };
 
   const submitIssueHandler = () => {
+   
+    setIssError({ message: "", error: false });
     const issueCredentialCopy = { ...issueCredential, consumer_id: issueLab };
+    console.log(issueCredentialCopy);
+
+    if(issueCredentialCopy.carrier_name === "") {
+      (() => toast(`Carrier Name is Required`))()
+      setIssError({ message: "Carrier Name is Required", error: true })
+      return;
+    } else if(issueCredentialCopy.issue_date === "") {
+      (() => {toast(`Issue Date is Required`)})()
+      setIssError({ message: "Issue Date is Required", error: true })
+      return;
+    } else if(issueCredentialCopy.consumer_id === "") {
+      (() => toast(`Please Select a Loaction`))()
+      setIssError({ message: "Please Select a Loaction", error: true })
+      return;
+    } else if(issueList.length === 0) {
+      (() => toast(`Nothing to Issue`))()
+      setIssError({ message: "Nothing to Issue", error: true })
+      return;
+    }
+
     const issueListCopy = [...issueList];
     issueListCopy.forEach((issue) => {
       if (issue.material_type === "CHEMICAL") delete issue.chemical;
       else if (issue.material_type === "INSTRUMENT") delete issue.instrument;
       else if (issue.material_type === "GLASSWARE") delete issue.glassware;
     });
+    console.log(issueList)
     issueCredentialCopy.objects = issueListCopy;
-    setIssError({ message: "", error: false });
+    
+    setLoading(true);
+    
     axios
       .post(`/api/management/make-issue/`, issueCredentialCopy)
       .then((res) => {
+        setLoading(false);
         console.log(res);
       })
       .catch((err) => {
+        setLoading(false);
+        (() => toast(`Something Went Wrong`))()
         console.log(err.response);
-        setIssError({ message: err.response.data.errors[0], error: true });
+        setIssError({ message: "Something Went Wrong", error: true });
       });
 
     console.log(issueCredentialCopy);
@@ -136,7 +167,9 @@ const Issue = () => {
 
   return (
     <>
-      {isError.error && <Error message={isError.message} />}
+      {/* {isError.error && <Error message={isError.message} />}
+       */}
+       {isError.error && <ToastContainer />}
       <div className="issue_container">
         <Header text="Create An Issue" />
         <div className="issue_content_container">
@@ -264,9 +297,26 @@ const Issue = () => {
               </Dropdown.Menu>
             </Dropdown>
 
-            <Button variant="dark" onClick={submitIssueHandler}>
-              Submit
-            </Button>
+            <button onClick={submitIssueHandler} className="issue_button" disabled={loading}>Submit</button>
+
+            {/* <Button
+              variant="primary"
+              onClick={submitIssueHandler}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              disabled={loading}
+            >
+              {loading && (
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              )}{" "}
+              <span  >Submit</span>
+              
+            </Button> */}
           </div>
         </div>
       </div>

@@ -27,7 +27,7 @@ const Sidebar = (props) => {
         aria-controls="example-collapse-text"
         aria-expanded={open.crential}
       >
-        Add Chemical <FontAwesomeIcon icon={faAngleDown} />
+        Add Shipment <FontAwesomeIcon icon={faAngleDown} />
       </button>
       <Collapse in={open.crential}>
         <div className="add_chemical_collaps_btn_div">
