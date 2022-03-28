@@ -92,7 +92,7 @@ class Chemical(models.Model):
     manufacturer = models.CharField(max_length=50)
     supplier = models.CharField(max_length=50)
     state = models.CharField(max_length=6, choices=STATES_CHOICES)
-    amount = models.FloatField(default=0.0, blank=True)
+    quantity = models.FloatField(default=0.0, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

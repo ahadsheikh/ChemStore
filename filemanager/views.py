@@ -16,5 +16,18 @@ class FileViewset(mixins.CreateModelMixin,
                   mixins.RetrieveModelMixin,
                   mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
-    queryset = File.objects.all()
+    """
+    list method support parameter as query.
+    these query can be: category
+    """
     serializer_class = FileSerializer
+
+    def get_queryset(self):
+        params = self.request.query_params
+        if 'category' in params:
+            category = Category.objects.filter(name=params['category'])
+            if len(category) > 0:
+                return category[0].file_set.all()
+        return File.objects.all()
+
+

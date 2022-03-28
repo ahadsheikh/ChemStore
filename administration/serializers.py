@@ -30,7 +30,7 @@ class ChemicalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chemical
         fields = ['id', 'CAS_RN', 'name', 'molecular_formula', 'molecular_weight', 'purity',
-                  'manufacturer', 'supplier', 'state', 'amount']
+                  'manufacturer', 'supplier', 'state', 'quantity']
 
 
 class ChemicalUpdateSerializer(serializers.ModelSerializer):
@@ -38,7 +38,7 @@ class ChemicalUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chemical
         fields = ['CAS_RN', 'name', 'purity', 'molecular_formula',
-                  'manufacturer', 'supplier', 'state', 'amount']
+                  'manufacturer', 'supplier', 'state', 'quantity']
 
 
 class ChemicalCreateSerializer(serializers.ModelSerializer):
@@ -48,7 +48,7 @@ class ChemicalCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chemical
         fields = ['store', 'CAS_RN', 'name', 'purity', 'molecular_formula',
-                  'manufacturer', 'supplier', 'state', 'amount']
+                  'manufacturer', 'supplier', 'state', 'quantity']
 
     def create(self, validated_data):
         mf = validated_data.get('molecular_formula')
@@ -76,7 +76,7 @@ class ChemicalCreateSerializer(serializers.ModelSerializer):
         instance.manufacturer = validated_data.get('manufacturer', instance.manufacturer)
         instance.supplier = validated_data.get('supplier', instance.supplier)
         instance.state = validated_data.get('state', instance.state)
-        instance.amount = validated_data.get('amount', instance.amount)
+        instance.quantity = validated_data.get('quantity', instance.quantity)
         instance.save()
         return instance
 
@@ -150,7 +150,7 @@ class ShipmentSerializer(serializers.ModelSerializer):
 # Serializers for AddShipmentSerializer
 class OldData(serializers.Serializer):
     id = serializers.IntegerField()
-    amount = serializers.FloatField()
+    quantity = serializers.FloatField()
 
 
 class ChemicalShipment(serializers.Serializer):
@@ -183,7 +183,7 @@ class IssueSerializer(serializers.Serializer):
     """
     id = serializers.IntegerField()
     material_type = serializers.CharField(max_length=10)
-    amount = serializers.FloatField()
+    quantity = serializers.FloatField()
 
 
 class MakeIssueSerializer(serializers.Serializer):
