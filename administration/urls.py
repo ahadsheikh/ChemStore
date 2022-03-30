@@ -26,7 +26,9 @@ router.register(r'glasswares', GlasswareViewSet, basename='glassware')
 router.register(r'instruments', InstrumentViewSet, basename='instrument')
 router.register(r'stores', StoreViewSet, basename='store')
 router.register(r'store-consumers', StoreConsumerViewset, basename='store_consumer')
-router.register(r'temp-shipment', shipment.ChemicalTempShipmentViewSet, basename='temp_shipment')
+router.register(r'chemical-temp-shipment', shipment.ChemicalTempShipmentViewSet, basename='chemical_temp_shipment')
+router.register(r'glassware-temp-shipment', shipment.GlasswareTempShipmentViewSet, basename='glassware_temp_shipment')
+router.register(r'instrument-temp-shipment', shipment.InstrumentTempShipmentViewSet, basename='instrument_temp_shipment')
 
 urlpatterns = [
     # path('', login_required(AdminHome.as_view()), name="admin_home"),

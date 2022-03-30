@@ -97,7 +97,7 @@ class Chemical(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.quantity}"
 
 
 class Glassware(models.Model):
@@ -111,7 +111,7 @@ class Glassware(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.quantity}"
 
 
 class Instrument(models.Model):
@@ -123,7 +123,7 @@ class Instrument(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.quantity}"
 
 
 class Store(models.Model):
