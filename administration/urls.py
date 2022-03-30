@@ -14,6 +14,7 @@ from .views.base import (
     make_issue,
     consumers_tree
 )
+from .views import shipment
 from .views.utils import consumer_store_types
 
 from .views.users import UserViewset
@@ -25,6 +26,7 @@ router.register(r'glasswares', GlasswareViewSet, basename='glassware')
 router.register(r'instruments', InstrumentViewSet, basename='instrument')
 router.register(r'stores', StoreViewSet, basename='store')
 router.register(r'store-consumers', StoreConsumerViewset, basename='store_consumer')
+router.register(r'temp-shipment', shipment.ChemicalTempShipmentViewSet, basename='temp_shipment')
 
 urlpatterns = [
     # path('', login_required(AdminHome.as_view()), name="admin_home"),

@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.models import update_last_login
 from rest_framework_simplejwt.settings import api_settings
 
-from administration.serializers import UserSerializer, UserPasswordSerializer, UserCreateSerializer
+from administration.serializers.serializers import UserSerializer, UserPasswordSerializer, UserCreateSerializer
 
 User = get_user_model()
 
