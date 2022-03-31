@@ -140,9 +140,15 @@ class Store(models.Model):
         return self.name
 
 
-class Shipment(models.Model):
-    shipment_date = models.DateField()
+shipment_choices = (
+    ('CHEMICAL', 'Chemical'),
+    ('GLASSWARE', 'Glassware'),
+    ('INSTRUMENT', 'Instrument')
+)
 
+
+class Shipment(models.Model):
+    shipment_type = models.CharField(choices=shipment_choices, max_length=10, default='CHEMICAL')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

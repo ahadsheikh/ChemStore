@@ -1,13 +1,15 @@
 from rest_framework import serializers
 
 from administration.models import ChemicalTempShipment, GlasswareTempShipment, InstrumentTempShipment
+from administration.serializers.serializers import ChemicalSerializer, GlasswareSerializer, InstrumentSerializer
 
 
 class ChemicalTempShipmentSerializer(serializers.ModelSerializer):
+    chemical = ChemicalSerializer()
 
     class Meta:
         model = ChemicalTempShipment
-        fields = ['id', 'chemical', 'old_total', 'quantity']
+        fields = ['id', 'chemical', 'quantity']
 
 
 class ChemicalTempShipmentCreateSerializer(serializers.ModelSerializer):
@@ -40,10 +42,11 @@ class ChemicalTempShipmentCreateSerializer(serializers.ModelSerializer):
 
 
 class GlasswareTempShipmentSerializer(serializers.ModelSerializer):
+    glassware = GlasswareSerializer()
 
     class Meta:
         model = GlasswareTempShipment
-        fields = ['id', 'glassware', 'old_total', 'quantity']
+        fields = ['id', 'glassware', 'quantity']
 
 
 class GlasswareTempShipmentCreateSerializer(serializers.ModelSerializer):
@@ -76,10 +79,11 @@ class GlasswareTempShipmentCreateSerializer(serializers.ModelSerializer):
 
 
 class InstrumentTempShipmentSerializer(serializers.ModelSerializer):
+    instrument = InstrumentSerializer()
 
     class Meta:
         model = InstrumentTempShipment
-        fields = ['id', 'instrument', 'old_total', 'quantity']
+        fields = ['id', 'instrument', 'quantity']
 
 
 class InstrumentTempShipmentCreateSerializer(serializers.ModelSerializer):

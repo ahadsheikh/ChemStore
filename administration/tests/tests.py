@@ -12,7 +12,6 @@ class FuzzySearchTestCase(TestCase):
         """Animals that can speak are correctly identified"""
         user = User.objects.get(email='aaa@chemstore.com')
         self.assertEqual(user.password, 'hahaha')
-        print("Hahah")
 
     def test_hello_world(self):
         """Mock test"""

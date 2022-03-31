@@ -3,7 +3,8 @@ from rest_framework import status
 from django.urls import reverse
 
 from administration.models import ChemicalTempShipment, Chemical, Glassware, \
-    Instrument, GlasswareTempShipment, InstrumentTempShipment
+    Instrument, GlasswareTempShipment, InstrumentTempShipment, ChemicalShipment, \
+    Shipment, GlasswareShipment, InstrumentShipment
 from core.utils import molar_mass
 
 
@@ -23,6 +24,7 @@ class ChemicalTempShipmentTestCase(APITestCase):
     def setUp(self) -> None:
         self.url = reverse('chemical_temp_shipment-list')
         self.url_detail = reverse('chemical_temp_shipment-detail', args=[1])
+        self.url_merge = reverse('chemical_temp_shipment-merge')
 
     def test_chemical_temp_shipment_create(self):
         response = self.client.post(self.url, {
@@ -114,8 +116,8 @@ class ChemicalTempShipmentTestCase(APITestCase):
         response = self.client.get(self.url_detail, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['chemical'], chem.id)
-        self.assertEqual(response.data['old_total'], chem.quantity)
+        self.assertEqual(response.data['chemical']['id'], chem.id)
+        self.assertEqual(response.data['chemical']['quantity'], chem.quantity)
         self.assertEqual(response.data['quantity'], 10)
 
     def test_chemical_temp_shipment_delete(self):
@@ -126,6 +128,24 @@ class ChemicalTempShipmentTestCase(APITestCase):
         response = self.client.delete(self.url_detail, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(ChemicalTempShipment.objects.count(), 0)
+
+    def test_chemical_temp_shipment_merge(self):
+        chem = Chemical.objects.get(name='test_chemical')
+        chem2 = Chemical.objects.get(name='test_chemical2')
+        ChemicalTempShipment.objects.create(
+            chemical=chem, old_total=chem.quantity, quantity=10
+        )
+        ChemicalTempShipment.objects.create(
+            chemical=chem2, old_total=chem2.quantity, quantity=10
+        )
+        response = self.client.post(self.url_merge, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Shipment.objects.all().count(), 1)
+        self.assertEqual(ChemicalShipment.objects.all().count(), 2)
+        self.assertEqual(Chemical.objects.get(name='test_chemical').quantity, chem.quantity - 10)
+        self.assertEqual(Chemical.objects.get(name='test_chemical2').quantity, chem2.quantity - 10)
         self.assertEqual(ChemicalTempShipment.objects.count(), 0)
 
 
@@ -145,6 +165,7 @@ class GlasswareTempShipmentTestCase(APITestCase):
     def setUp(self) -> None:
         self.url = reverse('glassware_temp_shipment-list')
         self.url_detail = reverse('glassware_temp_shipment-detail', args=[1])
+        self.url_merge = reverse('glassware_temp_shipment-merge')
 
     def test_glassware_temp_shipment_create(self):
         response = self.client.post(self.url, {
@@ -236,8 +257,8 @@ class GlasswareTempShipmentTestCase(APITestCase):
         response = self.client.get(self.url_detail, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['glassware'], glassware.id)
-        self.assertEqual(response.data['old_total'], glassware.quantity)
+        self.assertEqual(response.data['glassware']['id'], glassware.id)
+        self.assertEqual(response.data['glassware']['quantity'], glassware.quantity)
         self.assertEqual(response.data['quantity'], 10)
 
     def test_glassware_temp_shipment_delete(self):
@@ -248,6 +269,24 @@ class GlasswareTempShipmentTestCase(APITestCase):
         response = self.client.delete(self.url_detail, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(GlasswareTempShipment.objects.count(), 0)
+
+    def test_glassware_temp_shipment_merge(self):
+        glassware = Glassware.objects.get(name='test_glassware')
+        glassware2 = Glassware.objects.get(name='test_glassware2')
+        GlasswareTempShipment.objects.create(
+            glassware=glassware, old_total=glassware.quantity, quantity=10
+        )
+        GlasswareTempShipment.objects.create(
+            glassware=glassware2, old_total=glassware2.quantity, quantity=10
+        )
+        response = self.client.post(self.url_merge, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Shipment.objects.all().count(), 1)
+        self.assertEqual(GlasswareShipment.objects.all().count(), 2)
+        self.assertEqual(Glassware.objects.get(name='test_glassware').quantity, glassware.quantity - 10)
+        self.assertEqual(Glassware.objects.get(name='test_glassware2').quantity, glassware2.quantity - 10)
         self.assertEqual(GlasswareTempShipment.objects.count(), 0)
 
 
@@ -265,6 +304,7 @@ class InstrumentTempShipmentTestCase(APITestCase):
     def setUp(self) -> None:
         self.url = reverse('instrument_temp_shipment-list')
         self.url_detail = reverse('instrument_temp_shipment-detail', args=[1])
+        self.url_merge = reverse('instrument_temp_shipment-merge')
 
     def test_instrument_temp_shipment_create(self):
         response = self.client.post(self.url, {
@@ -357,8 +397,8 @@ class InstrumentTempShipmentTestCase(APITestCase):
         response = self.client.get(self.url_detail, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['instrument'], instrument.id)
-        self.assertEqual(response.data['old_total'], instrument.quantity)
+        self.assertEqual(response.data['instrument']['id'], instrument.id)
+        self.assertEqual(response.data['instrument']['quantity'], instrument.quantity)
         self.assertEqual(response.data['quantity'], 10)
 
     def test_instrument_temp_shipment_delete(self):
@@ -369,4 +409,22 @@ class InstrumentTempShipmentTestCase(APITestCase):
         response = self.client.delete(self.url_detail, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(InstrumentTempShipment.objects.count(), 0)
+
+    def test_instrument_temp_shipment_merge(self):
+        instrument = Instrument.objects.get(name='test_instrument')
+        instrument2 = Instrument.objects.get(name='test_instrument2')
+        InstrumentTempShipment.objects.create(
+            instrument=instrument, old_total=instrument.quantity, quantity=10
+        )
+        InstrumentTempShipment.objects.create(
+            instrument=instrument2, old_total=instrument2.quantity, quantity=10
+        )
+        response = self.client.post(self.url_merge, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Shipment.objects.all().count(), 1)
+        self.assertEqual(InstrumentShipment.objects.all().count(), 2)
+        self.assertEqual(Instrument.objects.get(name='test_instrument').quantity, instrument.quantity - 10)
+        self.assertEqual(Instrument.objects.get(name='test_instrument2').quantity, instrument2.quantity - 10)
         self.assertEqual(InstrumentTempShipment.objects.count(), 0)
