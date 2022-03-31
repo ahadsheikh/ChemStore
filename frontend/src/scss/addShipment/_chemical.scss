@@ -1,0 +1,22 @@
+.chemical_add_wrapper {
+    width: 100%;
+    // background-color: red;
+}
+.chemical_add_container {
+    width: 80%;
+    margin: auto;
+    background-color: white;
+    position: relative;
+}
+
+.chemical_div {
+    position: relative;
+}
+
+.fuzzy_search_div_chemical {
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+}

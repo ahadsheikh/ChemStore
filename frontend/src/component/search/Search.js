@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Table, Spinner } from "react-bootstrap";
 import axios from "../../axios/axios";
 import Header from "../add/Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Search = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -9,6 +11,7 @@ const Search = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [title, setTitle] = useState("Chemical");
   const [loading, setLoading] = useState(false);
+  const [flag, setFlag] = useState(false)
   const [isError, setIsError] = useState({ error: false, message: "" });
 
   const searchInputHandler = (e) => {
@@ -16,10 +19,12 @@ const Search = () => {
   };
 
   const searchHandler = () => {
+    setFlag(false)
     setLoading(true);
     axios
       .get(`/api/management/fuzzysearch/?type=${type}&query=${searchInput}`)
       .then((res) => {
+        setFlag(true)
         setLoading(false);
         setSearchResult(res.data);
       })
@@ -34,7 +39,7 @@ const Search = () => {
     if (e.target.value === "chemical") title = "Chemical";
     else if (e.target.value === "instrument") title = "Instrument";
     else if (e.target.value === "glassware") title = "GlassWare";
-
+    setFlag(false)
     setTitle(title);
     const prevType = type;
     if (prevType !== e.target.value) setSearchResult([]);
@@ -60,21 +65,31 @@ const Search = () => {
             <button
               className="search_btn"
               onClick={searchHandler}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
             >
-              {loading && <Spinner animation="border" variant="dark" />}
               Search
-              {/* {" "}
-            <FontAwesomeIcon icon={faAddressCard} />{" "} */}
             </button>
           </div>
         </div>
       </div>
-      {searchResult.length > 0 && (
+      {!loading && flag && searchResult.length === 0 && <p className="text-center text-light display-4">Nothing Found</p>}
+      {loading && (
+        <div style={{width: "100%"}}>
+          <div
+            className="spinner-border text-light"
+            style={{
+              width: "5rem",
+              height: "5rem",
+              margin: 'auto',
+              marginLeft: '48%',
+              display: 'inline-block'
+            }}
+            role="status"
+          >
+            <span className="visually-hidden text-center">Loading...</span>
+          </div>
+        </div>
+      )}
+      {!loading && searchResult.length > 0 && (
         <div className="search_result_table_container">
           <Header text={`${title}`} />
           <div>

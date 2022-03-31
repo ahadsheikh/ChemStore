@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import Sidebar from "./Sidebar";
-import Store from "../component/store/Store";
-import UserManagment from "../component/userManagment/UserManagment";
-
-import Add from "../pages/add/Add";
-import Issue from "../component/issue/Issue";
-import Location from "../component/location/Location";
-import Search from "../component/search/Search";
-import axios from "../axios/axios";
+// import Store from "../../../component/store/Store";
+import Search from "../../../component/search/Search";
+import axios from "../../../axios/axios";
 import OverLaySideBar from "./OverLaySideBar";
-import AddShipment from "../component/add/AddShipment";
+import Location from "../location/Location";
+import Store from '../store/Store'
+import FileManagment from "../fileManagment/FileManagment";
 
-const Layout = () => {
+const HomeLayout = () => {
   const [showBackModal, setShowBlockModal] = useState(false);
   const [id, setId] = useState(0);
   const [storeList, setStoreList] = useState([]);
   let arr = [
     <Search />,
-    <AddShipment />,
+    // <Add />,
     <Store />,
     <Location />,
-    <Issue />,
-    <UserManagment />,
+    <FileManagment />
+    // <Issue />,
+    // <UserManagment />,
   ];
 
   const sideDrawerHandler = () => {
@@ -76,4 +74,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default HomeLayout;

@@ -1,7 +1,6 @@
 .specfic_issue_container {
   margin: 1rem;
   border-bottom: 1px solid var(--color-primary-3);
-  //   background-color: var(--color-primary-3);
 }
 
 .specfic_issue_header_container {
@@ -27,9 +26,10 @@
 }
 
 .specfiv_issue_item_wrappper {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  // display: flex;
+  // flex-wrap: wrap;
+  overflow-x: scroll;
+  // justify-content: flex-start;
   margin-left: 2rem;
 }
 
@@ -60,4 +60,81 @@
     border-bottom-left-radius: 10rem;
     background-color: var(--color-primary-3);
   }
+}
+
+
+.header {
+  padding: 30px;
+  text-align: center;
+  background: white;
+}
+
+.header h1 {
+  font-size: 50px;
+}
+
+/* Style the top navigation bar */
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+/* Style the topnav links */
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change color on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Create two unequal columns that floats next to each other */
+/* Left column */
+.leftcolumn {   
+  float: left;
+  width: 25%;
+}
+
+/* Right column */
+.rightcolumn {
+  float: left;
+  width: 75%;
+  background-color: #f1f1f1;
+  padding-left: 20px;
+}
+
+/* Fake image */
+.fakeimg {
+  background-color: #aaa;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Add a card effect for articles */
+.card {
+  background-color: white;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Footer */
+.footer {
+  padding: 20px;
+  text-align: center;
+  background: #ddd;
+  margin-top: 20px;
 }
