@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from thefuzz import fuzz
 from itertools import chain
 
-from administration.serializers import (
+from administration.serializers.serializers import (
     ChemicalSerializer,
     GlasswareSerializer,
     InstrumentSerializer,
@@ -33,7 +33,6 @@ class ChemicalViewSet(ModelViewSet):
     queryset = Chemical.objects.all()
 
     def get_serializer_class(self):
-        print(self.action)
         if self.action == 'create':
             return ChemicalCreateSerializer
         elif self.action == 'update':

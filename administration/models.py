@@ -97,7 +97,7 @@ class Chemical(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.quantity}"
 
 
 class Glassware(models.Model):
@@ -111,7 +111,7 @@ class Glassware(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.quantity}"
 
 
 class Instrument(models.Model):
@@ -123,7 +123,7 @@ class Instrument(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.quantity}"
 
 
 class Store(models.Model):
@@ -140,10 +140,15 @@ class Store(models.Model):
         return self.name
 
 
-class Shipment(models.Model):
-    shipment_date = models.DateField()
-    note = models.CharField(max_length=200, blank=True, default="Not not given.")
+shipment_choices = (
+    ('CHEMICAL', 'Chemical'),
+    ('GLASSWARE', 'Glassware'),
+    ('INSTRUMENT', 'Instrument')
+)
 
+
+class Shipment(models.Model):
+    shipment_type = models.CharField(choices=shipment_choices, max_length=10, default='CHEMICAL')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -153,37 +158,58 @@ class Shipment(models.Model):
 class ChemicalShipment(models.Model):
     chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
-    old_quantity = models.FloatField()
-    new_quantity = models.FloatField()
+    old_total = models.FloatField()
+    quantity = models.FloatField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Chemical Shipment with quantity {self.old_quantity -self.old_quantity}"
+        return f"Chemical Shipment with quantity {self.quantity}"
 
 
 class GlasswareShipment(models.Model):
     glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
-    old_quantity = models.PositiveIntegerField()
-    new_quantity = models.PositiveIntegerField()
+    old_total = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Glassware Shipment with quantity {self.old_quantity -self.old_quantity}"
+        return f"Glassware Shipment with quantity {self.quantity}"
 
 
 class InstrumentShipment(models.Model):
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
-    old_quantity = models.PositiveIntegerField()
-    new_quantity = models.PositiveIntegerField()
+    old_total = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Instrument Shipment with quantity {self.old_quantity -self.old_quantity}"
+        return f"Instrument Shipment with quantity {self.quantity}"
+
+
+# Model for Temporary Shipment data
+class ChemicalTempShipment(models.Model):
+    chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
+    old_total = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
+
+
+# Model for Temporary Shipment data
+class GlasswareTempShipment(models.Model):
+    glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
+    old_total = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
+
+
+# Model for Temporary Shipment data
+class InstrumentTempShipment(models.Model):
+    instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
+    old_total = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
 
 
 class StoreConsumer(models.Model):

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'django_extensions',  # For debugging url patterns
 
     # Project Apps
     'viewers.apps.ViewersConfig',

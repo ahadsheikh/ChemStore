@@ -166,7 +166,7 @@ const Store = () => {
                       <td>{el.name}</td>
                       <td>{el.molecular_formula}</td>
                       <td>{el.purity}</td>
-                      <td>{el.amount}</td>
+                      <td>{el.quantity}</td>
                       <td>{el.state}</td>
                       <td>{el.manufacturer}</td>
                       <td>{el.supplier}</td>
