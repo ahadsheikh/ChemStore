@@ -14,7 +14,7 @@ from .views.base import (
     make_issue,
     consumers_tree
 )
-from .views import shipment
+from .views import shipment, issue
 from .views.utils import consumer_store_types
 
 from .views.users import UserViewset
@@ -29,15 +29,10 @@ router.register(r'store-consumers', StoreConsumerViewset, basename='store_consum
 router.register(r'chemical-temp-shipment', shipment.ChemicalTempShipmentViewSet, basename='chemical_temp_shipment')
 router.register(r'glassware-temp-shipment', shipment.GlasswareTempShipmentViewSet, basename='glassware_temp_shipment')
 router.register(r'instrument-temp-shipment', shipment.InstrumentTempShipmentViewSet, basename='instrument_temp_shipment')
+router.register(r'issue-cart', issue.IssueCartViewSet, basename='issue_cart')
 
 urlpatterns = [
-    # path('', login_required(AdminHome.as_view()), name="admin_home"),
-    # path('login/', LoginView.as_view(template_name='administration/login.html'), name='login'),
-    # path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
-    # path('add-things/', AddThingsPage.as_view(), name="add_things_page"),
     path('fuzzysearch/', fuzzy_search, name="fuzzy_search"),
-    path('add-shipment/', add_shipment, name="add_shipment"),
-    path('make-issue/', make_issue, name="make_issue"),
     path('consumer-store-types/', consumer_store_types, name="consumer_store_types"),
     path('consumers-tree/', consumers_tree, name='consumers_tree')
 ]

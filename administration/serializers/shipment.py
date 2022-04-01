@@ -19,17 +19,16 @@ class ChemicalTempShipmentCreateSerializer(serializers.ModelSerializer):
         fields = ['chemical', 'quantity']
 
     def create(self, validated_data):
-        chemical = validated_data.get('chemical')
         if validated_data.get('quantity') < 1:
             raise serializers.ValidationError({'detail': 'Chemical quantity need to be more than 1'})
 
-        return ChemicalTempShipment.objects.create(old_total=chemical.quantity, **validated_data)
+        return ChemicalTempShipment.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.chemical = validated_data.get('chemical', instance.chemical)
         if validated_data.get('quantity') < 1:
             raise serializers.ValidationError({'detail': 'Chemical quantity need to be more than 1'})
 
+        instance.chemical = validated_data.get('chemical', instance.chemical)
         instance.quantity = validated_data.get('quantity', instance.quantity)
         instance.save()
         return instance
@@ -50,17 +49,16 @@ class GlasswareTempShipmentCreateSerializer(serializers.ModelSerializer):
         fields = ['glassware', 'quantity']
 
     def create(self, validated_data):
-        glassware = validated_data.get('glassware')
         if validated_data.get('quantity') < 1:
             raise serializers.ValidationError({'detail': 'Glassware quantity need to be more than 1'})
 
-        return GlasswareTempShipment.objects.create(old_total=glassware.quantity, **validated_data)
+        return GlasswareTempShipment.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.glassware = validated_data.get('glassware', instance.glassware)
         if validated_data.get('quantity') < 1:
             raise serializers.ValidationError({'detail': 'Glassware quantity need to be more than 1'})
 
+        instance.glassware = validated_data.get('glassware', instance.glassware)
         instance.quantity = validated_data.get('quantity', instance.quantity)
         instance.save()
         return instance
@@ -81,16 +79,15 @@ class InstrumentTempShipmentCreateSerializer(serializers.ModelSerializer):
         fields = ['instrument', 'quantity']
 
     def create(self, validated_data):
-        instrument = validated_data.get('instrument')
         if validated_data.get('quantity') < 1:
             raise serializers.ValidationError({'detail': 'Instrument quantity need to be more than 1'})
-        return InstrumentTempShipment.objects.create(old_total=instrument.quantity, **validated_data)
+        return InstrumentTempShipment.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.instrument = validated_data.get('instrument', instance.instrument)
         if validated_data.get('quantity') < 1:
             raise serializers.ValidationError({'detail': 'Instrument quantity need to be more than 1'})
 
+        instance.instrument = validated_data.get('instrument', instance.instrument)
         instance.quantity = validated_data.get('quantity', instance.quantity)
         instance.save()
         return instance

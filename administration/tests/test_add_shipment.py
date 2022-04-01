@@ -65,7 +65,7 @@ class ChemicalTempShipmentTestCase(APITestCase):
     def test_chemical_temp_shipment_update_quantity(self):
         chem = Chemical.objects.get(name='test_chemical')
         ChemicalTempShipment.objects.create(
-            chemical=chem, old_total=chem.quantity, quantity=10
+            chemical=chem, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'chemical': chem.id,
@@ -79,7 +79,7 @@ class ChemicalTempShipmentTestCase(APITestCase):
     def test_chemical_temp_shipment_update_quantity_with_invalid_data(self):
         chem = Chemical.objects.get(name='test_chemical')
         ChemicalTempShipment.objects.create(
-            chemical=chem, old_total=chem.quantity, quantity=10
+            chemical=chem, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'chemical': chem.id,
@@ -97,7 +97,7 @@ class ChemicalTempShipmentTestCase(APITestCase):
         chem = Chemical.objects.get(name='test_chemical')
         chem2 = Chemical.objects.get(name='test_chemical2')
         ChemicalTempShipment.objects.create(
-            chemical=chem, old_total=chem.quantity, quantity=10
+            chemical=chem, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'chemical': chem2.id,
@@ -110,7 +110,7 @@ class ChemicalTempShipmentTestCase(APITestCase):
     def test_chemical_temp_shipment_update_chemical_with_invalid_data(self):
         chem = Chemical.objects.get(name='test_chemical')
         ChemicalTempShipment.objects.create(
-            chemical=chem, old_total=chem.quantity, quantity=10
+            chemical=chem, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'chemical': 3,
@@ -123,7 +123,7 @@ class ChemicalTempShipmentTestCase(APITestCase):
     def test_chemical_temp_shipment_get(self):
         chem = Chemical.objects.get(name='test_chemical')
         ChemicalTempShipment.objects.create(
-            chemical=chem, old_total=chem.quantity, quantity=10
+            chemical=chem, quantity=10
         )
         response = self.client.get(self.url_detail, format='json')
 
@@ -135,7 +135,7 @@ class ChemicalTempShipmentTestCase(APITestCase):
     def test_chemical_temp_shipment_delete(self):
         chem = Chemical.objects.get(name='test_chemical')
         ChemicalTempShipment.objects.create(
-            chemical=chem, old_total=chem.quantity, quantity=10
+            chemical=chem, quantity=10
         )
         response = self.client.delete(self.url_detail, format='json')
 
@@ -146,10 +146,10 @@ class ChemicalTempShipmentTestCase(APITestCase):
         chem = Chemical.objects.get(name='test_chemical')
         chem2 = Chemical.objects.get(name='test_chemical2')
         ChemicalTempShipment.objects.create(
-            chemical=chem, old_total=chem.quantity, quantity=10
+            chemical=chem, quantity=10
         )
         ChemicalTempShipment.objects.create(
-            chemical=chem2, old_total=chem2.quantity, quantity=10
+            chemical=chem2, quantity=10
         )
         response = self.client.post(self.url_merge, format='json')
 
@@ -218,7 +218,7 @@ class GlasswareTempShipmentTestCase(APITestCase):
     def test_glassware_temp_shipment_update_quantity(self):
         glassware = Glassware.objects.get(name='test_glassware')
         GlasswareTempShipment.objects.create(
-            glassware=glassware, old_total=glassware.quantity, quantity=10
+            glassware=glassware, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'glassware': glassware.id,
@@ -232,7 +232,7 @@ class GlasswareTempShipmentTestCase(APITestCase):
     def test_glassware_temp_shipment_update_quantity_with_invalid_data(self):
         glassware = Glassware.objects.get(name='test_glassware')
         GlasswareTempShipment.objects.create(
-            glassware=glassware, old_total=glassware.quantity, quantity=10
+            glassware=glassware, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'glassware': glassware.id,
@@ -250,7 +250,7 @@ class GlasswareTempShipmentTestCase(APITestCase):
         glassware = Glassware.objects.get(name='test_glassware')
         glassware2 = Glassware.objects.get(name='test_glassware2')
         GlasswareTempShipment.objects.create(
-            glassware=glassware, old_total=glassware.quantity, quantity=10
+            glassware=glassware, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'glassware': glassware2.id,
@@ -263,7 +263,7 @@ class GlasswareTempShipmentTestCase(APITestCase):
     def test_glassware_temp_shipment_update_glassware_with_invalid_data(self):
         glassware = Glassware.objects.get(name='test_glassware')
         GlasswareTempShipment.objects.create(
-            glassware=glassware, old_total=glassware.quantity, quantity=10
+            glassware=glassware, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'glassware': 3,
@@ -276,7 +276,7 @@ class GlasswareTempShipmentTestCase(APITestCase):
     def test_glassware_temp_shipment_get(self):
         glassware = Glassware.objects.get(name='test_glassware')
         GlasswareTempShipment.objects.create(
-            glassware=glassware, old_total=glassware.quantity, quantity=10
+            glassware=glassware, quantity=10
         )
         response = self.client.get(self.url_detail, format='json')
 
@@ -288,7 +288,7 @@ class GlasswareTempShipmentTestCase(APITestCase):
     def test_glassware_temp_shipment_delete(self):
         glassware = Glassware.objects.get(name='test_glassware')
         GlasswareTempShipment.objects.create(
-            glassware=glassware, old_total=glassware.quantity, quantity=10
+            glassware=glassware, quantity=10
         )
         response = self.client.delete(self.url_detail, format='json')
 
@@ -299,10 +299,10 @@ class GlasswareTempShipmentTestCase(APITestCase):
         glassware = Glassware.objects.get(name='test_glassware')
         glassware2 = Glassware.objects.get(name='test_glassware2')
         GlasswareTempShipment.objects.create(
-            glassware=glassware, old_total=glassware.quantity, quantity=10
+            glassware=glassware, quantity=10
         )
         GlasswareTempShipment.objects.create(
-            glassware=glassware2, old_total=glassware2.quantity, quantity=10
+            glassware=glassware2, quantity=10
         )
         response = self.client.post(self.url_merge, format='json')
 
@@ -361,7 +361,7 @@ class InstrumentTempShipmentTestCase(APITestCase):
     def test_instrument_temp_shipment_update_quantity(self):
         instrument = Instrument.objects.get(name='test_instrument')
         InstrumentTempShipment.objects.create(
-            instrument=instrument, old_total=instrument.quantity, quantity=10
+            instrument=instrument, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'instrument': instrument.id,
@@ -375,7 +375,7 @@ class InstrumentTempShipmentTestCase(APITestCase):
     def test_instrument_temp_shipment_update_quantity_with_invalid_data(self):
         instrument = Instrument.objects.get(name='test_instrument')
         InstrumentTempShipment.objects.create(
-            instrument=instrument, old_total=instrument.quantity, quantity=10
+            instrument=instrument, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'instrument': instrument.id,
@@ -396,7 +396,7 @@ class InstrumentTempShipmentTestCase(APITestCase):
         instrument2 = Instrument.objects.get(name='test_instrument2')
 
         InstrumentTempShipment.objects.create(
-            instrument=instrument, old_total=instrument.quantity, quantity=10
+            instrument=instrument, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'instrument': instrument2.id,
@@ -409,7 +409,7 @@ class InstrumentTempShipmentTestCase(APITestCase):
     def test_instrument_temp_shipment_update_instrument_with_invalid_data(self):
         instrument = Instrument.objects.get(name='test_instrument')
         InstrumentTempShipment.objects.create(
-            instrument=instrument, old_total=instrument.quantity, quantity=10
+            instrument=instrument, quantity=10
         )
         response = self.client.put(self.url_detail, {
             'instrument': 3,
@@ -422,7 +422,7 @@ class InstrumentTempShipmentTestCase(APITestCase):
     def test_instrument_temp_shipment_get(self):
         instrument = Instrument.objects.get(name='test_instrument')
         InstrumentTempShipment.objects.create(
-            instrument=instrument, old_total=instrument.quantity, quantity=10
+            instrument=instrument, quantity=10
         )
         response = self.client.get(self.url_detail, format='json')
 
@@ -434,7 +434,7 @@ class InstrumentTempShipmentTestCase(APITestCase):
     def test_instrument_temp_shipment_delete(self):
         instrument = Instrument.objects.get(name='test_instrument')
         InstrumentTempShipment.objects.create(
-            instrument=instrument, old_total=instrument.quantity, quantity=10
+            instrument=instrument, quantity=10
         )
         response = self.client.delete(self.url_detail, format='json')
 
@@ -445,10 +445,10 @@ class InstrumentTempShipmentTestCase(APITestCase):
         instrument = Instrument.objects.get(name='test_instrument')
         instrument2 = Instrument.objects.get(name='test_instrument2')
         InstrumentTempShipment.objects.create(
-            instrument=instrument, old_total=instrument.quantity, quantity=10
+            instrument=instrument, quantity=10
         )
         InstrumentTempShipment.objects.create(
-            instrument=instrument2, old_total=instrument2.quantity, quantity=10
+            instrument=instrument2, quantity=10
         )
         response = self.client.post(self.url_merge, format='json')
 

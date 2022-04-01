@@ -176,24 +176,6 @@ class AddShipmentSerializer(serializers.Serializer):
     instrument = InstrumentShipment()
 
 
-# Serializers for
-class IssueSerializer(serializers.Serializer):
-    """
-    material_type: ["CHEMICAL", "GLASSWARE", "INSTRUMENT"]
-    """
-    id = serializers.IntegerField()
-    material_type = serializers.CharField(max_length=10)
-    quantity = serializers.FloatField()
-
-
-class MakeIssueSerializer(serializers.Serializer):
-    issue_date = serializers.DateField()
-    carrier_name = serializers.CharField(max_length=30, required=False)
-    note = serializers.CharField(max_length=200, required=False)
-    consumer_id = serializers.IntegerField()
-    objects = IssueSerializer(many=True)
-
-
 class StoreConsumerSerializer(serializers.ModelSerializer):
 
     class Meta:

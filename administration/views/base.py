@@ -16,9 +16,10 @@ from administration.serializers.serializers import (
     InstrumentSerializer,
     StoreSerializer,
     ChemicalCreateSerializer,
-    AddShipmentSerializer, ShipmentSerializer, MakeIssueSerializer, StoreConsumerSerializer, ChemicalUpdateSerializer,
-    GlasswareCreateSerializer, InstrumentCreateSerializer
+    AddShipmentSerializer, ShipmentSerializer, ChemicalUpdateSerializer,
+    GlasswareCreateSerializer, InstrumentCreateSerializer, StoreConsumerSerializer
 )
+from administration.serializers.issue import MakeIssueSerializer
 
 from administration.models import (
     Chemical, Glassware, Instrument, Store, Shipment,

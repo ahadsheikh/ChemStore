@@ -3,14 +3,6 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib import auth
 
 
-consumer_type_choices = (
-        ('PHYSICAL', 'Physical Lab'),
-        ('ORGANIC', 'Organic Lab'),
-        ('INORGANIC', 'Inorganic Lab'),
-        ('PERSONAL', 'Personal')
-    )
-
-
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
 
@@ -194,24 +186,30 @@ class InstrumentShipment(models.Model):
 # Model for Temporary Shipment data
 class ChemicalTempShipment(models.Model):
     chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
-    old_total = models.PositiveIntegerField()
-    quantity = models.PositiveIntegerField()
+    quantity = models.FloatField()
 
 
 # Model for Temporary Shipment data
 class GlasswareTempShipment(models.Model):
     glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
-    old_total = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
 
 
 # Model for Temporary Shipment data
 class InstrumentTempShipment(models.Model):
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
-    old_total = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
 
 
+consumer_type_choices = (
+        ('PHYSICAL', 'Physical Lab'),
+        ('ORGANIC', 'Organic Lab'),
+        ('INORGANIC', 'Inorganic Lab'),
+        ('PERSONAL', 'Personal')
+    )
+
+
+# This model is used for different types of Lab and Personal Researchers who used the system
 class StoreConsumer(models.Model):
     name = models.CharField(max_length=100)
     consumer_type = models.CharField(max_length=20, choices=consumer_type_choices)
@@ -225,9 +223,7 @@ class StoreConsumer(models.Model):
 
 
 class StoreIssue(models.Model):
-    issue_date = models.DateField()
     carrier_name = models.CharField(max_length=30, blank=True, default='Unknown')
-    note = models.CharField(max_length=200, blank=True, default="Write something about the issue in 200 characters")
     store_consumer = models.ForeignKey(StoreConsumer, on_delete=models.PROTECT)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -239,34 +235,52 @@ class StoreIssue(models.Model):
 class ChemicalIssue(models.Model):
     chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
     issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
-    old_quantity = models.FloatField()
-    new_quantity = models.FloatField()
+    old_total = models.FloatField()
+    quantity = models.FloatField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Chemical Issue with quantity {self.new_quantity - self.old_quantity}"
+        return f"Chemical Issue with quantity {self.quantity}"
 
 
 class GlasswareIssue(models.Model):
     glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
     issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
-    old_quantity = models.PositiveIntegerField()
-    new_quantity = models.PositiveIntegerField()
+    old_total = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Glassware Issue with quantity {self.new_quantity - self.old_quantity}"
+        return f"Glassware Issue with quantity {self.quantity}"
 
 
 class InstrumentIssue(models.Model):
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
-    old_quantity = models.PositiveIntegerField()
-    new_quantity = models.PositiveIntegerField()
+    old_total = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Instrument Issue with quantity {self.new_quantity - self.old_quantity}"
+        return f"Instrument Issue with quantity {self.quantity}"
+
+
+object_type_choices = (
+    ('CHEMICAL', 'Chemical'),
+    ('GLASSWARE', 'Glassware'),
+    ('INSTRUMENT', 'Instrument'),
+)
+
+
+class IssueCart(models.Model):
+    object_id = models.PositiveBigIntegerField()
+    object_type = models.CharField(max_length=10, choices=object_type_choices)
+    quantity = models.FloatField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.object_type} of {self.id} with quantity {self.quantity}"
