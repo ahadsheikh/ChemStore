@@ -38,7 +38,7 @@ class ChemicalTempShipmentViewSet(ModelViewSet):
                 old_total=temp_shipment.chemical.quantity,
                 quantity=temp_shipment.quantity
             )
-            temp_shipment.chemical.quantity = temp_shipment.chemical.quantity - temp_shipment.quantity
+            temp_shipment.chemical.quantity = temp_shipment.chemical.quantity + temp_shipment.quantity
             temp_shipment.chemical.save()
             temp_shipment.delete()
 
@@ -72,7 +72,7 @@ class GlasswareTempShipmentViewSet(ModelViewSet):
                 old_total=temp_shipment.glassware.quantity,
                 quantity=temp_shipment.quantity
             )
-            temp_shipment.glassware.quantity = temp_shipment.glassware.quantity - temp_shipment.quantity
+            temp_shipment.glassware.quantity = temp_shipment.glassware.quantity + temp_shipment.quantity
             temp_shipment.glassware.save()
             temp_shipment.delete()
 
@@ -106,7 +106,7 @@ class InstrumentTempShipmentViewSet(ModelViewSet):
                 old_total=temp_shipment.instrument.quantity,
                 quantity=temp_shipment.quantity
             )
-            temp_shipment.instrument.quantity = temp_shipment.instrument.quantity - temp_shipment.quantity
+            temp_shipment.instrument.quantity = temp_shipment.instrument.quantity + temp_shipment.quantity
             temp_shipment.instrument.save()
             temp_shipment.delete()
 

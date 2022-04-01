@@ -48,12 +48,19 @@ class ChemicalTempShipmentTestCase(APITestCase):
     def test_chemical_temp_shipment_create_with_invalid_quantity(self):
         response = self.client.post(self.url, {
             'chemical': Chemical.objects.get(name='test_chemical').id,
-            'quantity': 110
+            'quantity': -110
         }, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(ChemicalTempShipment.objects.count(), 0)
-        self.assertEqual(response.data['detail'], 'Chemical quantity is not enough')
+
+        response = self.client.post(self.url, {
+            'chemical': Chemical.objects.get(name='test_chemical').id,
+            'quantity': 0
+        }, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(ChemicalTempShipment.objects.count(), 0)
 
     def test_chemical_temp_shipment_update_quantity(self):
         chem = Chemical.objects.get(name='test_chemical')
@@ -76,10 +83,15 @@ class ChemicalTempShipmentTestCase(APITestCase):
         )
         response = self.client.put(self.url_detail, {
             'chemical': chem.id,
-            'quantity': 110
+            'quantity': -110
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['detail'], 'Chemical quantity is not enough')
+
+        response = self.client.put(self.url_detail, {
+            'chemical': chem.id,
+            'quantity': 0
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_chemical_temp_shipment_update_chemical(self):
         chem = Chemical.objects.get(name='test_chemical')
@@ -89,7 +101,7 @@ class ChemicalTempShipmentTestCase(APITestCase):
         )
         response = self.client.put(self.url_detail, {
             'chemical': chem2.id,
-            'quantity': 20
+            'quantity': 10
         }, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -144,8 +156,8 @@ class ChemicalTempShipmentTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Shipment.objects.all().count(), 1)
         self.assertEqual(ChemicalShipment.objects.all().count(), 2)
-        self.assertEqual(Chemical.objects.get(name='test_chemical').quantity, chem.quantity - 10)
-        self.assertEqual(Chemical.objects.get(name='test_chemical2').quantity, chem2.quantity - 10)
+        self.assertEqual(Chemical.objects.get(name='test_chemical').quantity, chem.quantity + 10)
+        self.assertEqual(Chemical.objects.get(name='test_chemical2').quantity, chem2.quantity + 10)
         self.assertEqual(ChemicalTempShipment.objects.count(), 0)
 
 
@@ -189,12 +201,19 @@ class GlasswareTempShipmentTestCase(APITestCase):
     def test_glassware_temp_shipment_create_with_invalid_quantity(self):
         response = self.client.post(self.url, {
             'glassware': Glassware.objects.get(name='test_glassware').id,
-            'quantity': 110
+            'quantity': -110
         }, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(GlasswareTempShipment.objects.count(), 0)
-        self.assertEqual(response.data['detail'], 'Glassware quantity is not enough')
+
+        response = self.client.post(self.url, {
+            'glassware': Glassware.objects.get(name='test_glassware').id,
+            'quantity': 0
+        }, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(GlasswareTempShipment.objects.count(), 0)
 
     def test_glassware_temp_shipment_update_quantity(self):
         glassware = Glassware.objects.get(name='test_glassware')
@@ -217,10 +236,15 @@ class GlasswareTempShipmentTestCase(APITestCase):
         )
         response = self.client.put(self.url_detail, {
             'glassware': glassware.id,
-            'quantity': 110
+            'quantity': -110
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['detail'], 'Glassware quantity is not enough')
+
+        response = self.client.put(self.url_detail, {
+            'glassware': glassware.id,
+            'quantity': 0
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_glassware_temp_shipment_update_glassware(self):
         glassware = Glassware.objects.get(name='test_glassware')
@@ -230,7 +254,7 @@ class GlasswareTempShipmentTestCase(APITestCase):
         )
         response = self.client.put(self.url_detail, {
             'glassware': glassware2.id,
-            'quantity': 20
+            'quantity': 10
         }, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -285,8 +309,8 @@ class GlasswareTempShipmentTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Shipment.objects.all().count(), 1)
         self.assertEqual(GlasswareShipment.objects.all().count(), 2)
-        self.assertEqual(Glassware.objects.get(name='test_glassware').quantity, glassware.quantity - 10)
-        self.assertEqual(Glassware.objects.get(name='test_glassware2').quantity, glassware2.quantity - 10)
+        self.assertEqual(Glassware.objects.get(name='test_glassware').quantity, glassware.quantity + 10)
+        self.assertEqual(Glassware.objects.get(name='test_glassware2').quantity, glassware2.quantity + 10)
         self.assertEqual(GlasswareTempShipment.objects.count(), 0)
 
 
@@ -331,9 +355,8 @@ class InstrumentTempShipmentTestCase(APITestCase):
             'quantity': 110
         }, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(InstrumentTempShipment.objects.count(), 0)
-        self.assertEqual(response.data['detail'], 'Instrument quantity is not enough')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(InstrumentTempShipment.objects.count(), 1)
 
     def test_instrument_temp_shipment_update_quantity(self):
         instrument = Instrument.objects.get(name='test_instrument')
@@ -356,10 +379,17 @@ class InstrumentTempShipmentTestCase(APITestCase):
         )
         response = self.client.put(self.url_detail, {
             'instrument': instrument.id,
-            'quantity': 110
+            'quantity': -110
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['detail'], 'Instrument quantity is not enough')
+
+        response = self.client.put(self.url_detail, {
+            'instrument': 3,
+            'quantity': 0
+        }, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('instrument', response.data)
 
     def test_instrument_temp_shipment_update_instrument(self):
         instrument = Instrument.objects.get(name='test_instrument')
@@ -383,7 +413,7 @@ class InstrumentTempShipmentTestCase(APITestCase):
         )
         response = self.client.put(self.url_detail, {
             'instrument': 3,
-            'quantity': 20
+            'quantity': 10
         }, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -425,6 +455,6 @@ class InstrumentTempShipmentTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Shipment.objects.all().count(), 1)
         self.assertEqual(InstrumentShipment.objects.all().count(), 2)
-        self.assertEqual(Instrument.objects.get(name='test_instrument').quantity, instrument.quantity - 10)
-        self.assertEqual(Instrument.objects.get(name='test_instrument2').quantity, instrument2.quantity - 10)
+        self.assertEqual(Instrument.objects.get(name='test_instrument').quantity, instrument.quantity + 10)
+        self.assertEqual(Instrument.objects.get(name='test_instrument2').quantity, instrument2.quantity + 10)
         self.assertEqual(InstrumentTempShipment.objects.count(), 0)
