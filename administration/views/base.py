@@ -16,8 +16,7 @@ from administration.serializers.serializers import (
     InstrumentSerializer,
     StoreSerializer,
     ChemicalCreateSerializer,
-    AddShipmentSerializer, ShipmentSerializer, ChemicalUpdateSerializer,
-    GlasswareCreateSerializer, InstrumentCreateSerializer, StoreConsumerSerializer
+    AddShipmentSerializer, ShipmentSerializer, StoreConsumerSerializer
 )
 
 from administration.models import (
@@ -33,87 +32,20 @@ class ChemicalViewSet(ModelViewSet):
     queryset = Chemical.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.action == 'create' or self.action == 'update':
             return ChemicalCreateSerializer
-        elif self.action == 'update':
-            return ChemicalUpdateSerializer
         else:
             return ChemicalSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        mf = serializer.data.get('molecular_formula')
-        molecular_weight = molar_mass(mf)
-        store_id = serializer.data.get('store')
-        try:
-            store = Store.objects.get(id=store_id)
-        except Store.DoesNotExist:
-            return Response({'detail': 'Store not found in the given id'}, status=status.HTTP_404_NOT_FOUND)
-        serializer.data.pop('store', None)
-        chemical = Chemical.objects.create(**serializer.data, molecular_weight=molecular_weight )
-        store.chemicals.add(chemical)
-
-        # headers = self.get_success_headers(serializer.data)
-        return Response({"store_id": store_id, **ChemicalSerializer(instance=chemical).data},
-                        status=status.HTTP_201_CREATED)
 
 
 class GlasswareViewSet(ModelViewSet):
     queryset = Glassware.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return GlasswareCreateSerializer
-        else:
-            return GlasswareSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        store_id = serializer.data.get('store')
-        try:
-            store = Store.objects.get(id=store_id)
-        except Store.DoesNotExist:
-            return Response({'detail': 'Store not found in the given id'}, status=status.HTTP_404_NOT_FOUND)
-        serializer.data.pop('store', None)
-        glassware = Glassware.objects.create(**serializer.data)
-        store.glasswares.add(glassware)
-
-        # headers = self.get_success_headers(serializer.data)
-        return Response({"store_id": store_id, **GlasswareSerializer(instance=glassware).data},
-                        status=status.HTTP_201_CREATED)
+    serializer_class = GlasswareSerializer
 
 
 class InstrumentViewSet(ModelViewSet):
     queryset = Instrument.objects.all()
-
-    def get_serializer_class(self):
-        print(self.action)
-        if self.action == 'create':
-            return InstrumentCreateSerializer
-        else:
-            return InstrumentSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        store_id = serializer.data.get('store')
-        try:
-            store = Store.objects.get(id=store_id)
-        except Store.DoesNotExist:
-            return Response({'detail': 'Store not found in the given id'}, status=status.HTTP_404_NOT_FOUND)
-
-        serializer.data.pop('store', None)
-        instrument = Instrument.objects.create(**serializer.data)
-        store.instruments.add(instrument)
-
-        # headers = self.get_success_headers(serializer.data)
-        return Response({"store_id": store_id, **InstrumentSerializer(instance=instrument).data},
-                        status=status.HTTP_201_CREATED)
+    serializer_class = InstrumentSerializer
 
 
 class StoreViewSet(ModelViewSet):
@@ -125,8 +57,9 @@ class StoreViewSet(ModelViewSet):
         """
         List all chemical in a store
         """
-        store = get_object_or_404(Store, pk=pk)
-        chemicals = store.chemicals.all()
+        # store = get_object_or_404(Store, pk=pk)
+        # chemicals = store.chemicals.all()
+        chemicals = Chemical.objects.all()
 
         chem_datas = ChemicalSerializer(instance=chemicals, many=True)
 
@@ -137,8 +70,9 @@ class StoreViewSet(ModelViewSet):
         """
         List all glassware in a store
         """
-        store = get_object_or_404(Store, pk=pk)
-        glasswares = store.glasswares.all()
+        # store = get_object_or_404(Store, pk=pk)
+        # glasswares = store.glasswares.all()
+        glasswares = Glassware.objects.all()
 
         glass_datas = GlasswareSerializer(instance=glasswares, many=True)
 
@@ -149,8 +83,9 @@ class StoreViewSet(ModelViewSet):
         """
         List all instrument in a store
         """
-        store = get_object_or_404(Store, pk=pk)
-        instruments = store.instruments.all()
+        # store = get_object_or_404(Store, pk=pk)
+        # instruments = store.instruments.all()
+        instruments = Instrument.objects.all()
 
         instru_datas = InstrumentSerializer(instance=instruments, many=True)
 
