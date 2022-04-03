@@ -222,8 +222,7 @@ class StoreConsumer(models.Model):
         return self.name
 
 
-class StoreIssue(models.Model):
-    carrier_name = models.CharField(max_length=30, blank=True, default='Unknown')
+class Issue(models.Model):
     store_consumer = models.ForeignKey(StoreConsumer, on_delete=models.PROTECT)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -232,47 +231,24 @@ class StoreIssue(models.Model):
         return f"Store Issue {self.id}"
 
 
-class ChemicalIssue(models.Model):
-    chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
-    issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
+object_type_choices = (
+    ('CHEMICAL', 'Chemical'),
+    ('GLASSWARE', 'Glassware'),
+    ('INSTRUMENT', 'Instrument'),
+)
+
+
+class IssueObject(models.Model):
+    object_id = models.PositiveBigIntegerField()
+    object_type = models.CharField(max_length=10, choices=object_type_choices)
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     old_total = models.FloatField()
     quantity = models.FloatField()
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Chemical Issue with quantity {self.quantity}"
-
-
-class GlasswareIssue(models.Model):
-    glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
-    issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
-    old_total = models.PositiveIntegerField()
-    quantity = models.PositiveIntegerField()
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Glassware Issue with quantity {self.quantity}"
-
-
-class InstrumentIssue(models.Model):
-    instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
-    issue = models.ForeignKey(StoreIssue, on_delete=models.CASCADE)
-    old_total = models.PositiveIntegerField()
-    quantity = models.PositiveIntegerField()
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Instrument Issue with quantity {self.quantity}"
-
-
-object_type_choices = (
-    ('CHEMICAL', 'Chemical'),
-    ('GLASSWARE', 'Glassware'),
-    ('INSTRUMENT', 'Instrument'),
-)
+        return f"Issue with quantity {self.quantity}"
 
 
 class IssueCart(models.Model):

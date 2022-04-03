@@ -10,10 +10,9 @@ from .models import (
     GlasswareShipment,
     InstrumentShipment,
     StoreConsumer,
-    StoreIssue,
-    ChemicalIssue,
-    GlasswareIssue,
-    InstrumentIssue,
+    Issue,
+    IssueObject,
+    IssueCart
 )
 User = get_user_model()
 
@@ -27,8 +26,6 @@ admin.site.register(ChemicalShipment)
 admin.site.register(GlasswareShipment)
 admin.site.register(InstrumentShipment)
 admin.site.register(StoreConsumer)
-admin.site.register(StoreIssue)
-admin.site.register(ChemicalIssue)
-admin.site.register(GlasswareIssue)
-admin.site.register(InstrumentIssue)
-
+admin.site.register(Issue)
+admin.site.register(IssueObject)
+admin.site.register(IssueCart)

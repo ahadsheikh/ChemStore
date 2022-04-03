@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django_extensions',  # For debugging url patterns
 
     # Project Apps
-    'viewers.apps.ViewersConfig',
     'administration.apps.AdministrationConfig',
     'filemanager.apps.FilemanagerConfig',
 ]

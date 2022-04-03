@@ -34,7 +34,6 @@ urlpatterns += [
     # JWT Auth
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/userview/', include('viewers.urls')),
     path('api/management/', include('administration.urls')),
     path('api/filemanager/', include('filemanager.urls')),
 

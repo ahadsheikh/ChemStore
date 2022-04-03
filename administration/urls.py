@@ -10,8 +10,6 @@ from .views.base import (
     StoreViewSet,
     StoreConsumerViewset,
     fuzzy_search,
-    add_shipment,
-    make_issue,
     consumers_tree
 )
 from .views import shipment, issue

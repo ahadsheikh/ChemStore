@@ -3,10 +3,6 @@ from rest_framework import serializers
 from administration.models import IssueCart, Chemical, Glassware, Instrument
 
 
-class MakeIssueSerializer(serializers.Serializer):
-    carrier_name = serializers.CharField(max_length=30, required=False)
-
-
 class IssueCartSerializer(serializers.ModelSerializer):
 
     class Meta:

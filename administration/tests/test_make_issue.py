@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
-from administration.models import Chemical, Glassware, Instrument, StoreConsumer, StoreIssue, IssueCart
+from administration.models import Chemical, Glassware, Instrument, StoreConsumer, IssueCart
 
 
 class IssueCartTestCase(APITestCase):
@@ -171,3 +171,50 @@ class IssueCartTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(IssueCart.objects.count(), 0)
+
+    def test_issue_cart_merge(self):
+        """
+        Testing merge all issue cart
+        """
+        store_con = StoreConsumer.objects.create(
+            name="Lab 1",
+            consumer_type="PHYSICAL",
+            room_number="1",
+            building_name="Building 1",
+        )
+
+        IssueCart.objects.create(
+            object_id=1,
+            object_type="CHEMICAL",
+            quantity=50,
+        )
+
+        IssueCart.objects.create(
+            object_id=1,
+            object_type="GLASSWARE",
+            quantity=30,
+        )
+
+        IssueCart.objects.create(
+            object_id=1,
+            object_type="INSTRUMENT",
+            quantity=5,
+        )
+
+        url = reverse('issue_cart-merge', args=[store_con.id])
+        response = self.client.post(
+            url
+            , format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['success'], 'Issue cart merged successfully')
+        self.assertEqual(IssueCart.objects.count(), 0)
+
+        chem = Chemical.objects.get(id=1)
+        glass = Glassware.objects.get(id=1)
+        inst = Instrument.objects.get(id=1)
+
+        self.assertEqual(chem.quantity, 50)
+        self.assertEqual(glass.quantity, 20)
+        self.assertEqual(inst.quantity, 5)
+
