@@ -458,3 +458,56 @@ class InstrumentTempShipmentTestCase(APITestCase):
         self.assertEqual(Instrument.objects.get(name='test_instrument').quantity, instrument.quantity + 10)
         self.assertEqual(Instrument.objects.get(name='test_instrument2').quantity, instrument2.quantity + 10)
         self.assertEqual(InstrumentTempShipment.objects.count(), 0)
+
+
+class ShipmentTestCase(APITestCase):
+
+    def setUp(self) -> None:
+        self.chem1 = Chemical.objects.create(
+            name='test_chemical', CAS_RN='123456789', molecular_formula='C2H4O2', molecular_weight=molar_mass('C2H4O2'),
+            purity='60.00', manufacturer='pct', supplier='pct', state='LIQUID', quantity=100
+        )
+        self.chem2 = Chemical.objects.create(
+            name='test_chemical2', CAS_RN='223456789', molecular_formula='C6H6', molecular_weight=molar_mass('C6H6'),
+            purity='60.00', manufacturer='pct', supplier='pct', state='LIQUID', quantity=90
+        )
+        self.glass = Glassware.objects.create(
+            name='Beaker',
+            manufacturer='Honeywell',
+            supplier='Honeywell',
+            size='10',
+            material_type='GLASS',
+            quantity=50,
+        )
+        self.instru = Instrument.objects.create(
+            name='Machine 1',
+            manufacturer='Honeywell',
+            supplier='Honeywell',
+            quantity=10,
+        )
+        self.instru2 = Instrument.objects.create(
+            name='Machine 2',
+            manufacturer='Honeywell',
+            supplier='Honeywell',
+            quantity=10,
+        )
+
+    def test_shipments(self):
+        ChemicalTempShipment.objects.create(
+            chemical=self.chem1,
+            quantity=10
+        )
+        GlasswareTempShipment.objects.create(
+            glassware=self.glass,
+            quantity=10
+        )
+        InstrumentTempShipment.objects.create(
+            instrument=self.instru,
+            quantity=10
+        )
+        self.client.post(reverse('chemical_temp_shipment-merge'))
+        self.client.post(reverse('glassware_temp_shipment-merge'))
+        self.client.post(reverse('instrument_temp_shipment-merge'))
+
+        response = self.client.get(reverse('shipments') + '?type=chemical')
+        print(response.data)

@@ -1,5 +1,6 @@
+import rest_framework.serializers
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 
 from administration.models import ChemicalTempShipment, GlasswareTempShipment, InstrumentTempShipment, Shipment, \
@@ -111,3 +112,86 @@ class InstrumentTempShipmentViewSet(ModelViewSet):
             temp_shipment.delete()
 
         return Response({'message': 'Shipment merged'})
+
+
+
+@api_view(['GET'])
+def shipments(request):
+    type_ = request.GET.get('type')
+    res = []
+    if type_ == 'chemical':
+        shipments = Shipment.objects.filter(shipment_type='CHEMICAL')
+        for shipment in shipments:
+            obj = {
+                'id': shipment.id,
+                'date_time': shipment.created_at,
+                'chemicals': []
+            }
+            chem_shipments = ChemicalShipment.objects.filter(shipment=shipment)
+            for obj_shipment in chem_shipments:
+                chem = {
+                    'CAS_RN': obj_shipment.chemical.CAS_RN,
+                    'name': obj_shipment.chemical.name,
+                    'molecular_formula': obj_shipment.chemical.molecular_formula,
+                    'molecular_weight': obj_shipment.chemical.molecular_weight,
+                    'purity': obj_shipment.chemical.purity,
+                    'manufacturer': obj_shipment.chemical.manufacturer,
+                    'supplier': obj_shipment.chemical.supplier,
+                    'state': obj_shipment.chemical.state,
+                    'old_total': obj_shipment.old_total,
+                    'added_quantity': obj_shipment.quantity
+                }
+                obj['chemicals'].append(chem)
+
+            res.append(obj)
+        return Response(res)
+
+    elif type_ == 'glassware':
+        shipments = Shipment.objects.filter(shipment_type='GLASSWARE')
+        for shipment in shipments:
+            obj = {
+                'id': shipment.id,
+                'date_time': shipment.created_at,
+                'glasswares': []
+            }
+            glass_shipments = GlasswareShipment.objects.filter(shipment=shipment)
+            for obj_shipment in glass_shipments:
+                glass = {
+                    'name': obj_shipment.glassware.name,
+                    'manufacturer': obj_shipment.glassware.manufacturer,
+                    'supplier': obj_shipment.glassware.supplier,
+                    'size': obj_shipment.glassware.size,
+                    'material_type': obj_shipment.glassware.material_type,
+                    'old_total': obj_shipment.old_total,
+                    'added_quantity': obj_shipment.quantity
+                }
+                obj['glasswares'].append(glass)
+
+            res.append(obj)
+        return Response(res)
+
+    elif type_ == 'instrument':
+        shipments = Shipment.objects.filter(shipment_type='INSTRUMENT')
+        for shipment in shipments:
+            obj = {
+                'id': shipment.id,
+                'date_time': shipment.created_at,
+                'instruments': []
+            }
+            chem_shipments = InstrumentShipment.objects.filter(shipment=shipment)
+            for obj_shipment in chem_shipments:
+                chem = {
+                    'name': obj_shipment.instrument.name,
+                    'manufacturer': obj_shipment.instrument.manufacturer,
+                    'supplier': obj_shipment.instrument.supplier,
+                    'old_total': obj_shipment.old_total,
+                    'added_quantity': obj_shipment.quantity
+                }
+                obj['instruments'].append(chem)
+
+            res.append(obj)
+        return Response(res)
+
+    else:
+        return Response({"error": "type query param needed"})
+

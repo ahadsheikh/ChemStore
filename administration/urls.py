@@ -32,7 +32,8 @@ router.register(r'issue-cart', issue.IssueCartViewSet, basename='issue_cart')
 urlpatterns = [
     path('fuzzysearch/', fuzzy_search, name="fuzzy_search"),
     path('consumer-store-types/', consumer_store_types, name="consumer_store_types"),
-    path('consumers-tree/', consumers_tree, name='consumers_tree')
+    path('consumers-tree/', consumers_tree, name='consumers_tree'),
+    path('shipments/', shipment.shipments, name='shipments')
 ]
 
 urlpatterns += router.urls
