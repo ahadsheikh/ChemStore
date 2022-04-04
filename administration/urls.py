@@ -33,7 +33,9 @@ urlpatterns = [
     path('fuzzysearch/', fuzzy_search, name="fuzzy_search"),
     path('consumer-store-types/', consumer_store_types, name="consumer_store_types"),
     path('consumers-tree/', consumers_tree, name='consumers_tree'),
-    path('shipments/', shipment.shipments, name='shipments')
+    path('shipments/', shipment.shipments, name='shipments'),
+    path('issues/<int:location_id>/', issue.issues, name='issues'),
+
 ]
 
 urlpatterns += router.urls

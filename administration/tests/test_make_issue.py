@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
-from administration.models import Chemical, Glassware, Instrument, StoreConsumer, IssueCart
+from administration.models import Chemical, Glassware, Instrument, StoreConsumer, IssueCart, IssueObject, Issue
 
 
 class IssueCartTestCase(APITestCase):
@@ -202,9 +202,7 @@ class IssueCartTestCase(APITestCase):
         )
 
         url = reverse('issue_cart-merge', args=[store_con.id])
-        response = self.client.post(
-            url
-            , format='json')
+        response = self.client.post(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['success'], 'Issue cart merged successfully')
@@ -218,3 +216,63 @@ class IssueCartTestCase(APITestCase):
         self.assertEqual(glass.quantity, 20)
         self.assertEqual(inst.quantity, 5)
 
+
+class IssueTestCase(APITestCase):
+
+    def setUp(self) -> None:
+        self.chem = Chemical.objects.create(
+            CAS_RN='26181-88-4',
+            name='Benzene',
+            molecular_formula='C6H6',
+            molecular_weight='78.1134',
+            purity="50",
+            manufacturer='Honeywell',
+            supplier='Honeywell',
+            state='LIQUID',
+            quantity=100,
+        )
+        self.glass = Glassware.objects.create(
+            name='Beaker',
+            manufacturer='Honeywell',
+            supplier='Honeywell',
+            size='10',
+            material_type='GLASS',
+            quantity=50,
+        )
+        self.instru = Instrument.objects.create(
+            name='Machine 1',
+            manufacturer='Honeywell',
+            supplier='Honeywell',
+            quantity=10,
+        )
+
+    def test_issuses(self):
+        IssueCart.objects.create(
+            object_id=self.chem.id,
+            object_type='CHEMICAL',
+            quantity=10
+        )
+        IssueCart.objects.create(
+            object_id=self.glass.id,
+            object_type='GLASSWARE',
+            quantity=10
+        )
+        IssueCart.objects.create(
+            object_id=self.instru.id,
+            object_type='INSTRUMENT',
+            quantity=10
+        )
+        StoreConsumer.objects.create(
+            name="Lab 1",
+            consumer_type="PHYSICAL",
+            room_number="110",
+            building_name="Chem Build"
+        )
+        self.client.post('/api/management/issue-cart/1/merge/', format='json')
+        response = self.client.get('/api/management/issues/1/', format='json')
+        self.assertEqual(IssueCart.objects.count(), 0)
+        self.assertEqual(StoreConsumer.objects.count(), 1)
+        self.assertEqual(IssueObject.objects.count(), 3)
+        self.assertEqual(Issue.objects.count(), 1)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data[0]['objects']), 3)

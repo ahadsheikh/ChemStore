@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
@@ -55,3 +55,42 @@ class IssueCartViewSet(viewsets.ModelViewSet):
 
             issue_cart.delete()
         return Response({'success': 'Issue cart merged successfully'}, status=200)
+
+
+@api_view(['GET'])
+def issues(request, location_id):
+    location = get_object_or_404(StoreConsumer, pk=location_id)
+    issues = Issue.objects.filter(store_consumer=location)
+
+    res = []
+    for issue in issues:
+        issue_objects = IssueObject.objects.filter(issue=issue)
+
+        obj = {
+            'id': issue.id,
+            'created_at': issue.created_at,
+            'objects': []
+        }
+
+        for iss_obj in issue_objects:
+            o = {}
+            mat_ob = None
+            if iss_obj.object_type == 'CHEMICAL':
+                mat_ob = get_object_or_404(Chemical, pk=iss_obj.object_id)
+            elif iss_obj.object_type == 'GLASSWARE':
+                mat_ob = get_object_or_404(Glassware, pk=iss_obj.object_id)
+            elif iss_obj.object_type == 'INSTRUMENT':
+                mat_ob = get_object_or_404(Instrument, pk=iss_obj.object_id)
+            else:
+                return Response({"error": "Issues has wrong objects"})
+
+            o['id'] = mat_ob.id
+            o['name'] = mat_ob.name
+            o['object_type'] = iss_obj.object_type
+            o['quantity'] = iss_obj.quantity
+
+            obj['objects'].append(o)
+
+        res.append(obj)
+    return Response(res)
+
