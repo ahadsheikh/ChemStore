@@ -3,7 +3,7 @@ import React from "react";
 const ShipmentInput = (props) => {
   return (
     <div>
-      <label>{props.placeholder}</label>
+      {props.labelShow && <label>{props.placeholder}</label>}
       <input
         className={["input", props.bckColor].join(" ")}
         type={props.type}
@@ -11,6 +11,7 @@ const ShipmentInput = (props) => {
         name={props.name}
         value={props.value}
         onChange={props.handler}
+        readOnly={props.readOnly}
       />
     </div>
   );
