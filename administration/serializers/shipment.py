@@ -19,23 +19,16 @@ class ChemicalTempShipmentCreateSerializer(serializers.ModelSerializer):
         fields = ['chemical', 'quantity']
 
     def create(self, validated_data):
-        chemical = validated_data.get('chemical')
-        if chemical.quantity < validated_data.get('quantity'):
-            raise serializers.ValidationError({'detail': 'Chemical quantity is not enough'})
+        if validated_data.get('quantity') < 1:
+            raise serializers.ValidationError({'detail': 'Chemical quantity need to be more than 1'})
 
-        return ChemicalTempShipment.objects.create(old_total=chemical.quantity, **validated_data)
+        return ChemicalTempShipment.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        chemical = validated_data.get('chemical', None)
-        if chemical:
-            instance.chemical = chemical
-            if chemical.quantity < validated_data.get('quantity', instance.quantity):
-                raise serializers.ValidationError({'detail': 'Chemical quantity is not enough'})
+        if validated_data.get('quantity') < 1:
+            raise serializers.ValidationError({'detail': 'Chemical quantity need to be more than 1'})
 
-        else:
-            if instance.chemical.quantity < validated_data.get('quantity', instance.quantity):
-                raise serializers.ValidationError({'detail': 'Chemical quantity is not enough'})
-
+        instance.chemical = validated_data.get('chemical', instance.chemical)
         instance.quantity = validated_data.get('quantity', instance.quantity)
         instance.save()
         return instance
@@ -56,23 +49,16 @@ class GlasswareTempShipmentCreateSerializer(serializers.ModelSerializer):
         fields = ['glassware', 'quantity']
 
     def create(self, validated_data):
-        glassware = validated_data.get('glassware')
-        if glassware.quantity < validated_data.get('quantity'):
-            raise serializers.ValidationError({'detail': 'Glassware quantity is not enough'})
+        if validated_data.get('quantity') < 1:
+            raise serializers.ValidationError({'detail': 'Glassware quantity need to be more than 1'})
 
-        return GlasswareTempShipment.objects.create(old_total=glassware.quantity, **validated_data)
+        return GlasswareTempShipment.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        glassware = validated_data.get('glassware', None)
-        if glassware:
-            instance.glassware = glassware
-            if glassware.quantity < validated_data.get('quantity', instance.quantity):
-                raise serializers.ValidationError({'detail': 'Glassware quantity is not enough'})
+        if validated_data.get('quantity') < 1:
+            raise serializers.ValidationError({'detail': 'Glassware quantity need to be more than 1'})
 
-        else:
-            if instance.glassware.quantity < validated_data.get('quantity', instance.quantity):
-                raise serializers.ValidationError({'detail': 'Glassware quantity is not enough'})
-
+        instance.glassware = validated_data.get('glassware', instance.glassware)
         instance.quantity = validated_data.get('quantity', instance.quantity)
         instance.save()
         return instance
@@ -93,23 +79,15 @@ class InstrumentTempShipmentCreateSerializer(serializers.ModelSerializer):
         fields = ['instrument', 'quantity']
 
     def create(self, validated_data):
-        instrument = validated_data.get('instrument')
-        if instrument.quantity < validated_data.get('quantity'):
-            raise serializers.ValidationError({'detail': 'Instrument quantity is not enough'})
-
-        return InstrumentTempShipment.objects.create(old_total=instrument.quantity, **validated_data)
+        if validated_data.get('quantity') < 1:
+            raise serializers.ValidationError({'detail': 'Instrument quantity need to be more than 1'})
+        return InstrumentTempShipment.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instrument = validated_data.get('instrument', None)
-        if instrument:
-            instance.instrument = instrument
-            if instrument.quantity < validated_data.get('quantity', instance.quantity):
-                raise serializers.ValidationError({'detail': 'Instrument quantity is not enough'})
+        if validated_data.get('quantity') < 1:
+            raise serializers.ValidationError({'detail': 'Instrument quantity need to be more than 1'})
 
-        else:
-            if instance.instrument.quantity < validated_data.get('quantity', instance.quantity):
-                raise serializers.ValidationError({'detail': 'Instrument quantity is not enough'})
-
+        instance.instrument = validated_data.get('instrument', instance.instrument)
         instance.quantity = validated_data.get('quantity', instance.quantity)
         instance.save()
         return instance

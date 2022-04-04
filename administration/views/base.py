@@ -16,15 +16,14 @@ from administration.serializers.serializers import (
     InstrumentSerializer,
     StoreSerializer,
     ChemicalCreateSerializer,
-    AddShipmentSerializer, ShipmentSerializer, MakeIssueSerializer, StoreConsumerSerializer, ChemicalUpdateSerializer,
-    GlasswareCreateSerializer, InstrumentCreateSerializer
+    AddShipmentSerializer, ShipmentSerializer, StoreConsumerSerializer
 )
 
 from administration.models import (
     Chemical, Glassware, Instrument, Store, Shipment,
     ChemicalShipment,
     GlasswareShipment,
-    InstrumentShipment, StoreIssue, StoreConsumer, ChemicalIssue, GlasswareIssue, InstrumentIssue
+    InstrumentShipment, StoreConsumer
 )
 from core.utils import molar_mass
 
@@ -33,34 +32,20 @@ class ChemicalViewSet(ModelViewSet):
     queryset = Chemical.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.action == 'create' or self.action == 'update':
             return ChemicalCreateSerializer
-        elif self.action == 'update':
-            return ChemicalUpdateSerializer
         else:
             return ChemicalSerializer
 
 
 class GlasswareViewSet(ModelViewSet):
     queryset = Glassware.objects.all()
-
-    def get_serializer_class(self):
-        print(self.action)
-        if self.action == 'create':
-            return GlasswareCreateSerializer
-        else:
-            return GlasswareSerializer
+    serializer_class = GlasswareSerializer
 
 
 class InstrumentViewSet(ModelViewSet):
     queryset = Instrument.objects.all()
-
-    def get_serializer_class(self):
-        print(self.action)
-        if self.action == 'create':
-            return InstrumentCreateSerializer
-        else:
-            return InstrumentSerializer
+    serializer_class = InstrumentSerializer
 
 
 class StoreViewSet(ModelViewSet):
@@ -72,8 +57,9 @@ class StoreViewSet(ModelViewSet):
         """
         List all chemical in a store
         """
-        store = get_object_or_404(Store, pk=pk)
-        chemicals = store.chemicals.all()
+        # store = get_object_or_404(Store, pk=pk)
+        # chemicals = store.chemicals.all()
+        chemicals = Chemical.objects.all()
 
         chem_datas = ChemicalSerializer(instance=chemicals, many=True)
 
@@ -84,8 +70,9 @@ class StoreViewSet(ModelViewSet):
         """
         List all glassware in a store
         """
-        store = get_object_or_404(Store, pk=pk)
-        glasswares = store.glasswares.all()
+        # store = get_object_or_404(Store, pk=pk)
+        # glasswares = store.glasswares.all()
+        glasswares = Glassware.objects.all()
 
         glass_datas = GlasswareSerializer(instance=glasswares, many=True)
 
@@ -96,8 +83,9 @@ class StoreViewSet(ModelViewSet):
         """
         List all instrument in a store
         """
-        store = get_object_or_404(Store, pk=pk)
-        instruments = store.instruments.all()
+        # store = get_object_or_404(Store, pk=pk)
+        # instruments = store.instruments.all()
+        instruments = Instrument.objects.all()
 
         instru_datas = InstrumentSerializer(instance=instruments, many=True)
 
@@ -364,121 +352,5 @@ def add_shipment(request):
         )
 
     res['shipment'] = ShipmentSerializer(shipment).data
-
-    return Response(res)
-
-
-@api_view(['POST'])
-def make_issue(request):
-    """
-    Create an issue for materials
-    """
-    serializer = MakeIssueSerializer(data=request.data)
-
-    material_type = ["CHEMICAL", "GLASSWARE", "INSTRUMENT"]
-
-    serializer.is_valid(raise_exception=True)
-
-    res = {
-        'errors': []
-    }
-
-    try:
-        consumer = StoreConsumer.objects.get(pk=serializer.validated_data['consumer_id'])
-    except ObjectDoesNotExist:
-        res['errors'].append("Consumer not found")
-        return Response(res, status=status.HTTP_404_NOT_FOUND)
-
-    note = "No Note"
-    if 'note' in serializer.validated_data:
-        note = serializer.validated_data['note']
-
-    carrier_name = "Unknown"
-    if 'carrier_name' in serializer.validated_data:
-        carrier_name = serializer.validated_data['carrier_name']
-
-    for obj in serializer.validated_data['objects']:
-
-        if obj['material_type'] not in material_type:
-            res["errors"].append("Some material type is invalid. Valid type is CHEMICAL/GLASSWARE/INSTRUMENT.")
-            return Response(res, status=status.HTTP_400_BAD_REQUEST)
-
-        flag = False
-
-        # Checking if objects are exists in store
-        if obj['material_type'] == material_type[0]:
-            chem = Chemical.objects.filter(pk=obj['id'])
-            if chem.exists():
-                if chem[0].quantity < obj['quantity']:
-                    res['errors'].append(f"{chem[0].name} is not enough.")
-                    flag = True
-            else:
-                flag = True
-                res["errors"].append("Some material is not found.")
-
-        elif obj['material_type'] == material_type[1]:
-            glass = Glassware.objects.filter(pk=obj['id'])
-            if glass.exists():
-                if glass[0].quantity < int(obj['quantity']):
-                    res['errors'].append(f"{glass[0].name} is not enough.")
-                    flag = True
-            else:
-                flag = True
-                res["errors"].append("Some material is not found.")
-
-        elif obj['material_type'] == material_type[2]:
-            inst = Instrument.objects.filter(pk=obj['id'])
-            if inst.exists():
-                if inst[0].quantity < int(obj['quantity']):
-                    res['errors'].append(f"{inst[0].name} is not enough.")
-                    flag = True
-            else:
-                flag = True
-                res["errors"].append("Some material is not found.")
-
-        if flag:
-            return Response(res, status=status.HTTP_400_BAD_REQUEST)
-
-    # Creating issue object
-    issue = StoreIssue.objects.create(
-        issue_date=serializer.validated_data['issue_date'],
-        carrier_name=carrier_name,
-        note=note,
-        store_consumer=consumer
-    )
-
-    for obj in serializer.validated_data['objects']:
-        if obj['material_type'] == material_type[0]:
-            chem = Chemical.objects.get(pk=obj['id'])
-            ChemicalIssue.objects.create(
-                chemical=chem,
-                issue=issue,
-                old_quantity=chem.quantity,
-                new_quantity=chem.quantity - obj['quantity']
-            )
-            chem.quantity = chem.quantity - obj['quantity']
-            chem.save()
-        elif obj['material_type'] == material_type[1]:
-            glass = Glassware.objects.get(pk=obj['id'])
-            GlasswareIssue.objects.create(
-                glassware=glass,
-                issue=issue,
-                old_quantity=glass.quantity,
-                new_quantity=glass.quantity - obj['quantity']
-            )
-            glass.quantity = glass.quantity - obj['quantity']
-            glass.save()
-        elif obj['material_type'] == material_type[2]:
-            inst = Instrument.objects.get(pk=obj['id'])
-            InstrumentIssue.objects.create(
-                instrument=inst,
-                issue=issue,
-                old_quantity=inst.quantity,
-                new_quantity=inst.quantity - obj['quantity']
-            )
-            inst.quantity = inst.quantity - obj['quantity']
-            inst.save()
-
-        res['message'] = 'Issue Created'
 
     return Response(res)

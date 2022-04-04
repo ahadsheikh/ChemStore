@@ -33,34 +33,18 @@ class ChemicalSerializer(serializers.ModelSerializer):
                   'manufacturer', 'supplier', 'state', 'quantity']
 
 
-class ChemicalUpdateSerializer(serializers.ModelSerializer):
+class ChemicalCreateSerializer(serializers.ModelSerializer):
+    molecular_formula = serializers.CharField(max_length=300, required=False, validators=[compound_name_validator])
 
     class Meta:
         model = Chemical
         fields = ['CAS_RN', 'name', 'purity', 'molecular_formula',
                   'manufacturer', 'supplier', 'state', 'quantity']
 
-
-class ChemicalCreateSerializer(serializers.ModelSerializer):
-    molecular_formula = serializers.CharField(max_length=300, required=False, validators=[compound_name_validator])
-    store = serializers.IntegerField(required=True)
-
-    class Meta:
-        model = Chemical
-        fields = ['store', 'CAS_RN', 'name', 'purity', 'molecular_formula',
-                  'manufacturer', 'supplier', 'state', 'quantity']
-
     def create(self, validated_data):
         mf = validated_data.get('molecular_formula')
         validated_data['molecular_weight'] = molar_mass(mf)
-        store_id = validated_data.get('store')
-        validated_data.pop('store', None)
         chemical = Chemical.objects.create(**validated_data)
-        try:
-            store = Store.objects.get(id=store_id)
-            store.chemicals.add(chemical)
-        except Store.DoesNotExist:
-            raise serializers.ValidationError({'detail': 'Store not found in the given id'})
         return chemical
 
     def update(self, instance, validated_data):
@@ -88,49 +72,11 @@ class GlasswareSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'manufacturer', 'supplier', 'size', 'material_type', 'quantity']
 
 
-class GlasswareCreateSerializer(serializers.ModelSerializer):
-    store = serializers.IntegerField(required=True)
-
-    class Meta:
-        model = Glassware
-        fields = ['store', 'name', 'manufacturer', 'supplier', 'size', 'material_type', 'quantity']
-
-    def create(self, validated_data):
-        store_id = validated_data['store']
-        validated_data.pop('store', None)
-        glassware = Glassware.objects.create(**validated_data)
-        try:
-            store = Store.objects.get(id=store_id)
-            store.glasswares.add(glassware)
-        except Store.DoesNotExist:
-            raise serializers.ValidationError({'detail': 'Store not found in the given id'})
-        return glassware
-
-
 class InstrumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Instrument
         fields = ['id', 'name', 'manufacturer', 'supplier', 'quantity']
-
-
-class InstrumentCreateSerializer(serializers.ModelSerializer):
-    store = serializers.IntegerField(required=True)
-
-    class Meta:
-        model = Instrument
-        fields = ['store', 'name', 'manufacturer', 'supplier', 'quantity']
-
-    def create(self, validated_data):
-        store_id = validated_data['store']
-        validated_data.pop('store', None)
-        instrument = Instrument.objects.create(**validated_data)
-        try:
-            store = Store.objects.get(id=store_id)
-            store.instruments.add(instrument)
-        except Store.DoesNotExist:
-            raise serializers.ValidationError({'detail': 'Store not found in the given id'})
-        return instrument
 
 
 class StoreSerializer(serializers.ModelSerializer):
@@ -174,24 +120,6 @@ class AddShipmentSerializer(serializers.Serializer):
     chemical = ChemicalShipment()
     glassware = GlasswareShipment()
     instrument = InstrumentShipment()
-
-
-# Serializers for
-class IssueSerializer(serializers.Serializer):
-    """
-    material_type: ["CHEMICAL", "GLASSWARE", "INSTRUMENT"]
-    """
-    id = serializers.IntegerField()
-    material_type = serializers.CharField(max_length=10)
-    quantity = serializers.FloatField()
-
-
-class MakeIssueSerializer(serializers.Serializer):
-    issue_date = serializers.DateField()
-    carrier_name = serializers.CharField(max_length=30, required=False)
-    note = serializers.CharField(max_length=200, required=False)
-    consumer_id = serializers.IntegerField()
-    objects = IssueSerializer(many=True)
 
 
 class StoreConsumerSerializer(serializers.ModelSerializer):
