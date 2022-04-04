@@ -254,6 +254,7 @@ class IssueObject(models.Model):
 class IssueCart(models.Model):
     object_id = models.PositiveBigIntegerField()
     object_type = models.CharField(max_length=10, choices=object_type_choices)
+    is_new_obj = models.BooleanField(default=False)
     quantity = models.FloatField()
 
     created_at = models.DateTimeField(auto_now_add=True)

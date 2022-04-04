@@ -38,7 +38,7 @@ class ChemicalCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chemical
-        fields = ['CAS_RN', 'name', 'purity', 'molecular_formula',
+        fields = ['id', 'CAS_RN', 'name', 'purity', 'molecular_formula',
                   'manufacturer', 'supplier', 'state', 'quantity']
 
     def create(self, validated_data):

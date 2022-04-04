@@ -510,4 +510,3 @@ class ShipmentTestCase(APITestCase):
         self.client.post(reverse('instrument_temp_shipment-merge'))
 
         response = self.client.get(reverse('shipments') + '?type=chemical')
-        print(response.data)

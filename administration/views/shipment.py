@@ -114,7 +114,6 @@ class InstrumentTempShipmentViewSet(ModelViewSet):
         return Response({'message': 'Shipment merged'})
 
 
-
 @api_view(['GET'])
 def shipments(request):
     type_ = request.GET.get('type')

@@ -7,7 +7,7 @@ class IssueCartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IssueCart
-        fields = ('id', 'object_id', 'object_type', 'quantity')
+        fields = ('id', 'object_id', 'object_type', 'is_new_obj', 'quantity')
 
     def is_available(self, class_name, object_id, quantity):
         try:
@@ -47,6 +47,7 @@ class IssueCartSerializer(serializers.ModelSerializer):
 
         instance.object_id = validated_data.get('object_id', instance.object_id)
         instance.object_type = obj_type
+        instance.is_new_obj = validated_data.get('is_new_obj', instance.is_new_obj)
         instance.quantity = validated_data.get('quantity', instance.quantity)
         instance.save()
         return instance
