@@ -12,6 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {} from "../..";
 import AddChemicalTest from "../addShipment/AddChemicalTest";
+import AddInstrumentTest from "../addShipment/AddInstrumentTest";
 
 const dummyChemical = {
   CAS_RN: "",
@@ -75,7 +76,6 @@ const AddShipment = (props) => {
       .get("/api/management/chemicals/")
       .then((res) => {
         setChemicals(res.data);
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -308,48 +308,12 @@ const AddShipment = (props) => {
               chemicals={chemicals}
             />
           )}
-          {instrumentModal && <div>Instrument</div>}
+          {instrumentModal && <AddInstrumentTest />}
           {glassWare && <div>Glass Ware</div>}
 
           {/* CONDITIONALLY RENDERING  */}
           <div className="">
-            {credential.map((el, i) => {
-              if (el.type === "chemical") {
-                return (
-                  <AddChemical
-                    key={i}
-                    removeHandler={() => removeCredentialHandler(i)}
-                    handler={(e) => inputDataHandler(e, i)}
-                    valueObj={el}
-                    readOnly={el.isNew}
-                    value={chemicalCredential.chemical}
-                    // options={chemical}
-                  />
-                );
-              } else if (el.type === "instrument") {
-                return (
-                  <AddInstrument
-                    key={i}
-                    removeHandler={() => removeCredentialHandler(i)}
-                    handler={(e) => inputDataHandler(e, i)}
-                    valueObj={el}
-                    readOnly={el.isNew}
-                    value={chemicalCredential.instrument}
-                  />
-                );
-              } else if (el.type === "glassware") {
-                return (
-                  <AddGlassWare
-                    key={i}
-                    removeHandler={() => removeCredentialHandler(i)}
-                    handler={(e) => inputDataHandler(e, i)}
-                    valueObj={el}
-                    readOnly={el.isNew}
-                    value={chemicalCredential.glassWare}
-                  />
-                );
-              }
-            })}
+
             {credential.length > 0 && (
               <button
                 onClick={submitShipmentHandler}

@@ -20,8 +20,14 @@ const dummyChemical = {
   type: "",
   newQuantity: "",
 };
+const dummyInstrument = {
+    name: "",
+    manufacturer: "",
+    supplier: "",
+    quantity: "",
+  };
 
-const AddChemicalTest = (props) => {
+const AddInstrumentTest = (props) => {
   const [searchInput, setSearchInput] = useState("");
   const [tempShipment, setTempShipment] = useState({ data: [], flag: false });
   const [fuzzySearchResult, setFuzzySearchResult] = useState([]);
@@ -38,8 +44,9 @@ const AddChemicalTest = (props) => {
 
   const getTempShipmentHandler = () => {
     axios
-      .get(`/api/management/chemical-temp-shipment/`)
+      .get(`/api/management/instrument-temp-shipment/`)
       .then((res) => {
+          console.log(res.data)
         setTempShipment({ data: res.data, flag: true });
         setTempShipmentLoading(false);
       })
@@ -56,7 +63,7 @@ const AddChemicalTest = (props) => {
 
   const fuzzySearchHandler = (value) => {
     axios
-      .get(`/api/management/fuzzysearch/?type=chemical&query=${value}`)
+      .get(`/api/management/fuzzysearch/?type=instrument&query=${value}`)
       .then((res) => {
         setFuzzySearchResult(res.data);
       })
@@ -77,6 +84,7 @@ const AddChemicalTest = (props) => {
     } else {
       chemical = { ...chemical, newQuantity: "" };
     }
+    console.log(chemical, isNew)
     setChemicalCredential({ ...chemical, isNew });
     setSearchInput("");
     setShowChemicalElement(true);
@@ -107,7 +115,7 @@ const AddChemicalTest = (props) => {
     if (chemicalCredential.isNew && type.create) {
       console.log(copyCredential)
       axios
-        .post(`/api/management/chemicals/`, copyCredential)
+        .post(`/api/management/instruments/`, copyCredential)
         .then((res) => {
           console.log(res.data);
           const newData = {
@@ -117,7 +125,7 @@ const AddChemicalTest = (props) => {
           console.log(newData);
 
           axios
-            .post(`/api/management/chemical-temp-shipment/`, newData)
+            .post(`/api/management/instrument-temp-shipment/`, newData)
             .then((res) => {
               getTempShipmentHandler();
               setShowChemicalElement(false);
@@ -141,8 +149,8 @@ const AddChemicalTest = (props) => {
             quantity: chemicalCredential.newQuantity,
           })
       axios
-        .post(`/api/management/chemical-temp-shipment/`, {
-          chemical: chemicalCredential.id,
+        .post(`/api/management/instrument-temp-shipment/`, {
+        instrument: chemicalCredential.id,
           quantity: chemicalCredential.newQuantity,
         })
         .then((res) => {
@@ -159,7 +167,7 @@ const AddChemicalTest = (props) => {
     } else if (type.edit) {
       axios
         .patch(
-          `/api/management/chemical-temp-shipment/${chemicalCredential.id}/`,
+          `/api/management/instrument-temp-shipment/${chemicalCredential.id}/`,
           {
             quantity: chemicalCredential.newQuantity,
           }
@@ -228,11 +236,11 @@ const AddChemicalTest = (props) => {
         <div className="chemical_div">
           <input
             name="chemical"
-            placeholder="Chemical"
+            placeholder="Instrument"
             value={searchInput}
             onChange={searchInputHandler}
           />
-          <button onClick={() => foundChemicalHandler(dummyChemical, true)}>
+          <button onClick={() => foundChemicalHandler(dummyInstrument, true)}>
             Create
           </button>
         </div>
@@ -257,7 +265,7 @@ const AddChemicalTest = (props) => {
       </div>
       {showChemicalElement && (
         <div className="add_chemical_container">
-          <Header text="Add Chemical">
+          <Header text="Add Instrument">
             <button
               className="central_header_remove_btn"
               onClick={removeHandler}
@@ -285,7 +293,7 @@ const AddChemicalTest = (props) => {
               </div>
               <div className="container-fluid">
                 <div className="row row-cols-1 row-cols-sm-2">
-                  <div className="col">
+                  {/* <div className="col">
                     <ShipmentInput
                       labelShow
                       type="text"
@@ -296,8 +304,8 @@ const AddChemicalTest = (props) => {
                       handler={inputHandler}
                       readOnly={!chemicalCredential.isNew}
                     />
-                  </div>
-                  <div className="col">
+                  </div> */}
+                  {/* <div className="col">
                     <ShipmentInput
                       labelShow
                       type="text"
@@ -308,7 +316,7 @@ const AddChemicalTest = (props) => {
                       handler={inputHandler}
                       readOnly={!chemicalCredential.isNew}
                     />
-                  </div>
+                  </div> */}
                   {/* <div className="col">
                     <ShipmentInput
                       labelShow
@@ -321,7 +329,7 @@ const AddChemicalTest = (props) => {
                       readOnly={!false}
                     />
                   </div> */}
-                  <div className="col">
+                  {/* <div className="col">
                     <ShipmentInput
                       labelShow
                       type="text"
@@ -332,7 +340,7 @@ const AddChemicalTest = (props) => {
                       handler={inputHandler}
                       readOnly={!chemicalCredential.isNew}
                     />
-                  </div>
+                  </div> */}
                   <div className="col">
                     <ShipmentInput
                       labelShow
@@ -357,7 +365,7 @@ const AddChemicalTest = (props) => {
                       readOnly={!chemicalCredential.isNew}
                     />
                   </div>
-                  <div className="col">
+                  {/* <div className="col">
                     <label>Chemical Type</label>
                     <select
                       className="issue_content_container_top_input"
@@ -375,7 +383,7 @@ const AddChemicalTest = (props) => {
                       <option value="LIQUID">Liquid</option>
                       <option value="GAS">Gas</option>
                     </select>
-                  </div>
+                  </div> */}
                   <div className="col">
                     <label>{`Quantity :  ${chemicalCredential.quantity}`}</label>
                     <ShipmentInput
@@ -439,11 +447,11 @@ const AddChemicalTest = (props) => {
                 <tr>
                   <th style={{ paddingLeft: "2rem" }}>#</th>
                   <th>Name</th>
-                  <th>Molecular Formula</th>
+                  {/* <th>Molecular Formula</th>
                   <th>Molecular Weight</th>
-                  <th>Purity</th>
+                  <th>Purity</th> */}
                   <th>Quantity</th>
-                  <th>State</th>
+                  {/* <th>State</th> */}
                   <th>Manufacturer</th>
                   <th>Supplier</th>
                   <th>New Quantity</th>
@@ -455,14 +463,14 @@ const AddChemicalTest = (props) => {
                   tempShipment.data.map((el, i) => (
                     <tr key={el.id}>
                       <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                      <td>{el.chemical.name}</td>
-                      <td>{el.chemical.molecular_formula}</td>
-                      <td>{el.chemical.molecular_weight}</td>
-                      <td>{el.chemical.purity}</td>
-                      <td>{el.chemical.quantity}</td>
-                      <td>{el.chemical.state}</td>
-                      <td>{el.chemical.manufacturer}</td>
-                      <td>{el.chemical.supplier}</td>
+                      <td>{el.instrument.name}</td>
+                      {/* <td>{el.instrument.molecular_formula}</td>
+                      <td>{el.instrument.molecular_weight}</td>
+                      <td>{el.instrument.purity}</td> */}
+                      <td>{el.instrument.quantity}</td>
+                      {/* <td>{el.instrument.state}</td> */}
+                      <td>{el.instrument.manufacturer}</td>
+                      <td>{el.instrument.supplier}</td>
                       <td>{el.quantity}</td>
                       <td>
                         <div>
@@ -522,4 +530,4 @@ const AddChemicalTest = (props) => {
   );
 };
 
-export default AddChemicalTest;
+export default AddInstrumentTest;
