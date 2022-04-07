@@ -1,31 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button } from "react-bootstrap";
-import Input from "../input/Input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Header from "../add/Header";
 import ShipmentInput from "./ShipmentInput";
 import axios from "../../axios/axios";
 
-const dummyChemical = {
-  CAS_RN: "",
+const dummyInstrument = {
   name: "",
-  purity: "",
-  molecular_formula: "",
   manufacturer: "",
   supplier: "",
-  state: "",
   quantity: "",
-  molecular_weight: "",
-  type: "",
-  newQuantity: "",
 };
-const dummyInstrument = {
-    name: "",
-    manufacturer: "",
-    supplier: "",
-    quantity: "",
-  };
 
 const AddInstrumentTest = (props) => {
   const [searchInput, setSearchInput] = useState("");
@@ -40,13 +26,12 @@ const AddInstrumentTest = (props) => {
     id: null,
     loading: true,
   });
-  const [submitLoading, setSubmitLoading] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const getTempShipmentHandler = () => {
     axios
       .get(`/api/management/instrument-temp-shipment/`)
       .then((res) => {
-          console.log(res.data)
         setTempShipment({ data: res.data, flag: true });
         setTempShipmentLoading(false);
       })
@@ -72,19 +57,18 @@ const AddInstrumentTest = (props) => {
       });
   };
 
-
   const searchInputHandler = (e) => {
     fuzzySearchHandler(e.target.value);
     setSearchInput(e.target.value);
   };
 
-  const foundChemicalHandler = (chemical, isNew) => {
+  const foundInstrumentHandler = (chemical, isNew) => {
     if (isNew) {
       chemical = { ...chemical, name: searchInput, quantity: 0 };
     } else {
       chemical = { ...chemical, newQuantity: "" };
     }
-    console.log(chemical, isNew)
+    console.log(chemical, isNew);
     setChemicalCredential({ ...chemical, isNew });
     setSearchInput("");
     setShowChemicalElement(true);
@@ -99,9 +83,7 @@ const AddInstrumentTest = (props) => {
   const addTemporaryHandler = () => {
     setAddLoading(true);
     let copyCredential = { ...chemicalCredential };
-    console.log(chemicalCredential)
     copyCredential.quantity = 0;
-    delete copyCredential.molecular_weight;
     delete copyCredential.newQuantity;
     delete copyCredential.type;
     delete copyCredential.isNew;
@@ -110,16 +92,15 @@ const AddInstrumentTest = (props) => {
       ...copyCredential,
       store: 1,
     };
-    // console.log(copyCredential);
 
     if (chemicalCredential.isNew && type.create) {
-      console.log(copyCredential)
+      console.log(copyCredential);
       axios
         .post(`/api/management/instruments/`, copyCredential)
         .then((res) => {
           console.log(res.data);
           const newData = {
-            chemical: res.data.id,
+            instrument: res.data.id,
             quantity: chemicalCredential.newQuantity,
           };
           console.log(newData);
@@ -144,13 +125,9 @@ const AddInstrumentTest = (props) => {
           setAddLoading(false);
         });
     } else if (!chemicalCredential.isNew && type.create) {
-      console.log({
-            chemical: chemicalCredential.id,
-            quantity: chemicalCredential.newQuantity,
-          })
       axios
         .post(`/api/management/instrument-temp-shipment/`, {
-        instrument: chemicalCredential.id,
+          instrument: chemicalCredential.id,
           quantity: chemicalCredential.newQuantity,
         })
         .then((res) => {
@@ -186,65 +163,78 @@ const AddInstrumentTest = (props) => {
     }
   };
 
-  ///// FOR DELETE A CHEMICAL
+  ///// FOR DELETE A INSTRUMENT
   const deleteFromTempShipmentHandler = (id) => {
     setDeleteLoading({ id, loading: true });
     axios
-      .delete(`/api/management/chemical-temp-shipment/${id}/`)
+      .delete(`/api/management/instrument-temp-shipment/${id}/`)
       .then((res) => {
-        console.log(res.data);
         getTempShipmentHandler();
         setDeleteLoading({ id: null, loading: false });
       })
       .catch((err) => {
-        console.log(err.response);
         setDeleteLoading({ id: null, loading: false });
       });
   };
 
   /// FOR EDIT A CHEMICAL
-  const editChemicalHandler = (el) => {
-    const dummyChemical = {
-      ...el.chemical,
+  const editInstrumentHandler = (el) => {
+    const dummyInstrument = {
+      ...el.instrument,
       id: el.id,
-      secId: el.chemical.id,
+      secId: el.instrument.id,
       newQuantity: el.quantity,
     };
     setShowChemicalElement(true);
-    setChemicalCredential(dummyChemical);
+    setChemicalCredential(dummyInstrument);
     setType({ create: false, edit: true });
   };
 
   const submitHandler = () => {
-    setSubmitLoading(true)
-    axios.post(`/api/management/chemical-temp-shipment/merge/`, {}).then(res => {
-      console.log(res.data)
-      getTempShipmentHandler()
-      setSubmitLoading(false)
-    }).catch(err => {
-      console.log(err.response)
-      setSubmitLoading(false)
-    })
-  }
+    setSubmitLoading(true);
+    axios
+      .post(`/api/management/instrument-temp-shipment/merge/`, {})
+      .then((res) => {
+        console.log(res.data);
+        getTempShipmentHandler();
+        setSubmitLoading(false);
+      })
+      .catch((err) => {
+        console.log(err.response);
+        setSubmitLoading(false);
+      });
+  };
   const removeHandler = () => {
-    setShowChemicalElement(false)
-  }
+    setShowChemicalElement(false);
+  };
 
   return (
     <div className="chemical_add_wrapper">
       <div className="chemical_add_container">
-        <div className="chemical_div">
-          <input
-            name="chemical"
-            placeholder="Instrument"
-            value={searchInput}
-            onChange={searchInputHandler}
-          />
-          <button onClick={() => foundChemicalHandler(dummyInstrument, true)}>
-            Create
-          </button>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col">
+              <input
+                className="form-control"
+                style={{ fontSize: "1.6rem" }}
+                name="instrument"
+                placeholder="Instrument"
+                value={searchInput}
+                onChange={searchInputHandler}
+              />
+            </div>
+            <div className="col-auto">
+              <button
+                className="btn btn-light"
+                style={{ fontSize: "1.6rem" }}
+                onClick={() => foundInstrumentHandler(dummyInstrument, true)}
+              >
+                Create
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="fuzzy_search_div_chemical">
+        <div className="fuzzy_search_div_chemical mt-2">
           {searchInput.length > 0 && (
             <ul className="model_suggestion_ul">
               {props.isProcessing ? (
@@ -253,7 +243,7 @@ const AddInstrumentTest = (props) => {
                 fuzzySearchResult.map((el) => (
                   <li
                     key={el.id}
-                    onClick={() => foundChemicalHandler(el, false)}
+                    onClick={() => foundInstrumentHandler(el, false)}
                   >
                     {el.name}
                   </li>
@@ -293,54 +283,6 @@ const AddInstrumentTest = (props) => {
               </div>
               <div className="container-fluid">
                 <div className="row row-cols-1 row-cols-sm-2">
-                  {/* <div className="col">
-                    <ShipmentInput
-                      labelShow
-                      type="text"
-                      placeholder="CAS RN"
-                      bckColor="color_black "
-                      name="CAS_RN"
-                      value={chemicalCredential.CAS_RN}
-                      handler={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                    />
-                  </div> */}
-                  {/* <div className="col">
-                    <ShipmentInput
-                      labelShow
-                      type="text"
-                      placeholder="Moliqular Formula"
-                      bckColor="color_black "
-                      name="molecular_formula"
-                      value={chemicalCredential.molecular_formula}
-                      handler={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                    />
-                  </div> */}
-                  {/* <div className="col">
-                    <ShipmentInput
-                      labelShow
-                      type="text"
-                      placeholder="Moliqular Weight"
-                      bckColor="color_black "
-                      name="molecular_weight"
-                      value={chemicalCredential.molecular_weight}
-                      handler={inputHandler}
-                      readOnly={!false}
-                    />
-                  </div> */}
-                  {/* <div className="col">
-                    <ShipmentInput
-                      labelShow
-                      type="text"
-                      placeholder="Purity"
-                      bckColor="color_black "
-                      name="purity"
-                      value={chemicalCredential.purity}
-                      handler={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                    />
-                  </div> */}
                   <div className="col">
                     <ShipmentInput
                       labelShow
@@ -365,25 +307,6 @@ const AddInstrumentTest = (props) => {
                       readOnly={!chemicalCredential.isNew}
                     />
                   </div>
-                  {/* <div className="col">
-                    <label>Chemical Type</label>
-                    <select
-                      className="issue_content_container_top_input"
-                      name="state"
-                      value={chemicalCredential.state}
-                      onChange={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                      disabled={!chemicalCredential.isNew}
-                      // required
-                    >
-                      <option value="" disabled selected>
-                        Please Choose...
-                      </option>
-                      <option value="SOLID">Solid</option>
-                      <option value="LIQUID">Liquid</option>
-                      <option value="GAS">Gas</option>
-                    </select>
-                  </div> */}
                   <div className="col">
                     <label>{`Quantity :  ${chemicalCredential.quantity}`}</label>
                     <ShipmentInput
@@ -396,31 +319,33 @@ const AddInstrumentTest = (props) => {
                       handler={inputHandler}
                     />
                   </div>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "2rem",
-                  }}
-                >
-                  <Button
-                    onClick={addTemporaryHandler}
-                    variant="primary"
-                    style={{ fontSize: "1.6rem" }}
-                    disabled={addLoading}
-                  >
-                    {addLoading && (
-                      <div
-                        class="spinner-border me-2"
-                        role="status"
-                        style={{ width: "1.4rem", height: "1.4rem" }}
+                  <div className="col">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginTop: "3.5rem",
+                      }}
+                    >
+                      <Button
+                        onClick={addTemporaryHandler}
+                        variant="primary"
+                        style={{ fontSize: "1.6rem" }}
+                        disabled={addLoading}
                       >
-                        <span class="visually-hidden">Loading...</span>
-                      </div>
-                    )}
-                    {type.create ? `Add`: 'Edit'}
-                  </Button>
+                        {addLoading && (
+                          <div
+                            className="spinner-border me-2"
+                            role="status"
+                            style={{ width: "1.4rem", height: "1.4rem" }}
+                          >
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        )}
+                        {type.create ? `Add` : "Edit"}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -437,8 +362,8 @@ const AddInstrumentTest = (props) => {
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
-      )} 
-      {!tempShipmentLoading && tempShipment.data.length > 0 &&
+      )}
+      {!tempShipmentLoading && tempShipment.data.length > 0 && (
         <>
           <div className="border mt-5"></div>
           <div className="container mt-5" style={{ overflowX: "scroll" }}>
@@ -447,11 +372,7 @@ const AddInstrumentTest = (props) => {
                 <tr>
                   <th style={{ paddingLeft: "2rem" }}>#</th>
                   <th>Name</th>
-                  {/* <th>Molecular Formula</th>
-                  <th>Molecular Weight</th>
-                  <th>Purity</th> */}
                   <th>Quantity</th>
-                  {/* <th>State</th> */}
                   <th>Manufacturer</th>
                   <th>Supplier</th>
                   <th>New Quantity</th>
@@ -464,18 +385,14 @@ const AddInstrumentTest = (props) => {
                     <tr key={el.id}>
                       <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
                       <td>{el.instrument.name}</td>
-                      {/* <td>{el.instrument.molecular_formula}</td>
-                      <td>{el.instrument.molecular_weight}</td>
-                      <td>{el.instrument.purity}</td> */}
                       <td>{el.instrument.quantity}</td>
-                      {/* <td>{el.instrument.state}</td> */}
                       <td>{el.instrument.manufacturer}</td>
                       <td>{el.instrument.supplier}</td>
                       <td>{el.quantity}</td>
                       <td>
                         <div>
                           <Button
-                            onClick={() => editChemicalHandler(el)}
+                            onClick={() => editInstrumentHandler(el)}
                             variant="primary"
                           >
                             Edit
@@ -491,10 +408,10 @@ const AddInstrumentTest = (props) => {
                             {el.id === deleteLoading.id &&
                               deleteLoading.loading && (
                                 <div
-                                  class="spinner-border spinner-border-sm me-2"
+                                  className="spinner-border spinner-border-sm me-2"
                                   role="status"
                                 >
-                                  <span class="visually-hidden">
+                                  <span className="visually-hidden">
                                     Loading...
                                   </span>
                                 </div>
@@ -509,23 +426,22 @@ const AddInstrumentTest = (props) => {
             </Table>
           </div>
 
-          <div className="clearfix" >
-            <button onClick={submitHandler} className="btn btn-primary mt-4 px-4 float-end fontSize1_6" disabled={submitLoading}>
-            {submitLoading && (
-                      <div
-                        class="spinner-border me-2"
-                        role="status"
-                        // style={{ width: "1.4rem", height: "1.4rem" }}
-                      >
-                        <span class="visually-hidden">Loading...</span>
-                      </div>
-                    )}
+          <div className="clearfix">
+            <button
+              onClick={submitHandler}
+              className="btn btn-primary mt-4 px-4 float-end fontSize1_6"
+              disabled={submitLoading}
+            >
+              {submitLoading && (
+                <div className="spinner-border me-2" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              )}
               Submit
             </button>
           </div>
         </>
-        }
-      {/* )} */}
+      )}
     </div>
   );
 };

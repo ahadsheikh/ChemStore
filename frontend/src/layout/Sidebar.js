@@ -84,6 +84,12 @@ const Sidebar = (props) => {
       >
         User Managment
       </button>
+      <button
+        onClick={() => props.handlePage(6)}
+        className="sidebar_container_btn"
+      >
+        Shipment
+      </button>
     </div>
   );
 };

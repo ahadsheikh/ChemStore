@@ -11,6 +11,7 @@ import Search from "../component/search/Search";
 import axios from "../axios/axios";
 import OverLaySideBar from "./OverLaySideBar";
 import AddShipment from "../component/add/AddShipment";
+import Main from "../component/shipment/Main";
 
 const Layout = () => {
   const [showBackModal, setShowBlockModal] = useState(false);
@@ -23,6 +24,7 @@ const Layout = () => {
     <Location />,
     <Issue />,
     <UserManagment />,
+    <Main />
   ];
 
   const sideDrawerHandler = () => {

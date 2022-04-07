@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button } from "react-bootstrap";
+import Input from "../input/Input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Header from "../add/Header";
 import ShipmentInput from "./ShipmentInput";
 import axios from "../../axios/axios";
 
-const dummyChemical = {
-  CAS_RN: "",
+const dummyGlassware = {
   name: "",
-  purity: "",
-  molecular_formula: "",
   manufacturer: "",
   supplier: "",
-  state: "",
+  size: "",
+  material_type: "",
   quantity: "",
-  molecular_weight: "",
-  type: "",
-  newQuantity: "",
 };
 
-const AddChemicalTest = (props) => {
+const AddGlasswareTest = (props) => {
   const [searchInput, setSearchInput] = useState("");
   const [tempShipment, setTempShipment] = useState({ data: [], flag: false });
   const [fuzzySearchResult, setFuzzySearchResult] = useState([]);
@@ -35,11 +31,11 @@ const AddChemicalTest = (props) => {
   });
   const [submitLoading, setSubmitLoading] = useState(false);
 
-  //// GET TEMPORAY SHIPMENT
   const getTempShipmentHandler = () => {
     axios
-      .get(`/api/management/chemical-temp-shipment/`)
+      .get(`/api/management/glassware-temp-shipment/`)
       .then((res) => {
+        console.log(res.data);
         setTempShipment({ data: res.data, flag: true });
         setTempShipmentLoading(false);
       })
@@ -54,10 +50,9 @@ const AddChemicalTest = (props) => {
     getTempShipmentHandler();
   }, []);
 
-  ///// FUZZY SEARCH
   const fuzzySearchHandler = (value) => {
     axios
-      .get(`/api/management/fuzzysearch/?type=chemical&query=${value}`)
+      .get(`/api/management/fuzzysearch/?type=glassware&query=${value}`)
       .then((res) => {
         setFuzzySearchResult(res.data);
       })
@@ -71,32 +66,29 @@ const AddChemicalTest = (props) => {
     setSearchInput(e.target.value);
   };
 
-  //// IF CHEMICAL IS EXIST
   const foundChemicalHandler = (chemical, isNew) => {
     if (isNew) {
       chemical = { ...chemical, name: searchInput, quantity: 0 };
     } else {
       chemical = { ...chemical, newQuantity: "" };
     }
+    console.log(chemical, isNew);
     setChemicalCredential({ ...chemical, isNew });
     setSearchInput("");
     setShowChemicalElement(true);
     setType({ create: true, edit: false });
   };
 
-  ///// FOR GETTING INPUT FROM USER
   const inputHandler = (e) => {
     const { name, value } = e.target;
     setChemicalCredential({ ...chemicalCredential, [name]: value });
   };
 
-  ////// FOR ADDING TO TEMPORARY SHIPMENT
   const addTemporaryHandler = () => {
     setAddLoading(true);
-    ///// FORMING OBJECT
     let copyCredential = { ...chemicalCredential };
     copyCredential.quantity = 0;
-    delete copyCredential.molecular_weight;
+    // delete copyCredential.molecular_weight;
     delete copyCredential.newQuantity;
     delete copyCredential.type;
     delete copyCredential.isNew;
@@ -106,20 +98,18 @@ const AddChemicalTest = (props) => {
       store: 1,
     };
 
-    //// IF THE CHEMICAL IS NOT EXIST(IF NEW) TO DB
     if (chemicalCredential.isNew && type.create) {
-      //// FIRST CREATE THE CHEMICAL IF SUCCESS THEN ADD TO TEMPORARY SHIPMENT
       axios
-        .post(`/api/management/chemicals/`, copyCredential)
+        .post(`/api/management/glasswares/`, copyCredential)
         .then((res) => {
+          console.log(res.data);
           const newData = {
-            chemical: res.data.id,
+            glassware: res.data.id,
             quantity: chemicalCredential.newQuantity,
           };
 
-          /// IF SUCCESS THEN ADD TO TEMP SHIPMENT
           axios
-            .post(`/api/management/chemical-temp-shipment/`, newData)
+            .post(`/api/management/glassware-temp-shipment/`, newData)
             .then((res) => {
               getTempShipmentHandler();
               setShowChemicalElement(false);
@@ -127,25 +117,17 @@ const AddChemicalTest = (props) => {
             })
             .catch((err) => {
               console.log("CREATE Temp HSIPMENT");
-              console.log(err.response);
               setAddLoading(false);
             });
         })
         .catch((err) => {
           console.log("CREATE CHEMICAL");
-          console.log(err.response);
           setAddLoading(false);
         });
-
-      //// IF CHEMICAL IS EXIST IN DB THEN THIS PORTION WILL EXECUTE
     } else if (!chemicalCredential.isNew && type.create) {
-      console.log({
-        chemical: chemicalCredential.id,
-        quantity: chemicalCredential.newQuantity,
-      });
       axios
-        .post(`/api/management/chemical-temp-shipment/`, {
-          chemical: chemicalCredential.id,
+        .post(`/api/management/glassware-temp-shipment/`, {
+          glassware: chemicalCredential.id,
           quantity: chemicalCredential.newQuantity,
         })
         .then((res) => {
@@ -159,11 +141,10 @@ const AddChemicalTest = (props) => {
           console.log(err.response);
           setAddLoading(false);
         });
-      //// IF TEMPORARY ADDED SHIPMENT IS EDIT
     } else if (type.edit) {
       axios
         .patch(
-          `/api/management/chemical-temp-shipment/${chemicalCredential.id}/`,
+          `/api/management/glassware-temp-shipment/${chemicalCredential.id}/`,
           {
             quantity: chemicalCredential.newQuantity,
           }
@@ -171,6 +152,7 @@ const AddChemicalTest = (props) => {
         .then((res) => {
           getTempShipmentHandler();
           setShowChemicalElement(false);
+          console.log(res.data);
           setAddLoading(false);
         })
         .catch((err) => {
@@ -181,40 +163,37 @@ const AddChemicalTest = (props) => {
     }
   };
 
-  ///// FOR DELETE A CHEMICAL
+  ///// FOR DELETE A INSTRUMENT
   const deleteFromTempShipmentHandler = (id) => {
     setDeleteLoading({ id, loading: true });
     axios
-      .delete(`/api/management/chemical-temp-shipment/${id}/`)
+      .delete(`/api/management/glassware-temp-shipment/${id}/`)
       .then((res) => {
-        console.log(res.data);
         getTempShipmentHandler();
         setDeleteLoading({ id: null, loading: false });
       })
       .catch((err) => {
-        console.log(err.response);
         setDeleteLoading({ id: null, loading: false });
       });
   };
 
   /// FOR EDIT A CHEMICAL
-  const editChemicalHandler = (el) => {
-    const dummyChemical = {
-      ...el.chemical,
+  const editInstrumentHandler = (el) => {
+    const dummyGlassware = {
+      ...el.glassware,
       id: el.id,
-      secId: el.chemical.id,
+      secId: el.glassware.id,
       newQuantity: el.quantity,
     };
     setShowChemicalElement(true);
-    setChemicalCredential(dummyChemical);
+    setChemicalCredential(dummyGlassware);
     setType({ create: false, edit: true });
   };
 
-  ///// MERGE TO FINAL SHIPMENT
   const submitHandler = () => {
     setSubmitLoading(true);
     axios
-      .post(`/api/management/chemical-temp-shipment/merge/`, {})
+      .post(`/api/management/glassware-temp-shipment/merge/`, {})
       .then((res) => {
         console.log(res.data);
         getTempShipmentHandler();
@@ -225,13 +204,10 @@ const AddChemicalTest = (props) => {
         setSubmitLoading(false);
       });
   };
-
-  ////// REMOVE CHEMICAL FORM FROM UI
   const removeHandler = () => {
     setShowChemicalElement(false);
   };
 
-  //// RENDER TO UI
   return (
     <div className="chemical_add_wrapper">
       <div className="chemical_add_container">
@@ -242,7 +218,7 @@ const AddChemicalTest = (props) => {
                 className="form-control"
                 style={{ fontSize: "1.6rem" }}
                 name="chemical"
-                placeholder="Chemical"
+                placeholder="Glassware..."
                 value={searchInput}
                 onChange={searchInputHandler}
               />
@@ -251,7 +227,7 @@ const AddChemicalTest = (props) => {
               <button
                 className="btn btn-light"
                 style={{ fontSize: "1.6rem" }}
-                onClick={() => foundChemicalHandler(dummyChemical, true)}
+                onClick={() => foundChemicalHandler(dummyGlassware, true)}
               >
                 Create
               </button>
@@ -279,7 +255,7 @@ const AddChemicalTest = (props) => {
       </div>
       {showChemicalElement && (
         <div className="add_chemical_container">
-          <Header text="Add Chemical">
+          <Header text="Add Instrument">
             <button
               className="central_header_remove_btn"
               onClick={removeHandler}
@@ -311,46 +287,34 @@ const AddChemicalTest = (props) => {
                     <ShipmentInput
                       labelShow
                       type="text"
-                      placeholder="CAS RN"
-                      bckColor="color_black "
-                      name="CAS_RN"
-                      value={chemicalCredential.CAS_RN}
-                      handler={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                    />
-                  </div>
-                  <div className="col">
-                    <ShipmentInput
-                      labelShow
-                      type="text"
-                      placeholder="Moliqular Formula"
-                      bckColor="color_black "
-                      name="molecular_formula"
-                      value={chemicalCredential.molecular_formula}
-                      handler={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                    />
-                  </div>
-                  <div className="col">
-                    <ShipmentInput
-                      labelShow
-                      type="text"
-                      placeholder="Purity"
-                      bckColor="color_black "
-                      name="purity"
-                      value={chemicalCredential.purity}
-                      handler={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                    />
-                  </div>
-                  <div className="col">
-                    <ShipmentInput
-                      labelShow
-                      type="text"
                       placeholder="Manufacturer"
                       bckColor="color_black "
                       name="manufacturer"
                       value={chemicalCredential.manufacturer}
+                      handler={inputHandler}
+                      readOnly={!chemicalCredential.isNew}
+                    />
+                  </div>
+                  <div className="col">
+                    <ShipmentInput
+                      labelShow
+                      type="text"
+                      placeholder="Size"
+                      bckColor="color_black "
+                      name="size"
+                      value={chemicalCredential.size}
+                      handler={inputHandler}
+                      readOnly={!chemicalCredential.isNew}
+                    />
+                  </div>
+                  <div className="col">
+                    <ShipmentInput
+                      labelShow
+                      type="text"
+                      placeholder="Material Type"
+                      bckColor="color_black "
+                      name="material_type"
+                      value={chemicalCredential.material_type}
                       handler={inputHandler}
                       readOnly={!chemicalCredential.isNew}
                     />
@@ -368,25 +332,6 @@ const AddChemicalTest = (props) => {
                     />
                   </div>
                   <div className="col">
-                    <label>Chemical Type</label>
-                    <select
-                      className="issue_content_container_top_input"
-                      name="state"
-                      value={chemicalCredential.state}
-                      onChange={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                      disabled={!chemicalCredential.isNew}
-                      // required
-                    >
-                      <option value="" disabled>
-                        Please Choose...
-                      </option>
-                      <option value="SOLID">Solid</option>
-                      <option value="LIQUID">Liquid</option>
-                      <option value="GAS">Gas</option>
-                    </select>
-                  </div>
-                  <div className="col">
                     <label>{`Quantity :  ${chemicalCredential.quantity}`}</label>
                     <ShipmentInput
                       type="number"
@@ -398,31 +343,33 @@ const AddChemicalTest = (props) => {
                       handler={inputHandler}
                     />
                   </div>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "2rem",
-                  }}
-                >
-                  <Button
-                    onClick={addTemporaryHandler}
-                    variant="primary"
-                    style={{ fontSize: "1.6rem" }}
-                    disabled={addLoading}
-                  >
-                    {addLoading && (
-                      <div
-                        className="spinner-border me-2"
-                        role="status"
-                        style={{ width: "1.4rem", height: "1.4rem" }}
+                  <div className="col">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginTop: "3.5rem",
+                      }}
+                    >
+                      <Button
+                        onClick={addTemporaryHandler}
+                        variant="primary"
+                        style={{ fontSize: "1.6rem" }}
+                        disabled={addLoading}
                       >
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                    )}
-                    {type.create ? `Add` : "Edit"}
-                  </Button>
+                        {addLoading && (
+                          <div
+                            class="spinner-border me-2"
+                            role="status"
+                            style={{ width: "1.4rem", height: "1.4rem" }}
+                          >
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        )}
+                        {type.create ? `Add` : "Edit"}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -449,11 +396,9 @@ const AddChemicalTest = (props) => {
                 <tr>
                   <th style={{ paddingLeft: "2rem" }}>#</th>
                   <th>Name</th>
-                  <th>Molecular Formula</th>
-                  <th>Molecular Weight</th>
-                  <th>Purity</th>
+                  <th>Size</th>
+                  <th>Material Type</th>
                   <th>Quantity</th>
-                  <th>State</th>
                   <th>Manufacturer</th>
                   <th>Supplier</th>
                   <th>New Quantity</th>
@@ -465,19 +410,17 @@ const AddChemicalTest = (props) => {
                   tempShipment.data.map((el, i) => (
                     <tr key={el.id}>
                       <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                      <td>{el.chemical.name}</td>
-                      <td>{el.chemical.molecular_formula}</td>
-                      <td>{el.chemical.molecular_weight}</td>
-                      <td>{el.chemical.purity}</td>
-                      <td>{el.chemical.quantity}</td>
-                      <td>{el.chemical.state}</td>
-                      <td>{el.chemical.manufacturer}</td>
-                      <td>{el.chemical.supplier}</td>
+                      <td>{el.glassware.name}</td>
+                      <td>{el.glassware.size}</td>
+                      <td>{el.glassware.material_type}</td>
+                      <td>{el.glassware.quantity}</td>
+                      <td>{el.glassware.manufacturer}</td>
+                      <td>{el.glassware.supplier}</td>
                       <td>{el.quantity}</td>
                       <td>
                         <div>
                           <Button
-                            onClick={() => editChemicalHandler(el)}
+                            onClick={() => editInstrumentHandler(el)}
                             variant="primary"
                           >
                             Edit
@@ -493,10 +436,10 @@ const AddChemicalTest = (props) => {
                             {el.id === deleteLoading.id &&
                               deleteLoading.loading && (
                                 <div
-                                  className="spinner-border spinner-border-sm me-2"
+                                  class="spinner-border spinner-border-sm me-2"
                                   role="status"
                                 >
-                                  <span className="visually-hidden">
+                                  <span class="visually-hidden">
                                     Loading...
                                   </span>
                                 </div>
@@ -518,8 +461,8 @@ const AddChemicalTest = (props) => {
               disabled={submitLoading}
             >
               {submitLoading && (
-                <div className="spinner-border me-2" role="status">
-                  <span className="visually-hidden">Loading...</span>
+                <div class="spinner-border me-2" role="status">
+                  <span class="visually-hidden">Loading...</span>
                 </div>
               )}
               Submit
@@ -531,4 +474,4 @@ const AddChemicalTest = (props) => {
   );
 };
 
-export default AddChemicalTest;
+export default AddGlasswareTest;
