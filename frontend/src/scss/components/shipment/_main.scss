@@ -1,0 +1,19 @@
+.show_shipment_container {
+    display: flex;
+    justify-content: space-around;
+    // background-color: red;
+    border-bottom: 2px solid red;
+
+    p {
+        margin-bottom: 0;
+        width: 100%;
+        padding: 1rem 0;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+            background-color: aqua;
+
+        }
+    }
+}

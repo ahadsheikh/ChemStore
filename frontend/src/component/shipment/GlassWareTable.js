@@ -1,7 +1,7 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 
-const InstrumentTable = (props) => {
+const GlassWareTable = (props) => {
   return (
     <div>
       <div
@@ -14,6 +14,8 @@ const InstrumentTable = (props) => {
             <tr>
               <th style={{ paddingLeft: "2rem" }}>#</th>
               <th>Name</th>
+              <th>Size</th>
+              <th>Material Type</th>
               <th>Manufacturer</th>
               <th>Supplier</th>
               <th>Old Quantity</th>
@@ -22,10 +24,12 @@ const InstrumentTable = (props) => {
           </thead>
           <tbody>
             {props.flag &&
-              props.item.instruments.map((el, i) => (
+              props.item.glasswares.map((el, i) => (
                 <tr key={i}>
                   <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
                   <td>{el.name}</td>
+                  <td>{el.size}</td>
+                  <td>{el.material_type}</td>
                   <td>{el.manufacturer}</td>
                   <td>{el.supplier}</td>
                   <td>{el.old_total}</td>
@@ -39,4 +43,4 @@ const InstrumentTable = (props) => {
   );
 };
 
-export default InstrumentTable;
+export default GlassWareTable;
