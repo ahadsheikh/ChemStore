@@ -35,7 +35,6 @@ urlpatterns = [
     path('consumers-tree/', consumers_tree, name='consumers_tree'),
     path('shipments/', shipment.shipments, name='shipments'),
     path('issues/<int:location_id>/', issue.issues, name='issues'),
-
 ]
 
 urlpatterns += router.urls
