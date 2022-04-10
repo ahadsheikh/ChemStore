@@ -1,14 +1,14 @@
 # Temporary Shipments
-1. [Chemical Temp Shipment](http://chemstore.azurewebsites.net/api/management/chemical-temp-shipment/)
-   1. [Chemical Merge](http://chemstore.azurewebsites.net/api/management/chemical-temp-shipment/merge/)
-2. [Glassware Temp Shipment](http://chemstore.azurewebsites.net/api/management/glassware-temp-shipment/)
-   1. [Glassware Merge](http://chemstore.azurewebsites.net/api/management/glassware-temp-shipment/merge/)
-3. [Instrument Temp Shipment](http://chemstore.azurewebsites.net/api/management/instrument-temp-shipment/)
-    1. [Instrument Merge](http://chemstore.azurewebsites.net/api/management/instrument-temp-shipment/merge/)
+1. [Chemical Temp Shipment](http://chemstore2.azurewebsites.net/api/management/chemical-temp-shipment/)
+   1. [Chemical Merge](http://chemstore2.azurewebsites.net/api/management/chemical-temp-shipment/merge/)
+2. [Glassware Temp Shipment](http://chemstore2.azurewebsites.net/api/management/glassware-temp-shipment/)
+   1. [Glassware Merge](http://chemstore2.azurewebsites.net/api/management/glassware-temp-shipment/merge/)
+3. [Instrument Temp Shipment](http://chemstore2.azurewebsites.net/api/management/instrument-temp-shipment/)
+    1. [Instrument Merge](http://chemstore2.azurewebsites.net/api/management/instrument-temp-shipment/merge/)
     
 ## **Shipments**
 
-URL: [List of Shipments](https://chemstore.azurewebsites.net/api/management/shipments/?type=chemical)
+URL: [List of Shipments](https://chemstore2.azurewebsites.net/api/management/shipments/?type=chemical)
 
 Params: <type>: <chemical/glassware/instrument>
 

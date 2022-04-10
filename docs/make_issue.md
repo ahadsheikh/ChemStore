@@ -1,13 +1,13 @@
 # Make Issue
 
-1. [Add in Cart](http://chemstore.azurewebsites.net/api/management/issue-cart/)
-2. [Make Issue](http://chemstore.azurewebsites.net/api/management/issue-cart/1/merge/)
+1. [Add in Cart](http://chemstore2.azurewebsites.net/api/management/issue-cart/)
+2. [Make Issue](http://chemstore2.azurewebsites.net/api/management/issue-cart/1/merge/)
 
 
 ## **Issues**
 URL = /api/management/issues/<location_id>/
 
-Link: [List of Issues](https://chemstore.azurewebsites.net/api/management/issues/1/)
+Link: [List of Issues](https://chemstore2.azurewebsites.net/api/management/issues/1/)
 
 Method: GET
 
