@@ -1,4 +1,5 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.core.exceptions import ObjectDoesNotExist
@@ -29,6 +30,7 @@ from core.utils import molar_mass
 
 
 class ChemicalViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Chemical.objects.all()
 
     def get_serializer_class(self):
@@ -39,11 +41,13 @@ class ChemicalViewSet(ModelViewSet):
 
 
 class GlasswareViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Glassware.objects.all()
     serializer_class = GlasswareSerializer
 
 
 class InstrumentViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Instrument.objects.all()
     serializer_class = InstrumentSerializer
 
@@ -93,6 +97,7 @@ class StoreViewSet(ModelViewSet):
 
 
 class StoreConsumerViewset(ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = StoreConsumer.objects.all()
     serializer_class = StoreConsumerSerializer
 
@@ -106,6 +111,7 @@ class StoreConsumerViewset(ModelViewSet):
 
 
 @api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
 def consumers_tree(request):
     """
     return all consumers by consumer type category
@@ -160,6 +166,7 @@ def fuzzy_util(objects, query, limit=10, with_score=False):
 
 
 @api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
 def fuzzy_search(request):
     """
     Query Params:

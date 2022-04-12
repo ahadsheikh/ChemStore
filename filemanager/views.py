@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import mixins
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import Category, File
 from .serializers import CategorySerializer, FileSerializer
@@ -20,6 +21,7 @@ class FileViewset(mixins.CreateModelMixin,
     list method support parameter as query.
     these query can be: category
     """
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = FileSerializer
 
     def get_queryset(self):
