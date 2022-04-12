@@ -59,3 +59,25 @@
     cursor: not-allowed;
   }
 }
+
+.issue_fuzzy_search_container {
+  position: relative;
+}
+
+.issue_fuzzy_result {
+  position: absolute;
+  left: 0;
+  top: 5rem;
+  background-color: white;
+  width: 100%;
+  list-style: none;
+
+  li {
+    padding: .5rem 0;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-primary-1);
+    }
+  }
+}
