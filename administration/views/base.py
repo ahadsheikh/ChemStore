@@ -202,10 +202,13 @@ def fuzzy_search(request):
 
                 if isinstance(obj[1], Chemical):
                     data_l.append(ChemicalSerializer(obj[1]).data)
+                    data_l[-1]['type'] = 'CHEMICAL'
                 elif isinstance(obj[1], Glassware):
                     data_l.append(GlasswareSerializer(obj[1]).data)
+                    data_l[-1]['type'] = 'GLASSWARE'
                 elif isinstance(obj[1], Instrument):
                     data_l.append(InstrumentSerializer(obj[1]).data)
+                    data_l[-1]['type'] = 'INSTRUMENT'
 
                 i += 1
                 if i == limit:

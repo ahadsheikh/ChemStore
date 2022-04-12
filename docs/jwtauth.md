@@ -1,7 +1,7 @@
 # JWR Authentication
 
 ## Token Obtain
-**URL**: [Get Token](https://chemstore.azurewebsites.net/api/token/)
+**URL**: [Get Token](https://chemstore2.azurewebsites.net/api/token/)
 
 **Method**: POST
 
@@ -23,7 +23,7 @@
 ```
 
 ## Refresh Token
-**URl**: [Token Refresh](https://chemstore.azurewebsites.net/api/token/refresh/)
+**URl**: [Token Refresh](https://chemstore2.azurewebsites.net/api/token/refresh/)
 
 **Method**: POST
 

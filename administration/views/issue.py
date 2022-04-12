@@ -5,11 +5,34 @@ from django.shortcuts import get_object_or_404
 
 from administration.models import IssueCart, StoreConsumer, Chemical, Instrument, Glassware, Issue, IssueObject
 from administration.serializers.issue import IssueCartSerializer
+from administration.serializers.serializers import InstrumentSerializer, GlasswareSerializer, ChemicalSerializer
 
 
 class IssueCartViewSet(viewsets.ModelViewSet):
     queryset = IssueCart.objects.all()
     serializer_class = IssueCartSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+        for i in range(len(data)):
+            if data[i]['object_type'] == 'CHEMICAL':
+                data[i]['object'] = ChemicalSerializer(Chemical.objects.get(pk=data[i]['object_id'])).data
+            elif data[i]['object_type'] == 'GLASSWARE':
+                data[i]['object'] = GlasswareSerializer(Glassware.objects.get(pk=data[i]['object_id'])).data
+            elif data[i]['object_type'] == 'INSTRUMENT':
+                data[i]['object'] = InstrumentSerializer(Instrument.objects.get(pk=data[i]['object_id'])).data
+            else:
+                pass
+            del data[i]['object_id']
+        return Response(data)
 
     def issue_helper(self, obj, issue_cart, issue):
         IssueObject.objects.create(

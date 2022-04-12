@@ -186,18 +186,21 @@ class InstrumentShipment(models.Model):
 # Model for Temporary Shipment data
 class ChemicalTempShipment(models.Model):
     chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
+    is_new_obj = models.BooleanField(default=False)
     quantity = models.FloatField()
 
 
 # Model for Temporary Shipment data
 class GlasswareTempShipment(models.Model):
     glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
+    is_new_obj = models.BooleanField(default=False)
     quantity = models.PositiveIntegerField()
 
 
 # Model for Temporary Shipment data
 class InstrumentTempShipment(models.Model):
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
+    is_new_obj = models.BooleanField(default=False)
     quantity = models.PositiveIntegerField()
 
 
@@ -254,7 +257,6 @@ class IssueObject(models.Model):
 class IssueCart(models.Model):
     object_id = models.PositiveBigIntegerField()
     object_type = models.CharField(max_length=10, choices=object_type_choices)
-    is_new_obj = models.BooleanField(default=False)
     quantity = models.FloatField()
 
     created_at = models.DateTimeField(auto_now_add=True)
