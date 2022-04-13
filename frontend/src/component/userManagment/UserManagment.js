@@ -82,7 +82,6 @@ const UserManagment = () => {
 
   ///// FOR UPDATEING USER
   const updateUserHandler = () => {
-    
     setResp({ message: "", loading: true, error: false });
     axios
       .patch(`/api/management/users/${user.id}/`, user)
@@ -123,6 +122,7 @@ const UserManagment = () => {
 
   const createNewUserHandler = () => {
     setResp({ message: "", loading: true, error: false });
+    console.log(newUser);
     axios
       .post(`/api/management/users/`, newUser)
       .then((res) => {
@@ -141,7 +141,7 @@ const UserManagment = () => {
       });
   };
   return (
-    <>
+    <div>
       <SecondModal
         show={show.password}
         handleClose={handleClose}
@@ -313,117 +313,119 @@ const UserManagment = () => {
           </p>
         </div>
       </SecondModal>
-      <div className="user_managment_table_wrapper">
-        <div>
-          <Header text="User Accounts">
-            <button
-              className="central_header_remove_btn"
-              onClick={() => handleShow("newUser")}
-            >
-              <FontAwesomeIcon icon={faUserAlt} /> <span> New User </span>
-            </button>
-          </Header>
-        </div>
+      <div style={{ overflowX: "scroll" }}>
+        <div className="user_managment_table_wrapper">
+          <div>
+            <Header text="User Accounts">
+              <button
+                className="central_header_remove_btn"
+                onClick={() => handleShow("newUser")}
+              >
+                <FontAwesomeIcon icon={faUserAlt} /> <span> New User </span>
+              </button>
+            </Header>
+          </div>
 
-        <div>
-          <Table striped bordered hover variant="dark">
-            <thead>
-              <tr>
-                <th style={{ paddingLeft: "1rem" }}>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {users.loading && (
-                <tr className="user_managment_table_loading_div">
-                  <td colSpan={4} className="text-center">
-                    <Spinner
-                      animation="border"
-                      variant="light"
-                      style={{
-                        fontSize: "1rem",
-                        height: "5rem",
-                        width: "5rem",
-                      }}
-                    />
-                  </td>
+          <div>
+            <Table striped bordered hover variant="dark">
+              <thead>
+                <tr>
+                  <th style={{ paddingLeft: "1rem" }}>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Action</th>
                 </tr>
-              )}
-              {!users.loading &&
-                users.user.map((el) => (
-                  <tr className="user_managment_table_body_row" key={el.id}>
-                    <td
-                      className="user_managment_table_body_row_data"
-                      style={{ paddingLeft: "1rem" }}
-                    >
-                      {el.first_name}
-                    </td>
-                    <td className="user_managment_table_body_row_data">
-                      {el.last_name}
-                    </td>
-                    <td className="user_managment_table_body_row_data">
-                      {el.email}
-                    </td>
-                    <td className="user_managment_table_body_row_data">
-                      <div className="user_managment_btn_container">
-                        <button
-                          disabled={el.is_superuser}
-                          className="user_managment_action_btn detail"
-                          onClick={() => handleShow("password")}
-                        >
-                          <FontAwesomeIcon
-                            style={{ fontSize: "1.1rem" }}
-                            icon={faLock}
-                          />
-                        </button>
-                        <button
-                        disabled={el.is_superuser}
-                          className="user_managment_action_btn detail"
-                          onClick={() =>
-                            handleShow(
-                              "edit",
-                              el.id,
-                              el.first_name,
-                              el.last_name,
-                              el.email
-                            )
-                          }
-                        >
-                          <FontAwesomeIcon
-                            style={{ fontSize: "1.1rem" }}
-                            icon={faPencilAlt}
-                          />
-                        </button>
-                        <button
-                        disabled={el.is_superuser}
-                          className="user_managment_action_btn delete"
-                          onClick={() =>
-                            handleShow(
-                              "delete",
-                              el.id,
-                              el.first_name,
-                              el.last_name,
-                              el.email
-                            )
-                          }
-                        >
-                          <FontAwesomeIcon
-                            style={{ fontSize: "1.1rem" }}
-                            icon={faTimes}
-                          />
-                        </button>
-                      </div>
+              </thead>
+
+              <tbody>
+                {users.loading && (
+                  <tr className="user_managment_table_loading_div">
+                    <td colSpan={4} className="text-center">
+                      <Spinner
+                        animation="border"
+                        variant="light"
+                        style={{
+                          fontSize: "1rem",
+                          height: "5rem",
+                          width: "5rem",
+                        }}
+                      />
                     </td>
                   </tr>
-                ))}
-            </tbody>
-          </Table>
+                )}
+                {!users.loading &&
+                  users.user.map((el) => (
+                    <tr className="user_managment_table_body_row" key={el.id}>
+                      <td
+                        className="user_managment_table_body_row_data"
+                        style={{ paddingLeft: "1rem" }}
+                      >
+                        {el.first_name}
+                      </td>
+                      <td className="user_managment_table_body_row_data">
+                        {el.last_name}
+                      </td>
+                      <td className="user_managment_table_body_row_data">
+                        {el.email}
+                      </td>
+                      <td className="user_managment_table_body_row_data">
+                        <div className="user_managment_btn_container">
+                          <button
+                            disabled={el.is_superuser}
+                            className="user_managment_action_btn detail"
+                            onClick={() => handleShow("password")}
+                          >
+                            <FontAwesomeIcon
+                              style={{ fontSize: "1.1rem" }}
+                              icon={faLock}
+                            />
+                          </button>
+                          <button
+                            disabled={el.is_superuser}
+                            className="user_managment_action_btn detail"
+                            onClick={() =>
+                              handleShow(
+                                "edit",
+                                el.id,
+                                el.first_name,
+                                el.last_name,
+                                el.email
+                              )
+                            }
+                          >
+                            <FontAwesomeIcon
+                              style={{ fontSize: "1.1rem" }}
+                              icon={faPencilAlt}
+                            />
+                          </button>
+                          <button
+                            disabled={el.is_superuser}
+                            className="user_managment_action_btn delete"
+                            onClick={() =>
+                              handleShow(
+                                "delete",
+                                el.id,
+                                el.first_name,
+                                el.last_name,
+                                el.email
+                              )
+                            }
+                          >
+                            <FontAwesomeIcon
+                              style={{ fontSize: "1.1rem" }}
+                              icon={faTimes}
+                            />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

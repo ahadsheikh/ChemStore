@@ -9,10 +9,10 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 const Sidebar = (props) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState({ credential: false, store: false });
-  
+
   const collapseHandler = (name, id) => {
     props.handlePage(id);
-    
+
     setOpen({ ...open, [name]: !open[name] });
   };
 
@@ -47,7 +47,7 @@ const Sidebar = (props) => {
           </ul>
         </div>
       </Collapse>
-      <button
+      {/* <button
         onClick={() => collapseHandler("store", 2)}
         className="add_chemical_btn"
         aria-controls="example-collapse-text"
@@ -65,7 +65,13 @@ const Sidebar = (props) => {
             ))}
           </ul>
         </div>
-      </Collapse>
+      </Collapse> */}
+      <button
+        onClick={() => props.handlePage(2)}
+        className="sidebar_container_btn"
+      >
+        Store
+      </button>
       <button
         onClick={() => props.handlePage(3)}
         className="sidebar_container_btn"
@@ -89,6 +95,12 @@ const Sidebar = (props) => {
         className="sidebar_container_btn"
       >
         Shipment
+      </button>
+      <button
+        onClick={() => props.handlePage(7)}
+        className="sidebar_container_btn"
+      >
+        File Managment
       </button>
     </div>
   );

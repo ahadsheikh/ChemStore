@@ -14,8 +14,8 @@ import Input from "../input/Input";
 import axios from "../../axios/axios";
 import LocationHeader from "./LocationHeader";
 import SpecficIssue from "./SpecficIssue";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Location = ({ isShow = true }) => {
   const dispatch = useDispatch();
@@ -33,8 +33,8 @@ const Location = ({ isShow = true }) => {
   const [show, setShow] = useState({ create: false });
   const [credential, setCredential] = useState(storeStructure);
   const [error, setError] = useState({ isError: false, message: "" });
-  const [submitLoading, setSubmitLoading] = useState(false)
-  const [isError, setIssError] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [isError, setIssError] = useState(false);
   const [specficLabContent, setSpecficLabContent] = useState({
     content: [],
     loading: false,
@@ -69,8 +69,8 @@ const Location = ({ isShow = true }) => {
 
   ///// FOR CREATING NEW LAB OR PERSON
   const submitHandler = () => {
-    setSubmitLoading(true)
-    setIssError(false)
+    setSubmitLoading(true);
+    setIssError(false);
     if (
       credential.name !== "" &&
       credential.building_name !== "" &&
@@ -80,19 +80,19 @@ const Location = ({ isShow = true }) => {
       axios
         .post("/api/management/store-consumers/", credential)
         .then((res) => {
-          setSubmitLoading(false)
+          setSubmitLoading(false);
           setCredential(storeStructure);
           handleClose();
         })
         .catch((err) => {
-          setSubmitLoading(false)
+          setSubmitLoading(false);
           console.log(err);
         });
     } else {
       setIssError(true);
-      (() => toast(`All Field are required.`))()
+      (() => toast(`All Field are required.`))();
       setError({ isError: true, message: "Please fill all Field!!" });
-      setSubmitLoading(false)
+      setSubmitLoading(false);
     }
   };
 
@@ -119,7 +119,7 @@ const Location = ({ isShow = true }) => {
 
   return (
     <>
-    {isError && <ToastContainer />}
+      {isError && <ToastContainer />}
       {/* FOR RENDERING MODAL */}
       <SecondModal
         show={show.create}
@@ -295,20 +295,27 @@ const Location = ({ isShow = true }) => {
         </div>
         {isShow && loading && (
           <div className="location_specfic_message">
-          <div className="spinner-border text-light" style={{width: "5rem", height: "5rem"}} role="status">
-            <span className="visually-hidden text-center">Loading...</span>
-          </div>
+            <div
+              className="spinner-border text-light"
+              style={{ width: "5rem", height: "5rem" }}
+              role="status"
+            >
+              <span className="visually-hidden text-center">Loading...</span>
+            </div>
           </div>
         )}
-        {isShow && flag && specficLabContent.content.length === 0 && <div className="location_specfic_message">
-        <h1 style={{textAlign: "center"}}>Nothing Found</h1>
-        </div> }
+        {isShow && flag && specficLabContent.content.length === 0 && (
+          <div className="location_specfic_message">
+            <h1 style={{ textAlign: "center" }}>Nothing Found</h1>
+          </div>
+        )}
         {isShow && (
           <div className="location_specfic_container background_color_black">
             <div>
-              {specficLabContent.content.map((el, i) => (
-                <SpecficIssue key={i} item={el} />
-              ))}
+              {specficLabContent.content.length > 0 &&
+                specficLabContent.content.map((el, i) => (
+                  <SpecficIssue key={i} item={el} />
+                ))}
             </div>
           </div>
         )}

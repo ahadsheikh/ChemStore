@@ -24,47 +24,48 @@ const ChemicalTable = (props) => {
           </thead>
           <tbody>
             {props.item.map((el, i) => (
-                <tr key={el.id}>
-                  <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                  <td>{el.object.name}</td>
-                  <td>{el.object.molecular_formula}</td>
-                  <td>{el.object.molecular_weight}</td>
-                  <td>{el.object.purity}</td>
-                  <td>{el.object.quantity}</td>
-                  <td>{el.object.state}</td>
-                  <td>{el.object.manufacturer}</td>
-                  <td>{el.object.supplier}</td>
-                  <td>{el.quantity}</td>
-                  <td>
-                    <div>
-                      <Button
-                        variant="primary"
-                        onClick={() => props.editHandler(el)}
-                      >
-                        Edit
-                      </Button>{" "}
-                      <Button
-                        variant="danger"
-                        onClick={() => props.deleteHandler(el.id)}
-                        // onClick={() => props.deleteFromTempShipmentHandler(el.id)}
-                        // disabled={
-                        //   el.id === props.deleteLoading.id && props.deleteLoading.loading
-                        // }
-                      >
-                        {/* {el.id === props.deleteLoading.id && props.deleteLoading.loading && (
+              <tr key={el.id}>
+                <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
+                <td>{el.object.name}</td>
+                <td>{el.object.molecular_formula}</td>
+                <td>{el.object.molecular_weight}</td>
+                <td>{el.object.purity}</td>
+                <td>{el.object.quantity}</td>
+                <td>{el.object.state}</td>
+                <td>{el.object.manufacturer}</td>
+                <td>{el.object.supplier}</td>
+                <td>{el.quantity}</td>
+                <td>
+                  <div>
+                    <Button
+                      variant="primary"
+                      onClick={() => props.editHandler(el)}
+                    >
+                      Edit
+                    </Button>{" "}
+                    <Button
+                      variant="danger"
+                      onClick={() => props.deleteHandler(el.id)}
+                      disabled={
+                        el.id === props.deleteLoading.id &&
+                        props.deleteLoading.loading
+                      }
+                    >
+                      {el.id === props.deleteLoading.id &&
+                        props.deleteLoading.loading && (
                           <div
                             className="spinner-border spinner-border-sm me-2"
                             role="status"
                           >
                             <span className="visually-hidden">Loading...</span>
                           </div>
-                        )} */}
-                        Delete
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        )}
+                      Delete
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { Table, Spinner } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import axios from "../../axios/axios";
 import Header from "../add/Header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Search = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -11,7 +9,7 @@ const Search = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [title, setTitle] = useState("Chemical");
   const [loading, setLoading] = useState(false);
-  const [flag, setFlag] = useState(false)
+  const [flag, setFlag] = useState(false);
   const [isError, setIsError] = useState({ error: false, message: "" });
 
   const searchInputHandler = (e) => {
@@ -19,12 +17,12 @@ const Search = () => {
   };
 
   const searchHandler = () => {
-    setFlag(false)
+    setFlag(false);
     setLoading(true);
     axios
       .get(`/api/management/fuzzysearch/?type=${type}&query=${searchInput}`)
       .then((res) => {
-        setFlag(true)
+        setFlag(true);
         setLoading(false);
         setSearchResult(res.data);
       })
@@ -39,7 +37,7 @@ const Search = () => {
     if (e.target.value === "chemical") title = "Chemical";
     else if (e.target.value === "instrument") title = "Instrument";
     else if (e.target.value === "glassware") title = "GlassWare";
-    setFlag(false)
+    setFlag(false);
     setTitle(title);
     const prevType = type;
     if (prevType !== e.target.value) setSearchResult([]);
@@ -62,26 +60,25 @@ const Search = () => {
               placeholder="Search"
               type="search"
             />
-            <button
-              className="search_btn"
-              onClick={searchHandler}
-            >
+            <button className="search_btn" onClick={searchHandler}>
               Search
             </button>
           </div>
         </div>
       </div>
-      {!loading && flag && searchResult.length === 0 && <p className="text-center text-light display-4">Nothing Found</p>}
+      {!loading && flag && searchResult.length === 0 && (
+        <p className="text-center text-light display-4">Nothing Found</p>
+      )}
       {loading && (
-        <div style={{width: "100%"}}>
+        <div style={{ width: "100%" }}>
           <div
             className="spinner-border text-light"
             style={{
               width: "5rem",
               height: "5rem",
-              margin: 'auto',
-              marginLeft: '48%',
-              display: 'inline-block'
+              margin: "auto",
+              marginLeft: "48%",
+              display: "inline-block",
             }}
             role="status"
           >
@@ -89,86 +86,96 @@ const Search = () => {
           </div>
         </div>
       )}
-      {!loading && searchResult.length > 0 && (
-        <div className="search_result_table_container">
-          <Header text={`${title}`} />
-          <div>
-            <Table striped bordered hover variant="dark">
-              <thead>
-                {type === "chemical" && (
-                  <tr>
-                    <th style={{ paddingLeft: "2rem" }}>#</th>
-                    <th>Name</th>
-                    <th>Molecular Formula</th>
-                    <th>Purity</th>
-                    <th>Amount</th>
-                    <th>State</th>
-                    <th>Manufacturer</th>
-                    <th>Supplier</th>
-                  </tr>
-                )}
-                {type === "instrument" && (
-                  <tr>
-                    <th style={{ paddingLeft: "2rem" }}>#</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Manufacturer</th>
-                    <th>Supplier</th>
-                  </tr>
-                )}
-                {type === "glassware" && (
-                  <tr>
-                    <th style={{ paddingLeft: "2rem" }}>#</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Size</th>
-                    <th>Type</th>
-                    <th>Manufacturer</th>
-                    <th>Supplier</th>
-                  </tr>
-                )}
-              </thead>
-              <tbody>
-                {type === "chemical" &&
-                  searchResult.map((el, i) => (
-                    <tr key={el.id}>
-                      <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                      <td>{el.name}</td>
-                      <td>{el.molecular_formula}</td>
-                      <td>{el.purity}</td>
-                      <td>{el.amount}</td>
-                      <td>{el.state}</td>
-                      <td>{el.manufacturer}</td>
-                      <td>{el.supplier}</td>
+      <div style={{ overflowX: "scroll" }}>
+        {!loading && searchResult.length > 0 && (
+          <div className="search_result_table_container">
+            <div style={{ minWidth: "633px" }}>
+              <Header text={`${title}`} />
+            </div>
+            <div>
+              <Table
+                striped
+                bordered
+                hover
+                variant="dark"
+                style={{ minWidth: "633px" }}
+              >
+                <thead>
+                  {type === "chemical" && (
+                    <tr>
+                      <th style={{ paddingLeft: "2rem" }}>#</th>
+                      <th>Name</th>
+                      <th>Molecular Formula</th>
+                      <th>Purity</th>
+                      <th>Amount</th>
+                      <th>State</th>
+                      <th>Manufacturer</th>
+                      <th>Supplier</th>
                     </tr>
-                  ))}
-                {type === "instrument" &&
-                  searchResult.map((el, i) => (
-                    <tr key={el.id}>
-                      <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                      <td>{el.name}</td>
-                      <td>{el.quantity}</td>
-                      <td>{el.manufacturer}</td>
-                      <td>{el.supplier}</td>
+                  )}
+                  {type === "instrument" && (
+                    <tr>
+                      <th style={{ paddingLeft: "2rem" }}>#</th>
+                      <th>Name</th>
+                      <th>Quantity</th>
+                      <th>Manufacturer</th>
+                      <th>Supplier</th>
                     </tr>
-                  ))}
-                {type === "glassware" &&
-                  searchResult.map((el, i) => (
-                    <tr key={el.id}>
-                      <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                      <td>{el.name}</td>
-                      <td>{el.quantity}</td>
-                      <td>{el.size}</td>
-                      <td>{el.material_type}</td>
-                      <td>{el.manufacturer}</td>
-                      <td>{el.supplier}</td>
+                  )}
+                  {type === "glassware" && (
+                    <tr>
+                      <th style={{ paddingLeft: "2rem" }}>#</th>
+                      <th>Name</th>
+                      <th>Quantity</th>
+                      <th>Size</th>
+                      <th>Type</th>
+                      <th>Manufacturer</th>
+                      <th>Supplier</th>
                     </tr>
-                  ))}
-              </tbody>
-            </Table>
+                  )}
+                </thead>
+                <tbody>
+                  {type === "chemical" &&
+                    searchResult.map((el, i) => (
+                      <tr key={el.id}>
+                        <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
+                        <td>{el.name}</td>
+                        <td>{el.molecular_formula}</td>
+                        <td>{el.purity}</td>
+                        <td>{el.amount}</td>
+                        <td>{el.state}</td>
+                        <td>{el.manufacturer}</td>
+                        <td>{el.supplier}</td>
+                      </tr>
+                    ))}
+                  {type === "instrument" &&
+                    searchResult.map((el, i) => (
+                      <tr key={el.id}>
+                        <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
+                        <td>{el.name}</td>
+                        <td>{el.quantity}</td>
+                        <td>{el.manufacturer}</td>
+                        <td>{el.supplier}</td>
+                      </tr>
+                    ))}
+                  {type === "glassware" &&
+                    searchResult.map((el, i) => (
+                      <tr key={el.id}>
+                        <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
+                        <td>{el.name}</td>
+                        <td>{el.quantity}</td>
+                        <td>{el.size}</td>
+                        <td>{el.material_type}</td>
+                        <td>{el.manufacturer}</td>
+                        <td>{el.supplier}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };

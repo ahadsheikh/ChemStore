@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  activeStore: -1,
+  activeStore: 1,
   issueLab: "",
 };
 

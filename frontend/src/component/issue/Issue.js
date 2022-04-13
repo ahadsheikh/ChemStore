@@ -22,12 +22,6 @@ const Issue = (props) => {
   const dispatch = useDispatch();
   const { issueLab } = useSelector((state) => state.StoreManagment);
   const [issueList, setIssueList] = useState([]);
-  const [fuzzySearchResult, setFuzzySearchResult] = useState({
-    index: -1,
-    type: "",
-    options: [],
-    isloading: true,
-  });
   const [searchInput, setSearchInput] = useState("");
 
   const [isError, setIssError] = useState({ message: "", error: false });
@@ -44,6 +38,11 @@ const Issue = (props) => {
   const [listGlassware, setListGlassware] = useState([]);
   const [issuedQuantity, setIssuedQuantity] = useState("");
   const [mode, setMode] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState({
+    id: null,
+    loading: false,
+  });
 
   useLayoutEffect(() => {
     dispatch(issueLabHandler(""));
@@ -70,63 +69,13 @@ const Issue = (props) => {
         setListGlassware(glassware);
       })
       .catch((err) => {
-        console.log(err.response)
+        console.log(err.response);
       });
-  }
+  };
 
   useEffect(() => {
-    getListHandler()
+    getListHandler();
   }, []);
-
-  const issueHandler = (name) => {
-    const issueListCopy = [...issueList];
-    issueListCopy.push({ material_type: name, quantity: "", id: "" });
-    setIssueList(issueListCopy);
-  };
-
-  // const fuzzySearchHandler = (value, name, i) => {
-  //   setFuzzySearchResult({
-  //     index: i,
-  //     type: name,
-  //     options: [],
-  //     isloading: true,
-  //   });
-  //   let url = ``;
-  //   if (name === "chemical") {
-  //     url = `/api/management/fuzzysearch/?type=chemical&query=${value}`;
-  //   } else if (name === "instrument") {
-  //     url = `/api/management/fuzzysearch/?type=instrument&query=${value}`;
-  //   } else url = `/api/management/fuzzysearch/?type=glassware&query=${value}`;
-  //   axios
-  //     .get(url)
-  //     .then((res) => {
-  //       setFuzzySearchResult({
-  //         index: i,
-  //         type: name,
-  //         options: res.data,
-  //         isloading: false,
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.response);
-  //     });
-  // };
-
-  const inputHandler = (e, i) => {
-    const { name, value } = e.target;
-    if (name === "chemical" || name === "instrument" || name === "glassware") {
-      fuzzySearchHandler(value, name, i);
-    }
-
-    let issueListCopy = [...issueList];
-    let issueElement = issueListCopy[i];
-    issueElement = {
-      ...issueElement,
-      [name]: value,
-    };
-    issueListCopy[i] = issueElement;
-    setIssueList(issueListCopy);
-  };
 
   const submitIssueHandler = () => {
     setIssError({ message: "", error: false });
@@ -190,32 +139,6 @@ const Issue = (props) => {
     console.log(issueCredentialCopy);
   };
 
-  // const foundCredentialHandler = (value, id, index, name) => {
-  //   let issueListCopy = [...issueList];
-  //   let element = issueListCopy[index];
-  //   element[name] = value;
-  //   element.id = id;
-  //   issueListCopy[index] = element;
-  //   setFuzzySearchResult({
-  //     index: -1,
-  //     type: "",
-  //     options: [],
-  //     isloading: true,
-  //   });
-  //   setIssueList(issueListCopy);
-  // };
-
-  const removeIssueHandler = (index) => {
-    let issueListCopy = [...issueList];
-    issueListCopy.splice(index, 1);
-    setIssueList(issueListCopy);
-  };
-
-  const issueInputHandler = (e) => {
-    const { name, value } = e.target;
-    setIssueCredential({ ...issueCredential, [name]: value });
-  };
-
   const searchInputHandler = (e) => {
     fuzzySearchHandler(e.target.value);
     setSearchInput(e.target.value);
@@ -246,6 +169,7 @@ const Issue = (props) => {
 
   ////// SUBMIT HANDLER
   const addChemicalHandler = () => {
+    setSubmitLoading(true);
     if (mode) {
       const data = {
         object_id: Credential.id,
@@ -255,8 +179,10 @@ const Issue = (props) => {
       axios
         .post(`/api/management/issue-cart/`, data)
         .then((res) => {
-          console.log(res);
-          getListHandler()
+          setSubmitLoading(false);
+          setCredential({});
+          getListHandler();
+          setSearchInput("");
         })
         .catch((err) => {
           console.log(err.data);
@@ -271,8 +197,9 @@ const Issue = (props) => {
       axios
         .put(`/api/management/issue-cart/${Credential.secId}/`, updateData)
         .then((res) => {
-          console.log(res.data);
-          getListHandler()
+          setSubmitLoading(false);
+          setCredential({});
+          getListHandler();
         })
         .catch((err) => {
           console.log(err.response);
@@ -285,7 +212,6 @@ const Issue = (props) => {
   };
 
   const editHandler = (item) => {
-    console.log(item);
     setIssuedQuantity(item.quantity);
     setMode(false);
     const newObj = {
@@ -294,18 +220,22 @@ const Issue = (props) => {
       type: item.object_type,
     };
     setCredential(newObj);
-    // console.log("CLICKED")
   };
 
   const deleteHandler = (id) => {
+    setDeleteLoading({ id, loading: true });
     axios
       .delete(`/api/management/issue-cart/${id}/`)
       .then((res) => {
         console.log(res.data);
+        getListHandler();
+        setDeleteLoading({ id: null, loading: false });
       })
       .catch((err) => {
         console.log(err.response);
+        setDeleteLoading({ id: null, loading: false });
       });
+    console.log(id);
   };
 
   return (
@@ -353,7 +283,7 @@ const Issue = (props) => {
           </div>
         </div>
       </div>
-      <div className="container-sm mb-5">
+      <div className="container-md mb-5">
         {Object.keys(Credential).length !== 0 &&
           Credential.type === "CHEMICAL" && (
             <Chemical
@@ -363,6 +293,7 @@ const Issue = (props) => {
               quantityHandler={quantityHandler}
               submitHandler={addChemicalHandler}
               mode={mode}
+              submitLoading={submitLoading}
             />
           )}
         {Object.keys(Credential).length !== 0 &&
@@ -370,7 +301,11 @@ const Issue = (props) => {
             <Instrument
               data={Credential}
               removeHandler={removeHandler}
+              value={issuedQuantity}
               quantityHandler={quantityHandler}
+              submitHandler={addChemicalHandler}
+              mode={mode}
+              submitLoading={submitLoading}
             />
           )}
         {Object.keys(Credential).length !== 0 &&
@@ -378,21 +313,40 @@ const Issue = (props) => {
             <GlassWare
               data={Credential}
               removeHandler={removeHandler}
+              value={issuedQuantity}
               quantityHandler={quantityHandler}
+              submitHandler={addChemicalHandler}
+              mode={mode}
+              submitLoading={submitLoading}
             />
           )}
       </div>
 
-      <div>
+      <div className="container">
         {listChemical.length > 0 && (
           <ChemicalTable
             item={listChemical}
             editHandler={editHandler}
             deleteHandler={deleteHandler}
+            deleteLoading={deleteLoading}
           />
         )}
-        {listInstrument.length > 0 && <InstrumentTable item={listInstrument} />}
-        {listGlassware.length > 0 && <GlasswareTable item={listGlassware} />}
+        {listInstrument.length > 0 && (
+          <InstrumentTable
+            item={listInstrument}
+            editHandler={editHandler}
+            deleteHandler={deleteHandler}
+            deleteLoading={deleteLoading}
+          />
+        )}
+        {listGlassware.length > 0 && (
+          <GlasswareTable
+            item={listGlassware}
+            editHandler={editHandler}
+            deleteHandler={deleteHandler}
+            deleteLoading={deleteLoading}
+          />
+        )}
       </div>
     </>
   );

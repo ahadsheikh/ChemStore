@@ -1,16 +1,15 @@
-.store_managment_table {
-  &_wrapper {
-    width: 90%;
-    color: $color-white;
-    margin-top: 4rem;
-    margin-left: 2rem;
-    min-width: 570px;
-    // box-sizing: border-box;
-    // visibility: vis;
+// .store_managment_table {
+//   &_wrapper {
+//     // width: 90%;
+//     color: $color-white;
+//     margin-top: 4rem;
+//     margin-left: 2rem;
+//     min-width: 570px;
+//     // box-sizing: border-box;
 
-    @media (max-width: 750px) {
-      width: 96%;
-      margin: 4rem auto;
-    }
-  }
-}
+//     @media (max-width: 750px) {
+//       // width: 96%;
+//       margin: 4rem auto;
+//     }
+//   }
+// }

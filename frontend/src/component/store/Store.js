@@ -29,8 +29,10 @@ const Store = () => {
       });
   };
   const getInstrument = () => {
+    setInstrument([]);
     setError({ loading: true, message: "" });
     setTable({ chemical: false, instrument: true, glassware: false });
+
     axios
       .get(`/api/management/stores/${activeStore}/instruments/`)
       .then((res) => {
@@ -43,6 +45,7 @@ const Store = () => {
       });
   };
   const getGlassware = () => {
+    setGlassware([]);
     setError({ loading: true, message: "" });
     setTable({ chemical: false, instrument: false, glassware: true });
     axios
@@ -60,15 +63,34 @@ const Store = () => {
     setError({ loading: true, message: "" });
     getChemical();
   }, [activeStore]);
+
   return (
     <div>
-      {activeStore === -1 ? (
-        <p></p>
-      ) : (
-        <div className="store_managment_table_wrapper">
-          <div className="user_managment_table_main_header">
+      <div className="container-md mt-5">
+        <div className="show_shipment_container">
+          <p
+            style={{ backgroundColor: table.chemical && "crimson" }}
+            onClick={() => getChemical()}
+          >
+            Chemical
+          </p>
+          <p
+            style={{ backgroundColor: table.instrument && "crimson" }}
+            onClick={() => getInstrument()}
+          >
+            Instrument
+          </p>
+          <p
+            style={{ backgroundColor: table.glassware && "crimson" }}
+            onClick={() => getGlassware()}
+          >
+            Glassware
+          </p>
+        </div>
+      </div>
+      <div className="container-md mt-5" style={{ overflowX: "scroll" }}>
+        {/* <div className="user_managment_table_main_header">
             <h3 className="user_managment_table_main_header_main_title">
-              {/* <FontAwesomeIcon icon={faUserAlt} /> */}
               {table.chemical && <span> Chemicals</span>}
               {table.instrument && <span> Instrument</span>}
               {table.glassware && <span> Glass Ware</span>}
@@ -105,100 +127,100 @@ const Store = () => {
                 </Dropdown.Menu>
               </Dropdown>
             </div>
-          </div>
-          <div>
-            <Table striped bordered hover variant="dark">
-              <thead>
-                {table.chemical && (
-                  <tr>
-                    <th style={{ paddingLeft: "2rem" }}>#</th>
-                    <th>Name</th>
-                    <th>Molecular Formula</th>
-                    <th>Purity</th>
-                    <th>Amount</th>
-                    <th>State</th>
-                    <th>Manufacturer</th>
-                    <th>Supplier</th>
+          </div> */}
+
+        <div>
+          <Table striped bordered hover variant="dark">
+            <thead>
+              {table.chemical && (
+                <tr>
+                  <th style={{ paddingLeft: "2rem" }}>#</th>
+                  <th>Name</th>
+                  <th>Molecular Formula</th>
+                  <th>Purity</th>
+                  <th>Amount</th>
+                  <th>State</th>
+                  <th>Manufacturer</th>
+                  <th>Supplier</th>
+                </tr>
+              )}
+              {table.instrument && (
+                <tr>
+                  <th style={{ paddingLeft: "2rem" }}>#</th>
+                  <th>Name</th>
+                  <th>Quantity</th>
+                  <th>Manufacturer</th>
+                  <th>Supplier</th>
+                </tr>
+              )}
+              {table.glassware && (
+                <tr>
+                  <th style={{ paddingLeft: "2rem" }}>#</th>
+                  <th>Name</th>
+                  <th>Quantity</th>
+                  <th>Size</th>
+                  <th>Type</th>
+                  <th>Manufacturer</th>
+                  <th>Supplier</th>
+                </tr>
+              )}
+            </thead>
+            <tbody>
+              {error.loading && (
+                <tr className="user_managment_table_loading_div">
+                  <td colSpan="100%" className="text-center">
+                    <Spinner
+                      animation="border"
+                      variant="light"
+                      style={{
+                        fontSize: "1rem",
+                        height: "5rem",
+                        width: "5rem",
+                      }}
+                    />
+                  </td>
+                </tr>
+              )}
+              {!error.loading &&
+                table.chemical &&
+                chemical.map((el, i) => (
+                  <tr key={el.id}>
+                    <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
+                    <td>{el.name}</td>
+                    <td>{el.molecular_formula}</td>
+                    <td>{el.purity}</td>
+                    <td>{el.quantity}</td>
+                    <td>{el.state}</td>
+                    <td>{el.manufacturer}</td>
+                    <td>{el.supplier}</td>
                   </tr>
-                )}
-                {table.instrument && (
-                  <tr>
-                    <th style={{ paddingLeft: "2rem" }}>#</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Manufacturer</th>
-                    <th>Supplier</th>
+                ))}
+              {table.instrument &&
+                instrument.map((el, i) => (
+                  <tr key={el.id}>
+                    <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
+                    <td>{el.name}</td>
+                    <td>{el.quantity}</td>
+                    <td>{el.manufacturer}</td>
+                    <td>{el.supplier}</td>
                   </tr>
-                )}
-                {table.glassware && (
-                  <tr>
-                    <th style={{ paddingLeft: "2rem" }}>#</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Size</th>
-                    <th>Type</th>
-                    <th>Manufacturer</th>
-                    <th>Supplier</th>
+                ))}
+              {table.glassware &&
+                glassware.map((el, i) => (
+                  <tr key={el.id}>
+                    <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
+                    <td>{el.name}</td>
+                    <td>{el.quantity}</td>
+                    <td>{el.size}</td>
+                    <td>{el.material_type}</td>
+                    <td>{el.manufacturer}</td>
+                    <td>{el.supplier}</td>
                   </tr>
-                )}
-              </thead>
-              <tbody>
-                {error.loading && (
-                  <tr className="user_managment_table_loading_div">
-                    <td colSpan="100%" className="text-center">
-                      <Spinner
-                        animation="border"
-                        variant="light"
-                        style={{
-                          fontSize: "1rem",
-                          height: "5rem",
-                          width: "5rem",
-                        }}
-                      />
-                    </td>
-                  </tr>
-                )}
-                {!error.loading &&
-                  table.chemical &&
-                  chemical.map((el, i) => (
-                    <tr key={el.id}>
-                      <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                      <td>{el.name}</td>
-                      <td>{el.molecular_formula}</td>
-                      <td>{el.purity}</td>
-                      <td>{el.quantity}</td>
-                      <td>{el.state}</td>
-                      <td>{el.manufacturer}</td>
-                      <td>{el.supplier}</td>
-                    </tr>
-                  ))}
-                {table.instrument &&
-                  instrument.map((el, i) => (
-                    <tr key={el.id}>
-                      <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                      <td>{el.name}</td>
-                      <td>{el.quantity}</td>
-                      <td>{el.manufacturer}</td>
-                      <td>{el.supplier}</td>
-                    </tr>
-                  ))}
-                {table.glassware &&
-                  glassware.map((el, i) => (
-                    <tr key={el.id}>
-                      <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                      <td>{el.name}</td>
-                      <td>{el.quantity}</td>
-                      <td>{el.size}</td>
-                      <td>{el.material_type}</td>
-                      <td>{el.manufacturer}</td>
-                      <td>{el.supplier}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
-          </div>
+                ))}
+            </tbody>
+          </Table>
         </div>
-      )}
+      </div>
     </div>
   );
 };
