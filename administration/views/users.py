@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -35,6 +36,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 class UserViewset(ModelViewSet):
+    permission_classes = [IsAdminUser]
     queryset = User.objects.all()
 
     def get_serializer_class(self):

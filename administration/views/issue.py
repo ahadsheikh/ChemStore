@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
@@ -9,6 +10,7 @@ from administration.serializers.serializers import InstrumentSerializer, Glasswa
 
 
 class IssueCartViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = IssueCart.objects.all()
     serializer_class = IssueCartSerializer
 
