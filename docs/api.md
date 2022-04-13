@@ -15,8 +15,6 @@
    2. [Glasswares](http://chemstore2.azurewebsites.net/api/management/stores/1/glasswares/)
    3. [Instruments](http://chemstore2.azurewebsites.net/api/management/stores/1/instruments/)
 5. [StoreConsumer](http://chemstore2.azurewebsites.net/api/management/store-consumers/)
-6. [Category](http://chemstore2.azurewebsites.net/api/filemanager/categories/)
-7. [File](http://chemstore2.azurewebsites.net/api/filemanager/files/)
 
 ## Links
 1. [Fuzzy Search](http://chemstore2.azurewebsites.net/api/management/fuzzysearch/)
