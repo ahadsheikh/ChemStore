@@ -11,7 +11,7 @@ const Navigation = (props) => {
   const logoutHandler = () => {
     dispatch(removeTokenHandler());
     navigate("/adminapp/login");
-    sessionStorage.removeItem("token");
+    localStorage.removeItem(process.env.REACT_APP_ACCESS_TOKEN_NAME);
   };
   return (
     <nav className="nav_container">

@@ -37,7 +37,7 @@ const Login = () => {
     axios
       .post(`/api/token/`, adminLoginCredential)
       .then((res) => {
-        sessionStorage.setItem("token", res.data.access);
+        localStorage.setItem(process.env.REACT_APP_ACCESS_TOKEN_NAME, res.data.access);
         dispatch(setTokenHandler(res.data.access));
         navigate("/adminapp");
       })
