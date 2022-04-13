@@ -6,21 +6,42 @@ import { Route, Routes } from "react-router-dom";
 import HomeLayout from "./pages/home/layout/HomeLayout";
 import { setTokenHandler } from "./redux/Auth";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const { token } = useSelector((state) => state.auth);
+  console.log(token)
   useLayoutEffect(() => {
-    dispatch(setTokenHandler(sessionStorage.getItem("token")));
+    dispatch(
+      setTokenHandler(
+        localStorage.getItem(process.env.REACT_APP_ACCESS_TOKEN_NAME)
+      )
+    );
   }, []);
+  let routes = (
+    <>
+      <Route path="/adminapp/login" element={<Login />} />
+      <Route path="/" element={<HomeLayout />} />
+    </>
+  );
+
+  if (token) {
+    routes = (
+      <>
+        <Route path="/adminapp" element={<Layout />} />
+        <Route path="/adminapp/login" element={<Login />} />
+        <Route path="/" element={<HomeLayout />} />
+      </>
+    );
+  }
   return (
     <Routes>
-      {token ? (
+      <Route element={<ProtectedRoute />}>
         <Route path="/adminapp" element={<Layout />} />
-      ) : (
-        <Route path="/" element={<HomeLayout />} />
-      )}
+      </Route>
       <Route path="/adminapp/login" element={<Login />} />
       <Route path="/" element={<HomeLayout />} />
     </Routes>
