@@ -11,9 +11,9 @@ import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
-  console.log(token)
+  console.log(token);
   useLayoutEffect(() => {
     dispatch(
       setTokenHandler(

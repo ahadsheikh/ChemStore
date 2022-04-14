@@ -33,15 +33,20 @@ const Login = () => {
       })();
       return;
     }
-
+    console.log("CLICKED");
     axios
       .post(`/api/token/`, adminLoginCredential)
       .then((res) => {
-        localStorage.setItem(process.env.REACT_APP_ACCESS_TOKEN_NAME, res.data.access);
+        console.log(res.data);
+        localStorage.setItem(
+          process.env.REACT_APP_ACCESS_TOKEN_NAME,
+          res.data.access
+        );
         dispatch(setTokenHandler(res.data.access));
         navigate("/adminapp");
       })
       .catch((err) => {
+        console.log(err.response);
         setError(true);
         (() => {
           toast(`Invalid Email or Password.`);
