@@ -9,34 +9,118 @@ import {
   faDownload,
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import SubstanceModal from "./SubstanceModal";
+import AddLinkModal from "./AddLinkModal";
+import { useSelector } from 'react-redux'
 
 const FileManagment = () => {
+  const {flag} = useSelector(state => state.file)
   const [show, setShow] = useState(false);
+  const [substanceShow, setSubstanceShow] = useState(false);
+  const [addLinkModal, setAddLinkModal] = useState(false);
   const [files, setFiles] = useState([]);
+  const [modalChemical, setModalChemical] = useState({});
+  const [chemical, setChemical] = useState([]);
+  const [fuzzyResult, setFuzzyResult] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const onHideHandler = () => setSubstanceShow(false);
+  const showAddLinkModalHandler = () => {
+    setAddLinkModal(true);
+  };
+
+  const closeAddLinkModalHandler = () => setAddLinkModal(false);
+
+  const showSubstanceModalHandler = (chemical) => {
+    setSubstanceShow(true);
+    setModalChemical(chemical);
+    setChemical(chemical.chemicals);
+  };
 
   const getFileHandler = () => {
+    setLoading(true)
     axios
       .get(`/api/filemanager/files/`)
       .then((res) => {
         setFiles(res.data);
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.log(err.response);
+        setLoading(false)
+      });
+  };
+
+  useEffect(() => {
+    setLoading(true)
+    getFileHandler();
+  }, [flag]);
+
+  const deleteHandler = (id) => {
+    axios
+      .delete(`/api/filemanager/files/${id}/`)
+      .then((res) => {
+        console.log(res.data)
+        getFileHandler();
       })
       .catch((err) => {
         console.log(err.response);
       });
   };
 
-  useEffect(() => {
-    getFileHandler();
-  }, []);
+  const inputHandler = (e) => {
+    fuzzySearchHandler(e.target.value);
+    setSearchInput(e.target.value);
+  };
 
-  const deleteHandler = (id) => {
+  const fuzzySearchHandler = (value) => {
     axios
-      .delete(`/api/filemanager/files/${id}`)
+      .get(`/api/management/fuzzysearch/?type=chemical&query=${value}`)
       .then((res) => {
-        getFileHandler();
+        setFuzzyResult(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const addSubstanceChemicalHandler = (item, id) => {
+    const ids = []
+    chemical.forEach(el => ids.push(el.id))
+    ids.push(item.id)
+    const uniqueArray = Array.from(new Set(ids));
+    
+    if(chemical.length !== uniqueArray.length) {
+      axios
+      .patch(`/api/filemanager/files/${id}/`, { chemicals: uniqueArray })
+      .then((res) => {
+        setChemical([...chemical, item])
+        getFileHandler()
+        console.log(res.data);
+        setAddLinkModal(false)
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+    } 
+  }
+
+  const deleteSubstanceChemical = (index, chemicals, id) => {
+    const copyChemicals = [...chemicals];
+    copyChemicals.splice(index, 1);
+    let ids = [];
+    for (let i = 0; i < copyChemicals.length; i++) {
+      ids.push(copyChemicals[i].id);
+    }
+    axios
+      .patch(`/api/filemanager/files/${id}/`, { chemicals: ids })
+      .then((res) => {
+        setChemical(copyChemicals)
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err.response);
@@ -45,6 +129,23 @@ const FileManagment = () => {
 
   return (
     <>
+      <AddLinkModal
+        onHide={closeAddLinkModalHandler}
+        show={addLinkModal}
+        fuzzyResult={fuzzyResult}
+        inputHandler={inputHandler}
+        value={searchInput}
+        data={modalChemical}
+        handler={addSubstanceChemicalHandler}
+      />
+      <SubstanceModal
+        show={substanceShow}
+        onHideHandler={onHideHandler}
+        chemicals={chemical}
+        data={modalChemical}
+        showAddLinkModal={showAddLinkModalHandler}
+        deleteChemicalHandler={deleteSubstanceChemical}
+      />
       <UtilsModal
         show={show}
         handleClose={handleClose}
@@ -61,11 +162,27 @@ const FileManagment = () => {
           </button>
         </div>
       </div>
+      {loading && (
+        <div style={{ width: "100%" }}>
+          <div
+            className="spinner-border text-light"
+            style={{
+              width: "5rem",
+              height: "5rem",
+              margin: "auto",
+              marginLeft: "48%",
+              display: "inline-block",
+            }}
+            role="status"
+          >
+            <span className="visually-hidden text-center">Loading...</span>
+          </div>
+        </div>
+      )}
       <div style={{ width: "80%", margin: "auto" }}>
-        <Table striped bordered hover variant="dark">
+        {!loading && files.length > 0 && <Table striped bordered hover variant="dark">
           <thead>
             <tr>
-              {/* <th style={{ paddingLeft: "1rem" }}>First Name</th> */}
               <th className="ps-3">File Name</th>
               <th>Category</th>
               <th>Substance Link</th>
@@ -100,15 +217,24 @@ const FileManagment = () => {
                 </td>
                 <td className="align-middle">
                   <div class="dropdown">
-                    <span>Mouse over me</span>
+                    {el.categories.length > 0 && (
+                      <span>{el.categories[0].name}</span>
+                    )}
+
                     <div class="p-1 dropdown-content">
-                      <p className="mb-0">Hello World!</p>
+                      {el.categories.map((el) => (
+                        <p className="mb-0">{el.name}</p>
+                      ))}
                     </div>
                   </div>
                 </td>
                 <td className="align-middle">
                   {el.chemicals.length} Substance{" "}
-                  <FontAwesomeIcon role="button" icon={faInfoCircle} />{" "}
+                  <FontAwesomeIcon
+                    onClick={() => showSubstanceModalHandler(el)}
+                    role="button"
+                    icon={faInfoCircle}
+                  />{" "}
                 </td>
                 <td className="align-middle">
                   <div>
@@ -134,7 +260,7 @@ const FileManagment = () => {
               </tr>
             ))}
           </tbody>
-        </Table>
+        </Table>}
       </div>
     </>
   );

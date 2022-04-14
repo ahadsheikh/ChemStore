@@ -1,17 +1,12 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import { Button, Dropdown, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import Chemical from "./Chemical";
 import Instrument from "./Instrument";
 import GlassWare from "./GlassWare";
 import Location from "../location/Location";
 import axios from "../../axios/axios";
-import { withRouter } from "react-router";
 import Header from "../add/Header";
 import { issueLabHandler } from "../../redux/StoreManagment";
 import { useDispatch, useSelector } from "react-redux";
-import Error from "../../component/error/Error";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ChemicalTable from "./ChemicalTable";
@@ -21,16 +16,16 @@ import GlasswareTable from "./GlasswareTable";
 const Issue = (props) => {
   const dispatch = useDispatch();
   const { issueLab } = useSelector((state) => state.StoreManagment);
-  const [issueList, setIssueList] = useState([]);
+  // const [issueList, setIssueList] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
   const [isError, setIssError] = useState({ message: "", error: false });
-  const [loading, setLoading] = useState(false);
-  const [issueCredential, setIssueCredential] = useState({
-    carrier_name: "",
-    note: "",
-    issue_date: "",
-  });
+  // const [loading, setLoading] = useState(false);
+  // const [issueCredential, setIssueCredential] = useState({
+  //   carrier_name: "",
+  //   note: "",
+  //   issue_date: "",
+  // });
   const [fuzzyResult, setFuzzyResult] = useState([]);
   const [Credential, setCredential] = useState({});
   const [listChemical, setListChemical] = useState([]);
@@ -39,6 +34,7 @@ const Issue = (props) => {
   const [issuedQuantity, setIssuedQuantity] = useState("");
   const [mode, setMode] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [mergeLoading, setMergeLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState({
     id: null,
     loading: false,
@@ -48,6 +44,8 @@ const Issue = (props) => {
     dispatch(issueLabHandler(""));
   }, []);
 
+
+  //// GET TEMP ISSUE LIST AND DIFFERENTIATE BASED ON TYPE
   const getListHandler = () => {
     axios
       .get(`/api/management/issue-cart/`)
@@ -70,6 +68,11 @@ const Issue = (props) => {
       })
       .catch((err) => {
         console.log(err.response);
+        setDeleteLoading({ id: null, loading: false });
+        (() => {
+          toast(`Something Went Wrong.`);
+        })();
+        setIssError({ message: "Something Went Wrong.", error: true });
       });
   };
 
@@ -77,73 +80,15 @@ const Issue = (props) => {
     getListHandler();
   }, []);
 
-  const submitIssueHandler = () => {
-    setIssError({ message: "", error: false });
-    const issueCredentialCopy = { ...issueCredential, consumer_id: issueLab };
-    console.log(issueCredentialCopy);
 
-    if (issueCredentialCopy.carrier_name === "") {
-      (() => toast(`Carrier Name is Required`))();
-      setIssError({ message: "Carrier Name is Required", error: true });
-      return;
-    } else if (issueCredentialCopy.issue_date === "") {
-      (() => {
-        toast(`Issue Date is Required`);
-      })();
-      setIssError({ message: "Issue Date is Required", error: true });
-      return;
-    } else if (issueCredentialCopy.consumer_id === "") {
-      (() => toast(`Please Select a Loaction`))();
-      setIssError({ message: "Please Select a Loaction", error: true });
-      return;
-    } else if (issueList.length === 0) {
-      (() => toast(`Nothing to Issue`))();
-      setIssError({ message: "Nothing to Issue", error: true });
-      return;
-    }
-
-    const issueListCopy = [...issueList];
-    issueListCopy.forEach((issue) => {
-      if (issue.material_type === "CHEMICAL") delete issue.chemical;
-      else if (issue.material_type === "INSTRUMENT") delete issue.instrument;
-      else if (issue.material_type === "GLASSWARE") delete issue.glassware;
-    });
-    console.log(issueList);
-    issueCredentialCopy.objects = issueListCopy;
-
-    setLoading(true);
-
-    axios
-      .post(`/api/management/make-issue/`, issueCredentialCopy)
-      .then((res) => {
-        if (res.data.errors.length === 0) (() => toast(`Shipment Added.`))();
-        setIssueList([]);
-        setIssueCredential({
-          carrier_name: "",
-          note: "",
-          issue_date: "",
-        });
-        setIssError({ message: "Shipment Added", error: true });
-        setLoading(false);
-        console.log(res);
-      })
-      .catch((err) => {
-        if (err.response.data?.errors.length > 0)
-          (() => toast(err.response.data?.errors[0]))();
-        setLoading(false);
-
-        console.log(err.response);
-        setIssError({ message: "Something Went Wrong", error: true });
-      });
-
-    console.log(issueCredentialCopy);
-  };
-
+  //// INPUT HANDLER FOR SEARCHING CHEMICAL, INSTRUMENT OR GLASSWARE BY NAME
   const searchInputHandler = (e) => {
     fuzzySearchHandler(e.target.value);
     setSearchInput(e.target.value);
   };
 
+
+  // FOR FRUZZY SEARCH
   const fuzzySearchHandler = (value) => {
     axios
       .get(`/api/management/fuzzysearch/?query=${value}`)
@@ -156,6 +101,8 @@ const Issue = (props) => {
       });
   };
 
+
+  //// IF FOUND FROM FUZZY SEARCH
   const foundCredentialHandler = (item) => {
     setCredential(item);
     setFuzzyResult([]);
@@ -163,13 +110,17 @@ const Issue = (props) => {
     setIssuedQuantity("");
     setMode(true);
   };
+
+  /// FOR REMOVEING FORM UI
   const removeHandler = () => {
     setCredential({});
+    setSearchInput("")
   };
 
-  ////// SUBMIT HANDLER
+  ////// SUBMIT HANDLER FOR NEW ISSUE OR EDIT TEMP SHIPMENT BASED ON THE MODE STATE 
   const addChemicalHandler = () => {
     setSubmitLoading(true);
+    //// IF MOOD IS TRUE THEN ITS NEWLY ADDED ISSUE
     if (mode) {
       const data = {
         object_id: Credential.id,
@@ -185,8 +136,14 @@ const Issue = (props) => {
           setSearchInput("");
         })
         .catch((err) => {
-          console.log(err.data);
+          setSubmitLoading(false);
+          (() => {
+            toast(err.response.data[Object.keys(err.response.data)[0]]);
+          })();
+          setIssError({ message: "Issue Date is Required", error: true });
         });
+
+        //// FOR EDIT
     } else {
       const updateData = {
         id: Credential.secId,
@@ -202,15 +159,21 @@ const Issue = (props) => {
           getListHandler();
         })
         .catch((err) => {
-          console.log(err.response);
+          (() => {
+            toast(err.response.data[Object.keys(err.response.data)[0]]);
+          })();
+          setIssError({ message: "Issue Date is Required", error: true });
+          setSubmitLoading(false);
         });
     }
   };
 
+  //// FOR SET THE QUATITY
   const quantityHandler = (e) => {
     setIssuedQuantity(e.target.value);
   };
 
+  //// FOR EDITING
   const editHandler = (item) => {
     setIssuedQuantity(item.quantity);
     setMode(false);
@@ -222,20 +185,48 @@ const Issue = (props) => {
     setCredential(newObj);
   };
 
+
+  //// FOR DELETING A CHEMICAL, INSTRUMENT OR GLASS WARE FROM TEMP ISSUE
   const deleteHandler = (id) => {
     setDeleteLoading({ id, loading: true });
     axios
       .delete(`/api/management/issue-cart/${id}/`)
       .then((res) => {
-        console.log(res.data);
         getListHandler();
         setDeleteLoading({ id: null, loading: false });
       })
       .catch((err) => {
-        console.log(err.response);
         setDeleteLoading({ id: null, loading: false });
+        (() => {
+          toast(err.response.data[Object.keys(err.response.data)[0]]);
+        })();
+        setIssError({ message: "Issue Date is Required", error: true });
       });
-    console.log(id);
+  };
+
+  //// FOR MERGING ALL ISSUE
+  const mergeHandlerHandler = () => {
+    if (issueLab === null || issueLab === "") {
+      (() => toast(`Please Select a Location.`))();
+      setIssError({ message: "Please Select a Location.", error: true });
+      return;
+    }
+    setMergeLoading(true)
+    axios
+      .post(`/api/management/issue-cart/${issueLab}/merge/`, {})
+      .then((res) => {
+        setListChemical([]);
+        setListInstrument([]);
+        setListGlassware([]);
+        setMergeLoading(false)
+      })
+      .catch((err) => {
+        (() => {
+          toast(err.response.data[Object.keys(err.response.data)[0]]);
+        })();
+        setIssError({ message: "Issue Date is Required", error: true });
+        setMergeLoading(false)
+      });
   };
 
   return (
@@ -273,13 +264,13 @@ const Issue = (props) => {
               <Location isShow={false} />
             </div>
 
-            <button
+            {/* <button
               onClick={submitIssueHandler}
               className="issue_button"
               disabled={loading}
             >
               Submit
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
@@ -347,6 +338,25 @@ const Issue = (props) => {
             deleteLoading={deleteLoading}
           />
         )}
+
+        {listChemical.length > 0 ||
+          listInstrument.length > 0 ||
+          listGlassware.length > 0 ? (
+            <div className="clearfix">
+              <button
+                onClick={mergeHandlerHandler}
+                className="btn btn-primary mt-2 mb-5 px-4 float-end fontSize1_6"
+                disabled={mergeLoading}
+              >
+                {mergeLoading && (
+                  <div className="spinner-border me-2" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                )}
+                Submit
+              </button>
+            </div>
+          ): null}
       </div>
     </>
   );

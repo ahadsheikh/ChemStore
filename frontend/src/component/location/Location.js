@@ -104,8 +104,9 @@ const Location = ({ isShow = true }) => {
     setLoading(true);
     setSpecficLabContent({ content: [], loading: true });
     axios
-      .get(`/api/userview/issues/consumer/${id}/`)
+      .get(`/api/management/issues/${id}/`)
       .then((res) => {
+        console.log(res.data)
         setLoading(false);
         setFlag(true);
         setSpecficLabContent({ content: res.data, loading: false });
@@ -310,7 +311,7 @@ const Location = ({ isShow = true }) => {
           </div>
         )}
         {isShow && (
-          <div className="location_specfic_container background_color_black">
+          <div className="location_specfic_container">
             <div>
               {specficLabContent.content.length > 0 &&
                 specficLabContent.content.map((el, i) => (

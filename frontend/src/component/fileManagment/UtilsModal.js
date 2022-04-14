@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 import axios from "../../axios/axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle, faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { setFlagHandler } from '../../redux/FileManagment'
+import {useDispatch} from 'react-redux'
 
-// const ca = [1, 2, 3, 4, 5, 6];
 const UtilsModal = (props) => {
+  const dispatch  = useDispatch();
   const [ca, setCa] = useState([]);
   const [categories, setCategories] = useState([]);
   const [chemicals, setChemicals] = useState([]);
@@ -84,6 +84,8 @@ const UtilsModal = (props) => {
     axios
       .post(`/api/filemanager/files/`, fd)
       .then((res) => {
+        dispatch(setFlagHandler())
+        props.handleClose()
         console.log(res.data);
       })
       .catch((err) => {

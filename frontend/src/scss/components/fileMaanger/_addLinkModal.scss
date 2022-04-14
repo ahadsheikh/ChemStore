@@ -1,0 +1,20 @@
+.add_link_modal_ul {
+    list-style: none;
+    width: 100%;
+    // background-color: rebeccapurple;
+    li {
+        display: flex;
+        justify-content: space-between;
+        margin-right: 2rem;
+        padding-top: .6rem;
+    }
+}
+
+.add_link {
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+        color: black;
+    }
+}

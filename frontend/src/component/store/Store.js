@@ -18,7 +18,7 @@ const Store = () => {
     setError({ loading: true, message: "" });
     setTable({ chemical: true, instrument: false, glassware: false });
     axios
-      .get(`/api/management/stores/${activeStore}/chemicals/`)
+      .get(`/api/management/chemicals/`)
       .then((res) => {
         setChemical(res.data);
         setError({ loading: false, message: "" });
@@ -34,7 +34,7 @@ const Store = () => {
     setTable({ chemical: false, instrument: true, glassware: false });
 
     axios
-      .get(`/api/management/stores/${activeStore}/instruments/`)
+      .get(`/api/management/instruments/`)
       .then((res) => {
         setInstrument(res.data);
         setError({ loading: false, message: "" });
@@ -49,7 +49,7 @@ const Store = () => {
     setError({ loading: true, message: "" });
     setTable({ chemical: false, instrument: false, glassware: true });
     axios
-      .get(`/api/management/stores/${activeStore}/glasswares/`)
+      .get(`/api/management/glasswares/`)
       .then((res) => {
         setGlassware(res.data);
         setError({ loading: false, message: "" });
