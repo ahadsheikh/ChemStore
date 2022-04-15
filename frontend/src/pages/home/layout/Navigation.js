@@ -15,10 +15,10 @@ const Navigation = (props) => {
       </div>
 
       <div className="nav_container_logout">
-        <FontAwesomeIcon
+        {/* <FontAwesomeIcon
           className="nav_container_logout_icon"
           icon={faSignOutAlt}
-        />
+        /> */}
       </div>
     </nav>
   );

@@ -13,8 +13,9 @@ import SecondModal from "../../../component/modal/SecondModal";
 import Input from "../../../component/input/Input";
 import axios from "../../../axios/axios";
 import LocationHeader from "./LocationHeader";
-// import Error from "../error/Error";
 import SpecficIssue from "./SpecficIssue";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Location = ({ isShow = true }) => {
   const dispatch = useDispatch();
@@ -32,6 +33,8 @@ const Location = ({ isShow = true }) => {
   const [show, setShow] = useState({ create: false });
   const [credential, setCredential] = useState(storeStructure);
   const [error, setError] = useState({ isError: false, message: "" });
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [isError, setIssError] = useState(false);
   const [specficLabContent, setSpecficLabContent] = useState({
     content: [],
     loading: false,
@@ -66,6 +69,8 @@ const Location = ({ isShow = true }) => {
 
   ///// FOR CREATING NEW LAB OR PERSON
   const submitHandler = () => {
+    setSubmitLoading(true);
+    setIssError(false);
     if (
       credential.name !== "" &&
       credential.building_name !== "" &&
@@ -75,14 +80,19 @@ const Location = ({ isShow = true }) => {
       axios
         .post("/api/management/store-consumers/", credential)
         .then((res) => {
+          setSubmitLoading(false);
           setCredential(storeStructure);
           handleClose();
         })
         .catch((err) => {
+          setSubmitLoading(false);
           console.log(err);
         });
     } else {
+      setIssError(true);
+      (() => toast(`All Field are required.`))();
       setError({ isError: true, message: "Please fill all Field!!" });
+      setSubmitLoading(false);
     }
   };
 
@@ -94,8 +104,9 @@ const Location = ({ isShow = true }) => {
     setLoading(true);
     setSpecficLabContent({ content: [], loading: true });
     axios
-      .get(`/api/userview/issues/consumer/${id}/`)
+      .get(`/api/management/issues/${id}/`)
       .then((res) => {
+        console.log(res.data);
         setLoading(false);
         setFlag(true);
         setSpecficLabContent({ content: res.data, loading: false });
@@ -109,6 +120,60 @@ const Location = ({ isShow = true }) => {
 
   return (
     <>
+      {isError && <ToastContainer />}
+      {/* FOR RENDERING MODAL */}
+      <SecondModal
+        show={show.create}
+        handleClose={handleClose}
+        handleShow={showModalHandler}
+        info="Please enter details for the New Location."
+        title="Create Location"
+        btn_text="Create"
+        submitHandler={submitHandler}
+        loading={submitLoading}
+      >
+        <div className="second_modal_main_container">
+          <Input
+            type="text"
+            placeholder="Name"
+            bckColor="color_black"
+            value={credential.name}
+            handler={inputHandler}
+            name="name"
+          />
+          <select
+            className="issue_content_container_top_input"
+            name="consumer_type"
+            value={credential.consumer_type}
+            onChange={inputHandler}
+            id="cars"
+            style={{ backgroundColor: "black" }}
+          >
+            {storeTypes.map((el) => (
+              <option key={el.name} value={el.value}>
+                {el.name}
+              </option>
+            ))}
+          </select>
+          <Input
+            type="text"
+            placeholder="Room Number"
+            name="room_number"
+            value={credential.room_number}
+            handler={inputHandler}
+            bckColor="color_black "
+          />
+          <Input
+            type="text"
+            placeholder="Building Name"
+            name="building_name"
+            value={credential.building_name}
+            handler={inputHandler}
+            bckColor="color_black "
+          />
+        </div>
+      </SecondModal>
+
       {/* HEADER  */}
 
       <div className="location_container_div">
@@ -119,6 +184,7 @@ const Location = ({ isShow = true }) => {
               : "location_container location_container-issue"
           }
           style={{
+            // width: isShow ? "30%" : "100%",
             margin: isShow ? "4rem 1rem" : "1rem .5rem",
           }}
         >
@@ -245,11 +311,12 @@ const Location = ({ isShow = true }) => {
           </div>
         )}
         {isShow && (
-          <div className="location_specfic_container background_color_black">
+          <div className="location_specfic_container">
             <div>
-              {specficLabContent.content.map((el, i) => (
-                <SpecficIssue key={i} item={el} />
-              ))}
+              {specficLabContent.content.length > 0 &&
+                specficLabContent.content.map((el, i) => (
+                  <SpecficIssue key={i} item={el} />
+                ))}
             </div>
           </div>
         )}

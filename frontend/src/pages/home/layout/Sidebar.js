@@ -22,14 +22,16 @@ const Sidebar = (props) => {
         Search
       </button>
       <button
-        onClick={() => collapseHandler("store", 1)}
+        // onClick={() => collapseHandler("store", 1)}
+        onClick={() => props.handlePage(2)}
         className="add_chemical_btn"
         aria-controls="example-collapse-text"
         aria-expanded={open.store}
       >
-        Store <FontAwesomeIcon icon={faAngleDown} />
+        {/* Store <FontAwesomeIcon icon={faAngleDown} /> */}
+        Store
       </button>
-      <Collapse in={open.store}>
+      {/* <Collapse in={open.store}>
         <div className="add_chemical_collaps_btn_div">
           <ul>
             {props.storeList.map((el) => (
@@ -39,7 +41,7 @@ const Sidebar = (props) => {
             ))}
           </ul>
         </div>
-      </Collapse>
+      </Collapse> */}
       <button
         onClick={() => props.handlePage(2)}
         className="sidebar_container_btn"

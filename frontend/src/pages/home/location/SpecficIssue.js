@@ -1,54 +1,69 @@
 import React from "react";
 
 const SpecficIssue = (props) => {
-  return (
-    <div className="specfic_issue_container">
-      <div className="specfic_issue_header_container">
-        <p className="specfic_issue_header_carrier_name">
-          Carrier Name : <span>{props.item.carrier_name}</span>
-        </p>
-        <p className="specfic_issue_header_carrier_name">
-          Issue Date : <span>{props.item.issue_date}</span>
-        </p>
-      </div>
-      {props.item.chemicals.length > 0 && (
-        <div className="specfic_issue_item_container">
-          <p className="specfic_issue_item_container_title">Chemicals:</p>
-          <div className="specfiv_issue_item_wrappper">
-            {props.item.chemicals.map((el, i) => (
-              <div key={i} className="specfic_issue_one_item">
-                <p className="specfic_issue_one_item_name">{el.name}</p>
-                <p className="specfic_issue_one_item_amount">{el.quantity} ml</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+  const chemical = [];
+  const instrument = [];
+  const glassware = [];
+  const obj = [...props.item.objects];
+  for (let i = 0; i < obj.length; i++) {
+    if (obj[i].object_type === "CHEMICAL") {
+      chemical.push(obj[i]);
+    } else if (obj[i].object_type === "INSTRUMENT") {
+      instrument.push(obj[i]);
+    } else {
+      glassware.push(obj[i]);
+    }
+  }
 
-      {props.item.instruments.length > 0 && (
-        <div className="specfic_issue_item_container">
-          <p className="specfic_issue_item_container_title">Instruments:</p>
-          <div className="specfiv_issue_item_wrappper">
-            {props.item.instruments.map((el, i) => (
-              <div key={i} className="specfic_issue_one_item">
-                <p className="specfic_issue_one_item_name">{el.name}</p>
-                <p className="specfic_issue_one_item_amount">{el.quantity} pieces</p>
-              </div>
-            ))}
-          </div>
+  return (
+    <div className="specfic_issue_container card bg-dark mt-0 mb-3">
+      <p>
+        Date:{" "}
+        <small>
+          {new Date(props.item.created_at).toLocaleString("en-us", {
+            month: "long",
+            year: "numeric",
+            day: "numeric",
+          })}
+        </small>
+      </p>
+      {chemical.length > 0 && (
+        <div>
+          <p className="mb-0">
+            <small>Chemical</small>
+          </p>
+          {chemical.map((el) => (
+            <p className="badge rounded-pill bg-light text-dark me-2 mb-0">
+              {" "}
+              {el.name} <span className="ms-3">{el.quantity} ml</span>{" "}
+            </p>
+          ))}
         </div>
       )}
-      {props.item.glasswares.length > 0 && (
-        <div className="specfic_issue_item_container">
-          <p className="specfic_issue_item_container_title">Glasswares:</p>
-          <div className="specfiv_issue_item_wrappper">
-            {props.item.glasswares.map((el, i) => (
-              <div key={i} className="specfic_issue_one_item">
-                <p className="specfic_issue_one_item_name">{el.name}</p>
-                <p className="specfic_issue_one_item_amount">{el.quantity} pieces</p>
-              </div>
-            ))}
-          </div>
+      {instrument.length > 0 && (
+        <div>
+          <p className="mb-0">
+            <small>Instrument</small>
+          </p>
+          {instrument.map((el) => (
+            <p className="badge rounded-pill bg-light text-dark me-2 mb-0">
+              {" "}
+              {el.name} <span className="ms-3">{el.quantity} pieces</span>{" "}
+            </p>
+          ))}
+        </div>
+      )}
+      {glassware.length > 0 && (
+        <div>
+          <p className="mb-0">
+            <small>Glassware</small>
+          </p>
+          {glassware.map((el) => (
+            <p className="badge rounded-pill bg-light text-dark me-2 mb-0">
+              {" "}
+              {el.name} <span className="ms-3">{el.quantity} pieces</span>{" "}
+            </p>
+          ))}
         </div>
       )}
     </div>
