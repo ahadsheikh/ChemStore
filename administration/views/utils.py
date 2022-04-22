@@ -6,7 +6,6 @@ from rest_framework.response import Response
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
 def consumer_store_types(request):
     """
     Return List of Consumer types.
