@@ -49,7 +49,8 @@ const Location = ({ isShow = true }) => {
         setStoreTypeFlag(true);
       })
       .catch((err) => {
-        alert(`Something Went Wrong`);
+        setIssError(true);
+        (() => toast(`Something went Wrong.`))();
       });
   }, [show.create]);
 
@@ -86,7 +87,8 @@ const Location = ({ isShow = true }) => {
         })
         .catch((err) => {
           setSubmitLoading(false);
-          console.log(err);
+          setIssError(true);
+          (() => toast(`Something went Wrong.`))();
         });
     } else {
       setIssError(true);
@@ -106,15 +108,15 @@ const Location = ({ isShow = true }) => {
     axios
       .get(`/api/management/issues/${id}/`)
       .then((res) => {
-        console.log(res.data)
         setLoading(false);
         setFlag(true);
         setSpecficLabContent({ content: res.data, loading: false });
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err.response);
         setSpecficLabContent({ content: [], loading: false });
+        setIssError(true);
+        (() => toast(`Something went Wrong.`))();
       });
   };
 

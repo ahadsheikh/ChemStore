@@ -19,7 +19,10 @@ const SubstanceModal = (props) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p onClick={props.showAddLinkModal} className="text-end substance_modal_add_link">
+          <p
+            onClick={props.showAddLinkModal}
+            className="text-end substance_modal_add_link"
+          >
             Add Links
           </p>
           <div style={{ overflowX: "scroll" }}>
@@ -54,7 +57,13 @@ const SubstanceModal = (props) => {
                     <td>{el.supplier}</td>
                     <td>
                       <button
-                          onClick={() => props.deleteChemicalHandler(i, props.data.chemicals, props.data.id)}
+                        onClick={() =>
+                          props.deleteChemicalHandler(
+                            i,
+                            props.data.chemicals,
+                            props.data.id
+                          )
+                        }
                         className="bg-danger user_managment_action_btn detail"
                       >
                         <FontAwesomeIcon

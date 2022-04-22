@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../axios/axios";
 import GlassWareTable from "./GlassWareTable";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const GlassWare = () => {
   const [chemical, setChemical] = useState([]);
   const [flag, setFlag] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -13,17 +16,20 @@ const GlassWare = () => {
       .get(`/api/management/shipments/?type=glassware`)
       .then((res) => {
         setLoading(false);
-        console.log(res.data);
         setFlag(true);
         setChemical(res.data);
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err.response);
+        setError(true);
+        (() => {
+          toast(`Something Went Wrong.`);
+        })();
       });
   }, []);
   return (
     <div>
+      {error && <ToastContainer />}
       {loading ? (
         <div className="d-flex justify-content-center mt-5">
           <div
@@ -36,9 +42,15 @@ const GlassWare = () => {
         </div>
       ) : (
         <>
-          {chemical.map((el) => (
-            <GlassWareTable key={el.id} item={el} flag={flag} />
-          ))}
+          {chemical.length === 0 ? (
+            <p className="h1 text-center mt-5">Nothing Found</p>
+          ) : (
+            <>
+              {chemical.map((el) => (
+                <GlassWareTable key={el.id} item={el} flag={flag} />
+              ))}
+            </>
+          )}
         </>
       )}
     </div>

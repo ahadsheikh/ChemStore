@@ -16,16 +16,8 @@ import GlasswareTable from "./GlasswareTable";
 const Issue = (props) => {
   const dispatch = useDispatch();
   const { issueLab } = useSelector((state) => state.StoreManagment);
-  // const [issueList, setIssueList] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-
   const [isError, setIssError] = useState({ message: "", error: false });
-  // const [loading, setLoading] = useState(false);
-  // const [issueCredential, setIssueCredential] = useState({
-  //   carrier_name: "",
-  //   note: "",
-  //   issue_date: "",
-  // });
   const [fuzzyResult, setFuzzyResult] = useState([]);
   const [Credential, setCredential] = useState({});
   const [listChemical, setListChemical] = useState([]);
@@ -34,7 +26,8 @@ const Issue = (props) => {
   const [issuedQuantity, setIssuedQuantity] = useState("");
   const [mode, setMode] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [mergeLoading, setMergeLoading] = useState(false)
+  const [mergeLoading, setMergeLoading] = useState(false);
+  const [firstLoading, setFirstLoading] = useState(true);
   const [deleteLoading, setDeleteLoading] = useState({
     id: null,
     loading: false,
@@ -44,9 +37,9 @@ const Issue = (props) => {
     dispatch(issueLabHandler(""));
   }, []);
 
-
   //// GET TEMP ISSUE LIST AND DIFFERENTIATE BASED ON TYPE
   const getListHandler = () => {
+    setFirstLoading(true);
     axios
       .get(`/api/management/issue-cart/`)
       .then((res) => {
@@ -65,14 +58,15 @@ const Issue = (props) => {
         setListChemical(chemical);
         setListInstrument(instrument);
         setListGlassware(glassware);
+        setFirstLoading(false);
       })
       .catch((err) => {
-        console.log(err.response);
         setDeleteLoading({ id: null, loading: false });
         (() => {
           toast(`Something Went Wrong.`);
         })();
         setIssError({ message: "Something Went Wrong.", error: true });
+        setFirstLoading(false);
       });
   };
 
@@ -80,13 +74,11 @@ const Issue = (props) => {
     getListHandler();
   }, []);
 
-
   //// INPUT HANDLER FOR SEARCHING CHEMICAL, INSTRUMENT OR GLASSWARE BY NAME
   const searchInputHandler = (e) => {
     fuzzySearchHandler(e.target.value);
     setSearchInput(e.target.value);
   };
-
 
   // FOR FRUZZY SEARCH
   const fuzzySearchHandler = (value) => {
@@ -97,10 +89,12 @@ const Issue = (props) => {
         console.log(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        (() => {
+          toast(`Something Went Wrong.`);
+        })();
+        setIssError({ message: "Something Went Wrong.", error: true });
       });
   };
-
 
   //// IF FOUND FROM FUZZY SEARCH
   const foundCredentialHandler = (item) => {
@@ -114,10 +108,10 @@ const Issue = (props) => {
   /// FOR REMOVEING FORM UI
   const removeHandler = () => {
     setCredential({});
-    setSearchInput("")
+    setSearchInput("");
   };
 
-  ////// SUBMIT HANDLER FOR NEW ISSUE OR EDIT TEMP SHIPMENT BASED ON THE MODE STATE 
+  ////// SUBMIT HANDLER FOR NEW ISSUE OR EDIT TEMP SHIPMENT BASED ON THE MODE STATE
   const addChemicalHandler = () => {
     setSubmitLoading(true);
     //// IF MOOD IS TRUE THEN ITS NEWLY ADDED ISSUE
@@ -137,13 +131,20 @@ const Issue = (props) => {
         })
         .catch((err) => {
           setSubmitLoading(false);
-          (() => {
-            toast(err.response.data[Object.keys(err.response.data)[0]]);
-          })();
+          let len = Object.keys(err.response.data);
+          if (len > 0) {
+            (() => {
+              toast(err.response.data[Object.keys(err.response.data)[0]]);
+            })();
+          } else {
+            (() => {
+              toast(`Something Went Wrong.`);
+            })();
+          }
           setIssError({ message: "Issue Date is Required", error: true });
         });
 
-        //// FOR EDIT
+      //// FOR EDIT
     } else {
       const updateData = {
         id: Credential.secId,
@@ -159,9 +160,16 @@ const Issue = (props) => {
           getListHandler();
         })
         .catch((err) => {
-          (() => {
-            toast(err.response.data[Object.keys(err.response.data)[0]]);
-          })();
+          let len = Object.keys(err.response.data);
+          if (len > 0) {
+            (() => {
+              toast(err.response.data[Object.keys(err.response.data)[0]]);
+            })();
+          } else {
+            (() => {
+              toast(`Something Went Wrong.`);
+            })();
+          }
           setIssError({ message: "Issue Date is Required", error: true });
           setSubmitLoading(false);
         });
@@ -185,7 +193,6 @@ const Issue = (props) => {
     setCredential(newObj);
   };
 
-
   //// FOR DELETING A CHEMICAL, INSTRUMENT OR GLASS WARE FROM TEMP ISSUE
   const deleteHandler = (id) => {
     setDeleteLoading({ id, loading: true });
@@ -197,9 +204,16 @@ const Issue = (props) => {
       })
       .catch((err) => {
         setDeleteLoading({ id: null, loading: false });
-        (() => {
-          toast(err.response.data[Object.keys(err.response.data)[0]]);
-        })();
+        let len = Object.keys(err.response.data);
+        if (len > 0) {
+          (() => {
+            toast(err.response.data[Object.keys(err.response.data)[0]]);
+          })();
+        } else {
+          (() => {
+            toast(`Something Went Wrong.`);
+          })();
+        }
         setIssError({ message: "Issue Date is Required", error: true });
       });
   };
@@ -211,21 +225,28 @@ const Issue = (props) => {
       setIssError({ message: "Please Select a Location.", error: true });
       return;
     }
-    setMergeLoading(true)
+    setMergeLoading(true);
     axios
       .post(`/api/management/issue-cart/${issueLab}/merge/`, {})
       .then((res) => {
         setListChemical([]);
         setListInstrument([]);
         setListGlassware([]);
-        setMergeLoading(false)
+        setMergeLoading(false);
       })
       .catch((err) => {
-        (() => {
-          toast(err.response.data[Object.keys(err.response.data)[0]]);
-        })();
+        let len = Object.keys(err.response.data);
+        if (len > 0) {
+          (() => {
+            toast(err.response.data[Object.keys(err.response.data)[0]]);
+          })();
+        } else {
+          (() => {
+            toast(`Something Went Wrong.`);
+          })();
+        }
         setIssError({ message: "Issue Date is Required", error: true });
-        setMergeLoading(false)
+        setMergeLoading(false);
       });
   };
 
@@ -314,49 +335,69 @@ const Issue = (props) => {
       </div>
 
       <div className="container">
-        {listChemical.length > 0 && (
-          <ChemicalTable
-            item={listChemical}
-            editHandler={editHandler}
-            deleteHandler={deleteHandler}
-            deleteLoading={deleteLoading}
-          />
-        )}
-        {listInstrument.length > 0 && (
-          <InstrumentTable
-            item={listInstrument}
-            editHandler={editHandler}
-            deleteHandler={deleteHandler}
-            deleteLoading={deleteLoading}
-          />
-        )}
-        {listGlassware.length > 0 && (
-          <GlasswareTable
-            item={listGlassware}
-            editHandler={editHandler}
-            deleteHandler={deleteHandler}
-            deleteLoading={deleteLoading}
-          />
-        )}
-
-        {listChemical.length > 0 ||
-          listInstrument.length > 0 ||
-          listGlassware.length > 0 ? (
-            <div className="clearfix">
-              <button
-                onClick={mergeHandlerHandler}
-                className="btn btn-primary mt-2 mb-5 px-4 float-end fontSize1_6"
-                disabled={mergeLoading}
-              >
-                {mergeLoading && (
-                  <div className="spinner-border me-2" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
-                )}
-                Submit
-              </button>
+        {firstLoading ? (
+          <div style={{ width: "100%" }}>
+            <div
+              className="spinner-border text-light"
+              style={{
+                width: "5rem",
+                height: "5rem",
+                margin: "auto",
+                marginLeft: "48%",
+                display: "inline-block",
+              }}
+              role="status"
+            >
+              <span className="visually-hidden text-center">Loading...</span>
             </div>
-          ): null}
+          </div>
+        ) : (
+          <>
+            {listChemical.length > 0 && (
+              <ChemicalTable
+                item={listChemical}
+                editHandler={editHandler}
+                deleteHandler={deleteHandler}
+                deleteLoading={deleteLoading}
+              />
+            )}
+            {listInstrument.length > 0 && (
+              <InstrumentTable
+                item={listInstrument}
+                editHandler={editHandler}
+                deleteHandler={deleteHandler}
+                deleteLoading={deleteLoading}
+              />
+            )}
+            {listGlassware.length > 0 && (
+              <GlasswareTable
+                item={listGlassware}
+                editHandler={editHandler}
+                deleteHandler={deleteHandler}
+                deleteLoading={deleteLoading}
+              />
+            )}
+
+            {listChemical.length > 0 ||
+            listInstrument.length > 0 ||
+            listGlassware.length > 0 ? (
+              <div className="clearfix">
+                <button
+                  onClick={mergeHandlerHandler}
+                  className="btn btn-primary mt-2 mb-5 px-4 float-end fontSize1_6"
+                  disabled={mergeLoading}
+                >
+                  {mergeLoading && (
+                    <div className="spinner-border me-2" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  )}
+                  Submit
+                </button>
+              </div>
+            ) : null}
+          </>
+        )}
       </div>
     </>
   );

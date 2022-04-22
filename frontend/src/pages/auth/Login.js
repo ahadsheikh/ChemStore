@@ -14,6 +14,8 @@ const Login = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState(false);
 
   const inputHandler = (e) => {
@@ -33,24 +35,24 @@ const Login = () => {
       })();
       return;
     }
-    console.log("CLICKED");
+    setLoading(true);
     axios
       .post(`/api/token/`, adminLoginCredential)
       .then((res) => {
-        console.log(res.data);
         localStorage.setItem(
           process.env.REACT_APP_ACCESS_TOKEN_NAME,
           res.data.access
         );
         dispatch(setTokenHandler(res.data.access));
         navigate("/adminapp");
+        setLoading(false);
       })
       .catch((err) => {
-        console.log(err.response);
         setError(true);
         (() => {
           toast(`Invalid Email or Password.`);
         })();
+        setLoading(false);
       });
   };
 
@@ -76,7 +78,13 @@ const Login = () => {
               value={adminLoginCredential.password}
               onChange={inputHandler}
             />
+
             <button type="submit" className="login_btn">
+              {loading && (
+                <div className="spinner-border me-3" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              )}
               Login
             </button>
           </form>

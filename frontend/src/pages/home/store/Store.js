@@ -69,19 +69,19 @@ const Store = () => {
       <div className="container-md mt-5">
         <div className="show_shipment_container">
           <p
-            style={{ backgroundColor: table.chemical && "crimson" }}
+            style={{ backgroundColor: table.chemical && "#2d3133" }}
             onClick={() => getChemical()}
           >
             Chemical
           </p>
           <p
-            style={{ backgroundColor: table.instrument && "crimson" }}
+            style={{ backgroundColor: table.instrument && "#2d3133" }}
             onClick={() => getInstrument()}
           >
             Instrument
           </p>
           <p
-            style={{ backgroundColor: table.glassware && "crimson" }}
+            style={{ backgroundColor: table.glassware && "#2d3133" }}
             onClick={() => getGlassware()}
           >
             Glassware

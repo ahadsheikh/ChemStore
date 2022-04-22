@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Table, Dropdown, Spinner } from "react-bootstrap";
+import { Table, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import axios from "../../axios/axios";
+
 const Store = () => {
   const { activeStore } = useSelector((state) => state.StoreManagment);
   const [error, setError] = useState({ loading: false, message: "" });
@@ -13,6 +14,7 @@ const Store = () => {
     instrument: false,
     glassware: false,
   });
+  const [flag, setFlag] = useState(false);
 
   const getChemical = () => {
     setError({ loading: true, message: "" });
@@ -22,12 +24,13 @@ const Store = () => {
       .then((res) => {
         setChemical(res.data);
         setError({ loading: false, message: "" });
+        setFlag(true);
       })
       .catch((err) => {
-        console.log(err);
         setError({ loading: false, message: "Something Went Wrong" });
       });
   };
+
   const getInstrument = () => {
     setInstrument([]);
     setError({ loading: true, message: "" });
@@ -38,12 +41,13 @@ const Store = () => {
       .then((res) => {
         setInstrument(res.data);
         setError({ loading: false, message: "" });
+        setFlag(true);
       })
       .catch((err) => {
-        console.log(err);
         setError({ loading: false, message: "Something Went Wrong" });
       });
   };
+
   const getGlassware = () => {
     setGlassware([]);
     setError({ loading: true, message: "" });
@@ -53,12 +57,13 @@ const Store = () => {
       .then((res) => {
         setGlassware(res.data);
         setError({ loading: false, message: "" });
+        setFlag(true);
       })
       .catch((err) => {
-        console.log(err);
         setError({ loading: false, message: "Something Went Wrong" });
       });
   };
+
   useEffect(() => {
     setError({ loading: true, message: "" });
     getChemical();
@@ -69,19 +74,19 @@ const Store = () => {
       <div className="container-md mt-5">
         <div className="show_shipment_container">
           <p
-            style={{ backgroundColor: table.chemical && "crimson" }}
+            style={{ backgroundColor: table.chemical && "#2d3133" }}
             onClick={() => getChemical()}
           >
             Chemical
           </p>
           <p
-            style={{ backgroundColor: table.instrument && "crimson" }}
+            style={{ backgroundColor: table.instrument && "#2d3133" }}
             onClick={() => getInstrument()}
           >
             Instrument
           </p>
           <p
-            style={{ backgroundColor: table.glassware && "crimson" }}
+            style={{ backgroundColor: table.glassware && "#2d3133" }}
             onClick={() => getGlassware()}
           >
             Glassware
@@ -89,46 +94,10 @@ const Store = () => {
         </div>
       </div>
       <div className="container-md mt-5" style={{ overflowX: "scroll" }}>
-        {/* <div className="user_managment_table_main_header">
-            <h3 className="user_managment_table_main_header_main_title">
-              {table.chemical && <span> Chemicals</span>}
-              {table.instrument && <span> Instrument</span>}
-              {table.glassware && <span> Glass Ware</span>}
-            </h3>
-            <div>
-              <Dropdown>
-                <Dropdown.Toggle
-                  variant="Secondary"
-                  style={{ padding: ".8rem 1rem", backgroundColor: "black" }}
-                  id="dropdown-basic"
-                >
-                  Change Material Type
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    style={{ fontSize: "1.6rem" }}
-                    onClick={getChemical}
-                  >
-                    Chemical
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    style={{ fontSize: "1.6rem" }}
-                    onClick={getInstrument}
-                  >
-                    Instrument
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    style={{ fontSize: "1.6rem" }}
-                    onClick={getGlassware}
-                  >
-                    Glass Ware
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          </div> */}
-
+        {/* {flag &&
+          chemical.length === 0 &&
+          instrument.length === 0 &&
+          glassware.length === 0 && <p>Nothing Found</p>} */}
         <div>
           <Table striped bordered hover variant="dark">
             <thead>

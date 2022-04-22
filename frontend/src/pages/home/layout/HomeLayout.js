@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import Sidebar from "./Sidebar";
-// import Store from "../../../component/store/Store";
 import Search from "../../../component/search/Search";
 import axios from "../../../axios/axios";
 import OverLaySideBar from "./OverLaySideBar";
 import Location from "../location/Location";
-import Store from '../store/Store'
+import Store from "../store/Store";
 import FileManagment from "../fileManagment/FileManagment";
 
 const HomeLayout = () => {
   const [showBackModal, setShowBlockModal] = useState(false);
   const [id, setId] = useState(0);
   const [storeList, setStoreList] = useState([]);
-  let arr = [
-    <Search />,
-    // <Add />,
-    <Store />,
-    <Location />,
-    <FileManagment />
-    // <Issue />,
-    // <UserManagment />,
-  ];
+  let arr = [<Search />, <Store />, <Location />, <FileManagment />];
 
   const sideDrawerHandler = () => {
     setShowBlockModal((preState) => !preState);

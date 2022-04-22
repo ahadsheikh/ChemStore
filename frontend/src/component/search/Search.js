@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Table } from "react-bootstrap";
 import axios from "../../axios/axios";
 import Header from "../add/Header";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Search = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -10,7 +12,7 @@ const Search = () => {
   const [title, setTitle] = useState("Chemical");
   const [loading, setLoading] = useState(false);
   const [flag, setFlag] = useState(false);
-  const [isError, setIsError] = useState({ error: false, message: "" });
+  const [isError, setIsError] = useState(false);
 
   const searchInputHandler = (e) => {
     setSearchInput(e.target.value);
@@ -19,6 +21,7 @@ const Search = () => {
   const searchHandler = () => {
     setFlag(false);
     setLoading(true);
+    setIsError(false);
     axios
       .get(`/api/management/fuzzysearch/?type=${type}&query=${searchInput}`)
       .then((res) => {
@@ -28,7 +31,10 @@ const Search = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setIsError({ error: true, message: "Something Went Wrong" });
+        setSearchResult([]);
+        setIsError(true)(() => {
+          toast(`Please Provide Email and Password`);
+        })();
       });
   };
 
@@ -46,6 +52,7 @@ const Search = () => {
 
   return (
     <>
+      {isError && <ToastContainer />}
       <div className="search_container">
         <div className="search_input_box_container">
           <div className="search_input_box_div">
@@ -136,6 +143,7 @@ const Search = () => {
                 </thead>
                 <tbody>
                   {type === "chemical" &&
+                    searchResult.length > 0 &&
                     searchResult.map((el, i) => (
                       <tr key={el.id}>
                         <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
@@ -149,6 +157,7 @@ const Search = () => {
                       </tr>
                     ))}
                   {type === "instrument" &&
+                    searchResult.length > 0 &&
                     searchResult.map((el, i) => (
                       <tr key={el.id}>
                         <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
@@ -159,6 +168,7 @@ const Search = () => {
                       </tr>
                     ))}
                   {type === "glassware" &&
+                    searchResult.length > 0 &&
                     searchResult.map((el, i) => (
                       <tr key={el.id}>
                         <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { storeTypes, storeStructure } from "./utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronRight,
@@ -8,9 +7,6 @@ import {
 import { Collapse } from "react-bootstrap";
 import { issueLabHandler } from "../../../redux/StoreManagment";
 import { useDispatch } from "react-redux";
-
-import SecondModal from "../../../component/modal/SecondModal";
-import Input from "../../../component/input/Input";
 import axios from "../../../axios/axios";
 import LocationHeader from "./LocationHeader";
 import SpecficIssue from "./SpecficIssue";
@@ -31,9 +27,6 @@ const Location = ({ isShow = true }) => {
   const [storeType, setStoreType] = useState({});
   const [storeTypeFlag, setStoreTypeFlag] = useState(false);
   const [show, setShow] = useState({ create: false });
-  const [credential, setCredential] = useState(storeStructure);
-  const [error, setError] = useState({ isError: false, message: "" });
-  const [submitLoading, setSubmitLoading] = useState(false);
   const [isError, setIssError] = useState(false);
   const [specficLabContent, setSpecficLabContent] = useState({
     content: [],
@@ -49,7 +42,8 @@ const Location = ({ isShow = true }) => {
         setStoreTypeFlag(true);
       })
       .catch((err) => {
-        alert(`Something Went Wrong`);
+        setIssError(true);
+        (() => toast(`Something Went Wrong.`))();
       });
   }, [show.create]);
 
@@ -58,42 +52,6 @@ const Location = ({ isShow = true }) => {
   };
   const showModalHandler = (name) => {
     setShow({ ...show, [name]: !show[name] });
-  };
-  const handleClose = () => {
-    setShow({ create: false });
-  };
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setCredential({ ...credential, [name]: value });
-  };
-
-  ///// FOR CREATING NEW LAB OR PERSON
-  const submitHandler = () => {
-    setSubmitLoading(true);
-    setIssError(false);
-    if (
-      credential.name !== "" &&
-      credential.building_name !== "" &&
-      credential.consumer_type !== "" &&
-      credential.room_number !== ""
-    ) {
-      axios
-        .post("/api/management/store-consumers/", credential)
-        .then((res) => {
-          setSubmitLoading(false);
-          setCredential(storeStructure);
-          handleClose();
-        })
-        .catch((err) => {
-          setSubmitLoading(false);
-          console.log(err);
-        });
-    } else {
-      setIssError(true);
-      (() => toast(`All Field are required.`))();
-      setError({ isError: true, message: "Please fill all Field!!" });
-      setSubmitLoading(false);
-    }
   };
 
   const specficLabHandler = (id) => {
@@ -106,14 +64,14 @@ const Location = ({ isShow = true }) => {
     axios
       .get(`/api/management/issues/${id}/`)
       .then((res) => {
-        console.log(res.data);
         setLoading(false);
         setFlag(true);
         setSpecficLabContent({ content: res.data, loading: false });
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err.response);
+        setIssError(true);
+        (() => toast(`Something Went Wrong.`))();
         setSpecficLabContent({ content: [], loading: false });
       });
   };
@@ -121,58 +79,6 @@ const Location = ({ isShow = true }) => {
   return (
     <>
       {isError && <ToastContainer />}
-      {/* FOR RENDERING MODAL */}
-      <SecondModal
-        show={show.create}
-        handleClose={handleClose}
-        handleShow={showModalHandler}
-        info="Please enter details for the New Location."
-        title="Create Location"
-        btn_text="Create"
-        submitHandler={submitHandler}
-        loading={submitLoading}
-      >
-        <div className="second_modal_main_container">
-          <Input
-            type="text"
-            placeholder="Name"
-            bckColor="color_black"
-            value={credential.name}
-            handler={inputHandler}
-            name="name"
-          />
-          <select
-            className="issue_content_container_top_input"
-            name="consumer_type"
-            value={credential.consumer_type}
-            onChange={inputHandler}
-            id="cars"
-            style={{ backgroundColor: "black" }}
-          >
-            {storeTypes.map((el) => (
-              <option key={el.name} value={el.value}>
-                {el.name}
-              </option>
-            ))}
-          </select>
-          <Input
-            type="text"
-            placeholder="Room Number"
-            name="room_number"
-            value={credential.room_number}
-            handler={inputHandler}
-            bckColor="color_black "
-          />
-          <Input
-            type="text"
-            placeholder="Building Name"
-            name="building_name"
-            value={credential.building_name}
-            handler={inputHandler}
-            bckColor="color_black "
-          />
-        </div>
-      </SecondModal>
 
       {/* HEADER  */}
 

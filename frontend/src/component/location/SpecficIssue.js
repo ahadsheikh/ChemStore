@@ -33,7 +33,10 @@ const SpecficIssue = (props) => {
             <small>Chemical</small>
           </p>
           {chemical.map((el) => (
-            <p className="badge rounded-pill bg-light text-dark me-2 mb-0">
+            <p
+              key={el.id}
+              className="badge rounded-pill bg-light text-dark me-2 mb-0"
+            >
               {" "}
               {el.name} <span className="ms-3">{el.quantity} ml</span>{" "}
             </p>
@@ -46,7 +49,10 @@ const SpecficIssue = (props) => {
             <small>Instrument</small>
           </p>
           {instrument.map((el) => (
-            <p className="badge rounded-pill bg-light text-dark me-2 mb-0">
+            <p
+              key={el.id}
+              className="badge rounded-pill bg-light text-dark me-2 mb-0"
+            >
               {" "}
               {el.name} <span className="ms-3">{el.quantity} pieces</span>{" "}
             </p>
@@ -59,7 +65,10 @@ const SpecficIssue = (props) => {
             <small>Glassware</small>
           </p>
           {glassware.map((el) => (
-            <p className="badge rounded-pill bg-light text-dark me-2 mb-0">
+            <p
+              key={el.id}
+              className="badge rounded-pill bg-light text-dark me-2 mb-0"
+            >
               {" "}
               {el.name} <span className="ms-3">{el.quantity} pieces</span>{" "}
             </p>

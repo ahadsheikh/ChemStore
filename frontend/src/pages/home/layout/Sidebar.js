@@ -1,18 +1,6 @@
-import React, { useState } from "react";
-import { Collapse } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { openModal } from "../../../redux/Container";
-import { storeHandler } from "../../../redux/StoreManagment";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 
 const Sidebar = (props) => {
-  const dispatch = useDispatch();
-  const [open, setOpen] = useState({ crential: false, store: false });
-  const collapseHandler = (name, id) => {
-    props.handlePage(id);
-    setOpen({ ...open, [name]: !open[name] });
-  };
   return (
     <div className={props.name}>
       <button
@@ -22,26 +10,11 @@ const Sidebar = (props) => {
         Search
       </button>
       <button
-        // onClick={() => collapseHandler("store", 1)}
-        onClick={() => props.handlePage(2)}
-        className="add_chemical_btn"
-        aria-controls="example-collapse-text"
-        aria-expanded={open.store}
+        onClick={() => props.handlePage(1)}
+        className="sidebar_container_btn"
       >
-        {/* Store <FontAwesomeIcon icon={faAngleDown} /> */}
         Store
       </button>
-      {/* <Collapse in={open.store}>
-        <div className="add_chemical_collaps_btn_div">
-          <ul>
-            {props.storeList.map((el) => (
-              <li key={el.id} onClick={() => dispatch(storeHandler(el.id))}>
-                <span>{el.name}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Collapse> */}
       <button
         onClick={() => props.handlePage(2)}
         className="sidebar_container_btn"

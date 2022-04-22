@@ -1,38 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Table, Dropdown } from "react-bootstrap";
-// import UtilsModal from "./UtilsModal";
+import { Table } from "react-bootstrap";
 import axios from "../../../axios/axios";
 import { config } from "../../../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrash,
-  faDownload,
-  faInfoCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import SubstanceModal from "./SubstanceModal";
-import AddLinkModal from "./AddLinkModal";
 import { useSelector } from "react-redux";
 
 const FileManagment = () => {
   const { flag } = useSelector((state) => state.file);
-  const [show, setShow] = useState(false);
   const [substanceShow, setSubstanceShow] = useState(false);
-  const [addLinkModal, setAddLinkModal] = useState(false);
   const [files, setFiles] = useState([]);
   const [modalChemical, setModalChemical] = useState({});
   const [chemical, setChemical] = useState([]);
-  const [fuzzyResult, setFuzzyResult] = useState([]);
-  const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const onHideHandler = () => setSubstanceShow(false);
-  const showAddLinkModalHandler = () => {
-    setAddLinkModal(true);
-  };
-
-  const closeAddLinkModalHandler = () => setAddLinkModal(false);
 
   const showSubstanceModalHandler = (chemical) => {
     setSubstanceShow(true);
@@ -59,109 +42,16 @@ const FileManagment = () => {
     getFileHandler();
   }, [flag]);
 
-  const deleteHandler = (id) => {
-    axios
-      .delete(`/api/filemanager/files/${id}/`)
-      .then((res) => {
-        console.log(res.data);
-        getFileHandler();
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
-  const inputHandler = (e) => {
-    fuzzySearchHandler(e.target.value);
-    setSearchInput(e.target.value);
-  };
-
-  const fuzzySearchHandler = (value) => {
-    axios
-      .get(`/api/management/fuzzysearch/?type=chemical&query=${value}`)
-      .then((res) => {
-        setFuzzyResult(res.data);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const addSubstanceChemicalHandler = (item, id) => {
-    const ids = [];
-    chemical.forEach((el) => ids.push(el.id));
-    ids.push(item.id);
-    const uniqueArray = Array.from(new Set(ids));
-
-    if (chemical.length !== uniqueArray.length) {
-      axios
-        .patch(`/api/filemanager/files/${id}/`, { chemicals: uniqueArray })
-        .then((res) => {
-          setChemical([...chemical, item]);
-          getFileHandler();
-          console.log(res.data);
-          setAddLinkModal(false);
-        })
-        .catch((err) => {
-          console.log(err.response);
-        });
-    }
-  };
-
-  const deleteSubstanceChemical = (index, chemicals, id) => {
-    const copyChemicals = [...chemicals];
-    copyChemicals.splice(index, 1);
-    let ids = [];
-    for (let i = 0; i < copyChemicals.length; i++) {
-      ids.push(copyChemicals[i].id);
-    }
-    axios
-      .patch(`/api/filemanager/files/${id}/`, { chemicals: ids })
-      .then((res) => {
-        setChemical(copyChemicals);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
   return (
     <>
-      <AddLinkModal
-        onHide={closeAddLinkModalHandler}
-        show={addLinkModal}
-        fuzzyResult={fuzzyResult}
-        inputHandler={inputHandler}
-        value={searchInput}
-        data={modalChemical}
-        handler={addSubstanceChemicalHandler}
-      />
       <SubstanceModal
         show={substanceShow}
         onHideHandler={onHideHandler}
         chemicals={chemical}
         data={modalChemical}
-        showAddLinkModal={showAddLinkModalHandler}
-        deleteChemicalHandler={deleteSubstanceChemical}
       />
-      {/* <UtilsModal
-        show={show}
-        handleClose={handleClose}
-        handleShow={handleShow}
-      /> */}
-      <div className="conatiner mt-5 mb-4">
-        {/* <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <button
-            onClick={handleShow}
-            class="btn btn-primary me-md-2 btn-lg"
-            type="button"
-          >
-            Upload File
-          </button>
-        </div> */}
-      </div>
+
+      <div className="conatiner mt-5 mb-4"></div>
       {loading && (
         <div style={{ width: "100%" }}>
           <div
@@ -179,7 +69,7 @@ const FileManagment = () => {
           </div>
         </div>
       )}
-      <div style={{ width: "80%", margin: "auto" }}>
+      <div style={{ width: "96%", margin: "auto" }}>
         {!loading && files.length > 0 && (
           <Table striped bordered hover variant="dark">
             <thead>
@@ -192,8 +82,8 @@ const FileManagment = () => {
             </thead>
 
             <tbody>
-              {files.map((el) => (
-                <tr>
+              {files.map((el, i) => (
+                <tr key={el.id}>
                   <td className="ps-3">
                     <div>
                       <p className="mb-0">
@@ -217,14 +107,16 @@ const FileManagment = () => {
                     </div>
                   </td>
                   <td className="align-middle">
-                    <div class="dropdown">
+                    <div className="dropdown">
                       {el.categories.length > 0 && (
                         <span>{el.categories[0].name}</span>
                       )}
 
-                      <div class="p-1 dropdown-content">
+                      <div className="p-1 dropdown-content">
                         {el.categories.map((el) => (
-                          <p className="mb-0">{el.name}</p>
+                          <p key={el.id} className="mb-0">
+                            {el.name}
+                          </p>
                         ))}
                       </div>
                     </div>
@@ -239,7 +131,11 @@ const FileManagment = () => {
                   </td>
                   <td className="align-middle">
                     <div>
-                      <a href={`${config.url}${el.file.path}`} target="_blank">
+                      <a
+                        href={`${config.url}${el.file.path}`}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
                         <button className="user_managment_action_btn detail">
                           <FontAwesomeIcon
                             style={{ fontSize: "1.1rem" }}
@@ -247,15 +143,6 @@ const FileManagment = () => {
                           />
                         </button>
                       </a>
-                      <button
-                        onClick={() => deleteHandler(el.id)}
-                        className="bg-danger user_managment_action_btn detail"
-                      >
-                        <FontAwesomeIcon
-                          style={{ fontSize: "1.1rem" }}
-                          icon={faTrash}
-                        />
-                      </button>
                     </div>
                   </td>
                 </tr>

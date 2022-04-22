@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 import axios from "../../axios/axios";
-import { setFlagHandler } from '../../redux/FileManagment'
-import {useDispatch} from 'react-redux'
+import { setFlagHandler } from "../../redux/FileManagment";
+import { useDispatch } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UtilsModal = (props) => {
-  const dispatch  = useDispatch();
+  const dispatch = useDispatch();
   const [ca, setCa] = useState([]);
   const [categories, setCategories] = useState([]);
   const [chemicals, setChemicals] = useState([]);
   const [fuzzyResult, setFuzzyResult] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [file, setFile] = useState(null);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     axios
@@ -23,23 +27,26 @@ const UtilsModal = (props) => {
         console.log(err.response);
       });
   }, []);
+
   const fuzzySearchHandler = (value) => {
     axios
       .get(`/api/management/fuzzysearch/?type=chemical&query=${value}`)
       .then((res) => {
         setFuzzyResult(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        setError(true);
+        (() => {
+          toast(`Something Went Wrong.`);
+        })();
       });
   };
+
   const foundCredentialHandler = (item) => {
-    const copyChemicals = [...chemicals];
-    copyChemicals.push(item);
-    // setFuzzyResult([]);
+    let copyChemicals = [...chemicals];
+    if (copyChemicals.findIndex((el) => el.id === item.id) === -1)
+      copyChemicals.push(item);
     setChemicals(copyChemicals);
-    // setSearchInput(item.name);
   };
   const searchInputHandler = (e) => {
     fuzzySearchHandler(e.target.value);
@@ -48,8 +55,9 @@ const UtilsModal = (props) => {
   const [isShow, setIsShow] = useState(false);
 
   const addCategoriesHandler = (item) => {
-    const copyCategories = [...categories];
-    copyCategories.push(item);
+    let copyCategories = [...categories];
+    if (copyCategories.findIndex((el) => el.id === item.id) === -1)
+      copyCategories.push(item);
     setCategories(copyCategories);
   };
   const openOption = () => {
@@ -69,7 +77,6 @@ const UtilsModal = (props) => {
   };
 
   const fileUploadHandler = (e) => {
-    console.log(e.target.files[0]);
     setFile(e.target.files[0]);
   };
 
@@ -79,35 +86,48 @@ const UtilsModal = (props) => {
       fd.append(`categories`, categories[i].id);
     for (let i = 0; i < chemicals.length; i++)
       fd.append(`chemicals`, chemicals[i].id);
+    if (file === null) {
+      setError(true);
+      (() => {
+        toast(`Please Upload a File.`);
+      })();
+      return;
+    }
     fd.append("file", file, file.name);
-    console.log(fd);
+    setSubmitLoading(true);
     axios
       .post(`/api/filemanager/files/`, fd)
       .then((res) => {
-        dispatch(setFlagHandler())
-        props.handleClose()
-        console.log(res.data);
+        dispatch(setFlagHandler());
+        props.handleClose();
+        setSubmitLoading(false);
       })
       .catch((err) => {
         console.log(err.response);
+        setSubmitLoading(false);
       });
   };
   return (
     <>
+      {error && <ToastContainer />}
       <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Upload File</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <div>
             <div
               onClick={openOption}
-              className="utils_modal_categories_container border p-2"
+              className="utils_modal_categories_container  border p-2"
             >
               {categories.length === 0 && <p>Please Select Categories</p>}
+
               {categories.map((el, i) => (
-                <p className="badge rounded-pill bg-light text-dark me-2 mb-0">
+                <p
+                  key={el.id}
+                  className="badge rounded-pill bg-light text-dark me-2 mb-0"
+                >
                   {el.name}
                   <span
                     className="ms-3"
@@ -121,9 +141,9 @@ const UtilsModal = (props) => {
               ))}
             </div>
             {isShow && (
-              <ul className="utils_modal_categories_list">
+              <ul className="utils_modal_categories_list util_modal_chemical">
                 {ca.map((el) => (
-                  <li key={el} onClick={() => addCategoriesHandler(el)}>
+                  <li key={el.id} onClick={() => addCategoriesHandler(el)}>
                     {el.name}
                   </li>
                 ))}
@@ -134,7 +154,10 @@ const UtilsModal = (props) => {
             {chemicals.length > 0 && (
               <div className="border mt-3 py-2">
                 {chemicals.map((el, i) => (
-                  <p className="badge rounded-pill bg-light text-dark me-2 mb-0">
+                  <p
+                    key={i}
+                    className="badge rounded-pill bg-light text-dark me-2 mb-0"
+                  >
                     {el.name}
                     <span
                       onClick={() => removeChemicalHandler(i)}
@@ -149,15 +172,21 @@ const UtilsModal = (props) => {
             )}
             <div className="issue_fuzzy_search_container">
               <input
-                className="issue_content_container_top_input border"
+                className=" file_managment_chemical issue_content_container_top_input border"
                 style={{ backgroundColor: "white", color: "black" }}
                 type="text"
-                placeholder="Name"
+                placeholder="Chemical Name"
                 name="carrier_name"
                 value={searchInput}
                 onChange={searchInputHandler}
               />
-              <ul className="issue_fuzzy_result">
+              <ul
+                className={
+                  fuzzyResult.length > 0
+                    ? "issue_fuzzy_result util_modal_chemical"
+                    : "issue_fuzzy_result"
+                }
+              >
                 {fuzzyResult.map((el, i) => (
                   <li key={i} onClick={() => foundCredentialHandler(el)}>
                     {el.name}
@@ -171,12 +200,25 @@ const UtilsModal = (props) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={props.handleClose}>
-            Close
+          <Button
+            variant="secondary"
+            style={{ fontSize: "1.6rem" }}
+            onClick={props.handleClose}
+          >
+            Cancel
           </Button>
-          <Button variant="primary" onClick={submitHandler}>
-            Save Changes
-          </Button>
+          <button
+            onClick={submitHandler}
+            className="btn btn-primary px-4 float-end fontSize1_6"
+            disabled={submitLoading}
+          >
+            {submitLoading && (
+              <div className="spinner-border me-2" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
+            Submit
+          </button>
         </Modal.Footer>
       </Modal>
     </>

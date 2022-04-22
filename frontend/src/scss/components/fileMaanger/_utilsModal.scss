@@ -15,10 +15,12 @@
     position: absolute;
     left: 0;
     top: 4.9rem;
-    width: 100%;
+    width: 95.5%;
     list-style: none;
     background-color: white;
     z-index: 200;
+    margin-left: 1.1rem;
+    // margin: auto;
 }
 
 .dropdown {
@@ -39,4 +41,15 @@
   
   .dropdown:hover .dropdown-content {
     display: block;
+  }
+
+  .file_managment_chemical {
+    &::placeholder {
+      color: black;
+    }
+  }
+
+  .util_modal_chemical {
+    background-color: var(--color-Grey-light-1);
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
   }
