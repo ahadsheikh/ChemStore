@@ -85,7 +85,7 @@ class IssueCartViewSet(viewsets.ModelViewSet):
 @api_view(['GET'])
 def issues(request, location_id):
     location = get_object_or_404(StoreConsumer, pk=location_id)
-    issues = Issue.objects.filter(store_consumer=location)
+    issues = Issue.objects.filter(store_consumer=location).order_by('-created_at')
 
     res = []
     for issue in issues:
