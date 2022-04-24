@@ -13,6 +13,7 @@ import OverLaySideBar from "./OverLaySideBar";
 import AddShipment from "../component/add/AddShipment";
 import Main from "../component/shipment/Main";
 import FileManagment from "../component/fileManagment/FileManagment";
+import CategoryMain from "../component/category/Main";
 
 const Layout = () => {
   const [showBackModal, setShowBlockModal] = useState(false);
@@ -27,6 +28,7 @@ const Layout = () => {
     <UserManagment />,
     <Main />,
     <FileManagment />,
+    <CategoryMain />,
   ];
 
   const sideDrawerHandler = () => {

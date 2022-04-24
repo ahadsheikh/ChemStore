@@ -5,6 +5,9 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Header from "../add/Header";
 import ShipmentInput from "./ShipmentInput";
 import axios from "../../axios/axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { msgFormater } from "../../utils/utils";
 
 const dummyInstrument = {
   name: "",
@@ -22,6 +25,7 @@ const AddInstrumentTest = (props) => {
   const [type, setType] = useState({ create: false, edit: false });
   const [tempShipmentLoading, setTempShipmentLoading] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState({
     id: null,
     loading: true,
@@ -37,7 +41,10 @@ const AddInstrumentTest = (props) => {
       })
       .catch((err) => {
         setTempShipmentLoading(false);
-        console.log(err.response);
+        setIsError(true);
+        (() => {
+          toast(msgFormater(err));
+        })();
       });
   };
 
@@ -53,7 +60,10 @@ const AddInstrumentTest = (props) => {
         setFuzzySearchResult(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        setIsError(true);
+        (() => {
+          toast(msgFormater(err));
+        })();
       });
   };
 
@@ -94,7 +104,6 @@ const AddInstrumentTest = (props) => {
     };
 
     if (chemicalCredential.isNew && type.create) {
-      console.log(copyCredential);
       axios
         .post(`/api/management/instruments/`, copyCredential)
         .then((res) => {
@@ -103,25 +112,27 @@ const AddInstrumentTest = (props) => {
             instrument: res.data.id,
             quantity: chemicalCredential.newQuantity,
           };
-          console.log(newData);
 
           axios
             .post(`/api/management/instrument-temp-shipment/`, newData)
             .then((res) => {
               getTempShipmentHandler();
               setShowChemicalElement(false);
-              console.log(res.data);
               setAddLoading(false);
             })
             .catch((err) => {
-              console.log("CREATE Temp HSIPMENT");
-              console.log(err.response);
+              setIsError(true);
+              (() => {
+                toast(msgFormater(err));
+              })();
               setAddLoading(false);
             });
         })
         .catch((err) => {
-          console.log("CREATE CHEMICAL");
-          console.log(err.response);
+          setIsError(true);
+          (() => {
+            toast(msgFormater(err));
+          })();
           setAddLoading(false);
         });
     } else if (!chemicalCredential.isNew && type.create) {
@@ -133,12 +144,13 @@ const AddInstrumentTest = (props) => {
         .then((res) => {
           getTempShipmentHandler();
           setShowChemicalElement(false);
-          console.log(res.data);
           setAddLoading(false);
         })
         .catch((err) => {
-          console.log("CREATE Temp HSIPMENT");
-          console.log(err.response);
+          setIsError(true);
+          (() => {
+            toast(msgFormater(err));
+          })();
           setAddLoading(false);
         });
     } else if (type.edit) {
@@ -152,12 +164,13 @@ const AddInstrumentTest = (props) => {
         .then((res) => {
           getTempShipmentHandler();
           setShowChemicalElement(false);
-          console.log(res.data);
           setAddLoading(false);
         })
         .catch((err) => {
-          console.log("CREATE Temp HSIPMENT");
-          console.log(err.response);
+          setIsError(true);
+          (() => {
+            toast(msgFormater(err));
+          })();
           setAddLoading(false);
         });
     }
@@ -174,6 +187,10 @@ const AddInstrumentTest = (props) => {
       })
       .catch((err) => {
         setDeleteLoading({ id: null, loading: false });
+        setIsError(true);
+        (() => {
+          toast(msgFormater(err));
+        })();
       });
   };
 
@@ -195,12 +212,14 @@ const AddInstrumentTest = (props) => {
     axios
       .post(`/api/management/instrument-temp-shipment/merge/`, {})
       .then((res) => {
-        console.log(res.data);
         getTempShipmentHandler();
         setSubmitLoading(false);
       })
       .catch((err) => {
-        console.log(err.response);
+        setIsError(true);
+        (() => {
+          toast(msgFormater(err));
+        })();
         setSubmitLoading(false);
       });
   };
@@ -209,240 +228,248 @@ const AddInstrumentTest = (props) => {
   };
 
   return (
-    <div className="chemical_add_wrapper">
-      <div className="chemical_add_container">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col">
-              <input
-                className="form-control"
-                style={{ fontSize: "1.6rem" }}
-                name="instrument"
-                placeholder="Instrument"
-                value={searchInput}
-                onChange={searchInputHandler}
-              />
-            </div>
-            <div className="col-auto">
-              <button
-                className="btn btn-light"
-                style={{ fontSize: "1.6rem" }}
-                onClick={() => foundInstrumentHandler(dummyInstrument, true)}
-              >
-                Create
-              </button>
+    <>
+      {isError && <ToastContainer />}
+
+      <div className="chemical_add_wrapper">
+        <div className="chemical_add_container">
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col">
+                <input
+                  className="form-control"
+                  style={{ fontSize: "1.6rem" }}
+                  name="instrument"
+                  placeholder="Instrument"
+                  value={searchInput}
+                  onChange={searchInputHandler}
+                />
+              </div>
+              <div className="col-auto">
+                <button
+                  className="btn btn-light"
+                  style={{ fontSize: "1.6rem" }}
+                  onClick={() => foundInstrumentHandler(dummyInstrument, true)}
+                >
+                  Create
+                </button>
+              </div>
             </div>
           </div>
+          <div className="fuzzy_search_div_chemical mt-2">
+            {searchInput.length > 0 && (
+              <ul className="model_suggestion_ul">
+                {props.isProcessing ? (
+                  <p>loading..........</p>
+                ) : (
+                  fuzzySearchResult.map((el) => (
+                    <li
+                      key={el.id}
+                      onClick={() => foundInstrumentHandler(el, false)}
+                    >
+                      {el.name}
+                    </li>
+                  ))
+                )}
+              </ul>
+            )}
+          </div>
         </div>
-        <div className="fuzzy_search_div_chemical mt-2">
-          {searchInput.length > 0 && (
-            <ul className="model_suggestion_ul">
-              {props.isProcessing ? (
-                <p>loading..........</p>
-              ) : (
-                fuzzySearchResult.map((el) => (
-                  <li
-                    key={el.id}
-                    onClick={() => foundInstrumentHandler(el, false)}
-                  >
-                    {el.name}
-                  </li>
-                ))
-              )}
-            </ul>
-          )}
-        </div>
-      </div>
-      {showChemicalElement && (
-        <div className="add_chemical_container">
-          <Header text="Add Instrument">
-            <button
-              className="central_header_remove_btn"
-              onClick={removeHandler}
-            >
-              <FontAwesomeIcon icon={faTrashAlt} /> <span>Remove</span>
-            </button>
-          </Header>
-          <div className="add_chemical_input_container">
-            <div className="test">
-              <div className="container-fluid">
-                <div className="row">
-                  <div className="col">
-                    <ShipmentInput
-                      labelShow
-                      type="text"
-                      placeholder="Name"
-                      bckColor="color_black "
-                      name="name"
-                      value={chemicalCredential.name}
-                      handler={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                    />
+        {showChemicalElement && (
+          <div className="add_chemical_container">
+            <Header text="Add Instrument">
+              <button
+                className="central_header_remove_btn"
+                onClick={removeHandler}
+              >
+                <FontAwesomeIcon icon={faTrashAlt} /> <span>Remove</span>
+              </button>
+            </Header>
+            <div className="add_chemical_input_container">
+              <div className="test">
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col">
+                      <ShipmentInput
+                        labelShow
+                        type="text"
+                        placeholder="Name"
+                        bckColor="color_black "
+                        name="name"
+                        value={chemicalCredential.name}
+                        handler={inputHandler}
+                        readOnly={!chemicalCredential.isNew}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="container-fluid">
-                <div className="row row-cols-1 row-cols-sm-2">
-                  <div className="col">
-                    <ShipmentInput
-                      labelShow
-                      type="text"
-                      placeholder="Manufacturer"
-                      bckColor="color_black "
-                      name="manufacturer"
-                      value={chemicalCredential.manufacturer}
-                      handler={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                    />
-                  </div>
-                  <div className="col">
-                    <ShipmentInput
-                      labelShow
-                      type="text"
-                      placeholder="Supplier"
-                      bckColor="color_black "
-                      name="supplier"
-                      value={chemicalCredential.supplier}
-                      handler={inputHandler}
-                      readOnly={!chemicalCredential.isNew}
-                    />
-                  </div>
-                  <div className="col">
-                    <label>{`Quantity :  ${chemicalCredential.quantity}`}</label>
-                    <ShipmentInput
-                      type="number"
-                      labelShow={false}
-                      placeholder={`Quantity`}
-                      bckColor="color_black "
-                      name="newQuantity"
-                      value={chemicalCredential.newQuantity}
-                      handler={inputHandler}
-                    />
-                  </div>
-                  <div className="col">
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        marginTop: "3.5rem",
-                      }}
-                    >
-                      <Button
-                        onClick={addTemporaryHandler}
-                        variant="primary"
-                        style={{ fontSize: "1.6rem" }}
-                        disabled={addLoading}
+                <div className="container-fluid">
+                  <div className="row row-cols-1 row-cols-sm-2">
+                    <div className="col">
+                      <ShipmentInput
+                        labelShow
+                        type="text"
+                        placeholder="Manufacturer"
+                        bckColor="color_black "
+                        name="manufacturer"
+                        value={chemicalCredential.manufacturer}
+                        handler={inputHandler}
+                        readOnly={!chemicalCredential.isNew}
+                      />
+                    </div>
+                    <div className="col">
+                      <ShipmentInput
+                        labelShow
+                        type="text"
+                        placeholder="Supplier"
+                        bckColor="color_black "
+                        name="supplier"
+                        value={chemicalCredential.supplier}
+                        handler={inputHandler}
+                        readOnly={!chemicalCredential.isNew}
+                      />
+                    </div>
+                    <div className="col">
+                      <label>{`Quantity :  ${chemicalCredential.quantity}`}</label>
+                      <ShipmentInput
+                        type="number"
+                        labelShow={false}
+                        placeholder={`Quantity`}
+                        bckColor="color_black "
+                        name="newQuantity"
+                        value={chemicalCredential.newQuantity}
+                        handler={inputHandler}
+                      />
+                    </div>
+                    <div className="col">
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          marginTop: "3.5rem",
+                        }}
                       >
-                        {addLoading && (
-                          <div
-                            className="spinner-border me-2"
-                            role="status"
-                            style={{ width: "1.4rem", height: "1.4rem" }}
-                          >
-                            <span className="visually-hidden">Loading...</span>
-                          </div>
-                        )}
-                        {type.create ? `Add` : "Edit"}
-                      </Button>
+                        <Button
+                          onClick={addTemporaryHandler}
+                          variant="primary"
+                          style={{ fontSize: "1.6rem" }}
+                          disabled={addLoading}
+                        >
+                          {addLoading && (
+                            <div
+                              className="spinner-border me-2"
+                              role="status"
+                              style={{ width: "1.4rem", height: "1.4rem" }}
+                            >
+                              <span className="visually-hidden">
+                                Loading...
+                              </span>
+                            </div>
+                          )}
+                          {type.create ? `Add` : "Edit"}
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-      {tempShipmentLoading && (
-        <div className="d-flex justify-content-center">
-          <div
-            className="spinner-border mt-5"
-            role="status"
-            style={{ width: "5rem", height: "5rem" }}
-          >
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      )}
-      {!tempShipmentLoading && tempShipment.data.length > 0 && (
-        <>
-          <div className="border mt-5"></div>
-          <div className="container mt-5" style={{ overflowX: "scroll" }}>
-            <Table striped bordered hover variant="dark">
-              <thead>
-                <tr>
-                  <th style={{ paddingLeft: "2rem" }}>#</th>
-                  <th>Name</th>
-                  <th>Quantity</th>
-                  <th>Manufacturer</th>
-                  <th>Supplier</th>
-                  <th>New Quantity</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tempShipment.flag &&
-                  tempShipment.data.map((el, i) => (
-                    <tr key={el.id}>
-                      <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                      <td>{el.instrument.name}</td>
-                      <td>{el.instrument.quantity}</td>
-                      <td>{el.instrument.manufacturer}</td>
-                      <td>{el.instrument.supplier}</td>
-                      <td>{el.quantity}</td>
-                      <td>
-                        <div>
-                          <Button
-                            onClick={() => editInstrumentHandler(el)}
-                            variant="primary"
-                          >
-                            Edit
-                          </Button>{" "}
-                          <Button
-                            variant="danger"
-                            onClick={() => deleteFromTempShipmentHandler(el.id)}
-                            disabled={
-                              el.id === deleteLoading.id &&
-                              deleteLoading.loading
-                            }
-                          >
-                            {el.id === deleteLoading.id &&
-                              deleteLoading.loading && (
-                                <div
-                                  className="spinner-border spinner-border-sm me-2"
-                                  role="status"
-                                >
-                                  <span className="visually-hidden">
-                                    Loading...
-                                  </span>
-                                </div>
-                              )}
-                            Delete
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
-          </div>
-
-          <div className="clearfix">
-            <button
-              onClick={submitHandler}
-              className="btn btn-primary mt-4 px-4 float-end fontSize1_6"
-              disabled={submitLoading}
+        )}
+        {tempShipmentLoading && (
+          <div className="d-flex justify-content-center">
+            <div
+              className="spinner-border mt-5"
+              role="status"
+              style={{ width: "5rem", height: "5rem" }}
             >
-              {submitLoading && (
-                <div className="spinner-border me-2" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-              )}
-              Submit
-            </button>
+              <span className="visually-hidden">Loading...</span>
+            </div>
           </div>
-        </>
-      )}
-    </div>
+        )}
+        {!tempShipmentLoading && tempShipment.data.length > 0 && (
+          <>
+            <div className="border mt-5"></div>
+            <div className="container mt-5" style={{ overflowX: "scroll" }}>
+              <Table striped bordered hover variant="dark">
+                <thead>
+                  <tr>
+                    <th style={{ paddingLeft: "2rem" }}>#</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Manufacturer</th>
+                    <th>Supplier</th>
+                    <th>New Quantity</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tempShipment.flag &&
+                    tempShipment.data.map((el, i) => (
+                      <tr key={el.id}>
+                        <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
+                        <td>{el.instrument.name}</td>
+                        <td>{el.instrument.quantity}</td>
+                        <td>{el.instrument.manufacturer}</td>
+                        <td>{el.instrument.supplier}</td>
+                        <td>{el.quantity}</td>
+                        <td>
+                          <div>
+                            <Button
+                              onClick={() => editInstrumentHandler(el)}
+                              variant="primary"
+                            >
+                              Edit
+                            </Button>{" "}
+                            <Button
+                              variant="danger"
+                              onClick={() =>
+                                deleteFromTempShipmentHandler(el.id)
+                              }
+                              disabled={
+                                el.id === deleteLoading.id &&
+                                deleteLoading.loading
+                              }
+                            >
+                              {el.id === deleteLoading.id &&
+                                deleteLoading.loading && (
+                                  <div
+                                    className="spinner-border spinner-border-sm me-2"
+                                    role="status"
+                                  >
+                                    <span className="visually-hidden">
+                                      Loading...
+                                    </span>
+                                  </div>
+                                )}
+                              Delete
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+            </div>
+
+            <div className="clearfix">
+              <button
+                onClick={submitHandler}
+                className="btn btn-primary mt-4 px-4 float-end fontSize1_6"
+                disabled={submitLoading}
+              >
+                {submitLoading && (
+                  <div className="spinner-border me-2" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                )}
+                Submit
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

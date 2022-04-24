@@ -14,6 +14,7 @@ import {
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { msgFormater } from "../../utils/utils";
 
 const FileManagment = () => {
   const { flag } = useSelector((state) => state.file);
@@ -56,7 +57,7 @@ const FileManagment = () => {
       .catch((err) => {
         setError(true);
         (() => {
-          toast(`Something Went Wrong.`);
+          toast(msgFormater(err));
         })();
         setLoading(false);
       });
@@ -71,13 +72,12 @@ const FileManagment = () => {
     axios
       .delete(`/api/filemanager/files/${id}/`)
       .then((res) => {
-        console.log(res.data);
         getFileHandler();
       })
       .catch((err) => {
         setError(true);
         (() => {
-          toast(`Something Went Wrong.`);
+          toast(msgFormater(err));
         })();
       });
   };
@@ -96,7 +96,7 @@ const FileManagment = () => {
       .catch((err) => {
         setError(true);
         (() => {
-          toast(`Something Went Wrong.`);
+          toast(msgFormater(err));
         })();
       });
   };
@@ -118,7 +118,7 @@ const FileManagment = () => {
         .catch((err) => {
           setError(true);
           (() => {
-            toast(`Something Went Wrong.`);
+            toast(msgFormater(err));
           })();
         });
     } else {
@@ -145,7 +145,7 @@ const FileManagment = () => {
       .catch((err) => {
         setError(true);
         (() => {
-          toast(`Something Went Wrong.`);
+          toast(msgFormater(err));
         })();
       });
   };

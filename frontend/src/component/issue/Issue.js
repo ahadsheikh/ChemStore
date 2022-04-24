@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ChemicalTable from "./ChemicalTable";
 import InstrumentTable from "./InstrumentTable";
 import GlasswareTable from "./GlasswareTable";
+import { msgFormater } from "../../utils/utils";
 
 const Issue = (props) => {
   const dispatch = useDispatch();
@@ -86,7 +87,6 @@ const Issue = (props) => {
       .get(`/api/management/fuzzysearch/?query=${value}`)
       .then((res) => {
         setFuzzyResult(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         (() => {
@@ -131,16 +131,9 @@ const Issue = (props) => {
         })
         .catch((err) => {
           setSubmitLoading(false);
-          let len = Object.keys(err.response.data);
-          if (len > 0) {
-            (() => {
-              toast(err.response.data[Object.keys(err.response.data)[0]]);
-            })();
-          } else {
-            (() => {
-              toast(`Something Went Wrong.`);
-            })();
-          }
+          (() => {
+            toast(msgFormater(err));
+          })();
           setIssError({ message: "Issue Date is Required", error: true });
         });
 
@@ -160,16 +153,9 @@ const Issue = (props) => {
           getListHandler();
         })
         .catch((err) => {
-          let len = Object.keys(err.response.data);
-          if (len > 0) {
-            (() => {
-              toast(err.response.data[Object.keys(err.response.data)[0]]);
-            })();
-          } else {
-            (() => {
-              toast(`Something Went Wrong.`);
-            })();
-          }
+          (() => {
+            toast(msgFormater(err));
+          })();
           setIssError({ message: "Issue Date is Required", error: true });
           setSubmitLoading(false);
         });
@@ -204,16 +190,9 @@ const Issue = (props) => {
       })
       .catch((err) => {
         setDeleteLoading({ id: null, loading: false });
-        let len = Object.keys(err.response.data);
-        if (len > 0) {
-          (() => {
-            toast(err.response.data[Object.keys(err.response.data)[0]]);
-          })();
-        } else {
-          (() => {
-            toast(`Something Went Wrong.`);
-          })();
-        }
+        (() => {
+          toast(msgFormater(err));
+        })();
         setIssError({ message: "Issue Date is Required", error: true });
       });
   };

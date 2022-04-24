@@ -5,6 +5,7 @@ import { setFlagHandler } from "../../redux/FileManagment";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { msgFormater } from "../../utils/utils";
 
 const UtilsModal = (props) => {
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ const UtilsModal = (props) => {
       .catch((err) => {
         setError(true);
         (() => {
-          toast(`Something Went Wrong.`);
+          toast(msgFormater(err));
         })();
       });
   };
@@ -103,7 +104,9 @@ const UtilsModal = (props) => {
         setSubmitLoading(false);
       })
       .catch((err) => {
-        console.log(err.response);
+        (() => {
+          toast(msgFormater(err));
+        })();
         setSubmitLoading(false);
       });
   };

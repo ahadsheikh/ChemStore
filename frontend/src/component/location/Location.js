@@ -8,7 +8,6 @@ import {
 import { Collapse } from "react-bootstrap";
 import { issueLabHandler } from "../../redux/StoreManagment";
 import { useDispatch } from "react-redux";
-
 import SecondModal from "../modal/SecondModal";
 import Input from "../input/Input";
 import axios from "../../axios/axios";
@@ -16,6 +15,7 @@ import LocationHeader from "./LocationHeader";
 import SpecficIssue from "./SpecficIssue";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { msgFormater } from "../../utils/utils";
 
 const Location = ({ isShow = true }) => {
   const dispatch = useDispatch();
@@ -88,7 +88,7 @@ const Location = ({ isShow = true }) => {
         .catch((err) => {
           setSubmitLoading(false);
           setIssError(true);
-          (() => toast(`Something went Wrong.`))();
+          (() => toast(msgFormater(err)))();
         });
     } else {
       setIssError(true);

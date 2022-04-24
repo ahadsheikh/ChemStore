@@ -124,7 +124,7 @@ const UserManagment = () => {
     setResp({ message: "", loading: true, error: false });
     console.log(newUser);
     axios
-      .post(`/api/management/users/`, newUser)
+      .post(`/api/management/users/`, {newUser})
       .then((res) => {
         getUserFirstTimeHandler();
         console.log(res);
@@ -309,7 +309,6 @@ const UserManagment = () => {
         <div className="second_modal_main_container">
           <p style={{ marginBottom: "0", textAlign: "center" }}>
             {user.first_name} {user.last_name} ({user.email})
-            {/* Elanor Allen (e.allen@cheminventory.net) */}
           </p>
         </div>
       </SecondModal>
