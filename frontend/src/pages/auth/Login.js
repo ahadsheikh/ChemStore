@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "../../axios/axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,10 +13,14 @@ const Login = () => {
     email: "",
     password: "",
   });
-
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      setLoading(false);
+    };
+  }, []);
 
   const inputHandler = (e) => {
     const { name, value } = e.target;
@@ -72,7 +76,7 @@ const Login = () => {
             />
             <input
               className="login_container_form_input"
-              type="text"
+              type="password"
               name="password"
               placeholder="Password"
               value={adminLoginCredential.password}

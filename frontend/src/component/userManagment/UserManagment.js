@@ -124,7 +124,7 @@ const UserManagment = () => {
     setResp({ message: "", loading: true, error: false });
     console.log(newUser);
     axios
-      .post(`/api/management/users/`, {newUser})
+      .post(`/api/management/users/`, { newUser })
       .then((res) => {
         getUserFirstTimeHandler();
         console.log(res);
@@ -132,7 +132,6 @@ const UserManagment = () => {
         setResp({ message: "", loading: false, error: false });
       })
       .catch((err) => {
-        console.log(err.response);
         setResp({
           message: "Something Went Wrong",
           loading: false,

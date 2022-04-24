@@ -57,7 +57,7 @@ const FileManagment = () => {
       .catch((err) => {
         setError(true);
         (() => {
-          toast(msgFormater(err));
+          toast(`Something Went Wrong.`);
         })();
         setLoading(false);
       });
