@@ -123,7 +123,7 @@ def shipments(request):
     type_ = request.GET.get('type')
     res = []
     if type_ == 'chemical':
-        shipments = Shipment.objects.filter(shipment_type='CHEMICAL')
+        shipments = Shipment.objects.filter(shipment_type='CHEMICAL').order_by('-created_at')
         for shipment in shipments:
             obj = {
                 'id': shipment.id,
