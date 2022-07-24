@@ -2,6 +2,10 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from administration.models import Chemical, Glassware, Instrument, StoreConsumer, IssueCart, IssueObject, Issue
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
+
+User = get_user_model()
 
 
 class IssueCartTestCase(APITestCase):
@@ -62,6 +66,11 @@ class IssueCartTestCase(APITestCase):
         """
         self.url = reverse('issue_cart-list')
         self.detail_url = reverse('issue_cart-detail', args=[1])
+        self.user = User.objects.create(
+            email='test@chemstore.com'
+        )
+        self.token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
 
     def test_issue_cart_create(self):
         """
@@ -245,6 +254,12 @@ class IssueTestCase(APITestCase):
             supplier='Honeywell',
             quantity=10,
         )
+
+        self.user = User.objects.create(
+            email='test@chemstore.com'
+        )
+        self.token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
 
     def test_issuses(self):
         IssueCart.objects.create(

@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.test import APITestCase
 
 from administration.models import Chemical
@@ -26,7 +27,11 @@ class FuzzySearchTestCase(TestCase):
 class ChemicalTestCase(APITestCase):
 
     def setUp(self) -> None:
-        pass
+        self.user = User.objects.create(
+            email='test@chemstore.com'
+        )
+        self.token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
 
     def resolve_url(self, name, args=None):
         if args is None:

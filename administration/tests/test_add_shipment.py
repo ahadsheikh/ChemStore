@@ -1,11 +1,15 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from administration.models import ChemicalTempShipment, Chemical, Glassware, \
     Instrument, GlasswareTempShipment, InstrumentTempShipment, ChemicalShipment, \
     Shipment, GlasswareShipment, InstrumentShipment
 from core.utils import molar_mass
+
+User = get_user_model()
 
 
 class ChemicalTempShipmentTestCase(APITestCase):
@@ -25,6 +29,11 @@ class ChemicalTempShipmentTestCase(APITestCase):
         self.url = reverse('chemical_temp_shipment-list')
         self.url_detail = reverse('chemical_temp_shipment-detail', args=[1])
         self.url_merge = reverse('chemical_temp_shipment-merge')
+        self.user = User.objects.create(
+            email='test@chemstore.com'
+        )
+        self.token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
 
     def test_chemical_temp_shipment_create(self):
         response = self.client.post(self.url, {
@@ -178,6 +187,11 @@ class GlasswareTempShipmentTestCase(APITestCase):
         self.url = reverse('glassware_temp_shipment-list')
         self.url_detail = reverse('glassware_temp_shipment-detail', args=[1])
         self.url_merge = reverse('glassware_temp_shipment-merge')
+        self.user = User.objects.create(
+            email='test@chemstore.com'
+        )
+        self.token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
 
     def test_glassware_temp_shipment_create(self):
         response = self.client.post(self.url, {
@@ -329,6 +343,11 @@ class InstrumentTempShipmentTestCase(APITestCase):
         self.url = reverse('instrument_temp_shipment-list')
         self.url_detail = reverse('instrument_temp_shipment-detail', args=[1])
         self.url_merge = reverse('instrument_temp_shipment-merge')
+        self.user = User.objects.create(
+            email='test@chemstore.com'
+        )
+        self.token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
 
     def test_instrument_temp_shipment_create(self):
         response = self.client.post(self.url, {
@@ -491,6 +510,12 @@ class ShipmentTestCase(APITestCase):
             supplier='Honeywell',
             quantity=10,
         )
+
+        self.user = User.objects.create(
+            email='test@chemstore.com'
+        )
+        self.token = str(RefreshToken.for_user(self.user).access_token)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
 
     def test_shipments(self):
         ChemicalTempShipment.objects.create(
