@@ -3,9 +3,11 @@ import axios from "axios";
 export const cancelTokenSource = axios.CancelToken.source();
 
 const instance = axios.create({
-  baseURL: "http://chemstore2.azurewebsites.net",
+  baseURL: process.env.REACT_APP_BASE_URL,
   cancelToken: cancelTokenSource.token,
 });
+
+console.log("BLALALA", process.env.REACT_APP_BASE_URL);
 
 instance.interceptors.request.use(
   (config) => {

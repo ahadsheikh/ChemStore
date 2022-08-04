@@ -18,16 +18,16 @@ const HomeLayout = () => {
     setShowBlockModal((preState) => !preState);
   };
 
-  useEffect(() => {
-    axios
-      .get(`/api/management/stores/`)
-      .then((res) => {
-        setStoreList(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`/api/management/stores/`)
+  //     .then((res) => {
+  //       setStoreList(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.response);
+  //     });
+  // }, []);
 
   let pages = arr[id];
   const handlePage = (id) => {
