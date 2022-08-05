@@ -7,8 +7,6 @@ const instance = axios.create({
   cancelToken: cancelTokenSource.token,
 });
 
-console.log("BLALALA", process.env.REACT_APP_BASE_URL);
-
 instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(process.env.REACT_APP_ACCESS_TOKEN_NAME);

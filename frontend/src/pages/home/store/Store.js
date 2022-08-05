@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Dropdown, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import axios from "../../../axios/axios";
+import axios from "../../../axios/axios_noauth";
 const Store = () => {
   const { activeStore } = useSelector((state) => state.StoreManagment);
   const [error, setError] = useState({ loading: false, message: "" });

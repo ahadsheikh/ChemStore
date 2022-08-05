@@ -7,7 +7,7 @@ import {
 import { Collapse } from "react-bootstrap";
 import { issueLabHandler } from "../../../redux/StoreManagment";
 import { useDispatch } from "react-redux";
-import axios from "../../../axios/axios";
+import axios from "../../../axios/axios_noauth";
 import LocationHeader from "./LocationHeader";
 import SpecficIssue from "./SpecficIssue";
 import { ToastContainer, toast } from "react-toastify";

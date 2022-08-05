@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
-import axios from "../../../axios/axios";
+import axios from "../../../axios/axios_noauth";
 import { config } from "../../../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
