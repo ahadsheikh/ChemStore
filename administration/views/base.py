@@ -135,19 +135,34 @@ def consumers_tree(request):
     return Response(res)
 
 
-def fuzzy_util(objects, query, limit=10, with_score=False):
+def fuzzy_util(objects, query, query_obj='None', limit=10, with_score=False):
     """
     objects: list of objects to search
     query: string to search for
-    limit: number of results to return
+    query_key: key to search for in objects (default: name) [optional]
+                Example: name, CAS_RN, molecular_formula
+    limit: number of results to return (default: 10) [optional]
     with_score: return a tuple of (object, score) if False(default)
-                        otherwise return object with score and limit will be ignored
+                otherwise return object with score and limit will be
+                ignored (default: False) [optional]
     Returns a list of objects that match the given query.
     """
 
     h_objects = []
-    for obj in objects:
-        h_objects.append((-fuzz.ratio(query, obj.name), obj))
+    if query_obj == 'chemical':
+        print("Halallllllllllllllll")
+        for obj in objects:
+            h_objects.append((-fuzz.ratio(query, obj.name), obj))
+            h_objects.append((-fuzz.ratio(query, obj.CAS_RN), obj))
+            h_objects.append((-fuzz.ratio(query, obj.molecular_formula), obj))
+    elif query_obj == 'glassware':
+        for obj in objects:
+            h_objects.append((-fuzz.ratio(query, obj.name), obj))
+    elif query_obj == 'instrument':
+        for obj in objects:
+            h_objects.append((-fuzz.ratio(query, obj.name), obj))
+    else:
+        return []
 
     h_objects = sorted(h_objects, key=lambda x: x[0])
 
@@ -181,24 +196,24 @@ def fuzzy_search(request):
         limit = 10
         if type_ == 'chemical':
             objects = Chemical.objects.all()
-            h_obj = fuzzy_util(objects, query, limit)
+            h_obj = fuzzy_util(objects, query, 'chemical', limit)
             serializer = ChemicalSerializer(h_obj, many=True)
         elif type_ == 'glassware':
             objects = Glassware.objects.all()
-            h_obj = fuzzy_util(objects, query, limit)
+            h_obj = fuzzy_util(objects, query, 'glassware', limit)
             serializer = GlasswareSerializer(h_obj, many=True)
         elif type_ == 'instrument':
             objects = Instrument.objects.all()
-            h_obj = fuzzy_util(objects, query, limit)
+            h_obj = fuzzy_util(objects, query, 'instrument', limit)
             serializer = InstrumentSerializer(h_obj, many=True)
         # search all material and join them in a list
         elif type_ is None:
             chem = Chemical.objects.all()
-            h_chem = fuzzy_util(chem, query, limit, with_score=True)
+            h_chem = fuzzy_util(chem, query, limit=limit, with_score=True)
             glass = Glassware.objects.all()
-            h_glass = fuzzy_util(glass, query, limit, with_score=True)
+            h_glass = fuzzy_util(glass, query, limit=limit, with_score=True)
             instrument = Instrument.objects.all()
-            h_instrument = fuzzy_util(instrument, query, limit, with_score=True)
+            h_instrument = fuzzy_util(instrument, query, limit=limit, with_score=True)
             objects = list(chain(h_chem, h_glass, h_instrument))
             objects = sorted(objects, key=lambda x: x[0])
             data_l = []
