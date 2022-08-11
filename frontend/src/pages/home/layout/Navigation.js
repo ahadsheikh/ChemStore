@@ -6,6 +6,7 @@ const Navigation = (props) => {
   return (
     <nav className="nav_container">
       <h2 className="nav_container_title">ChemStore</h2>
+        <a href="/adminapp" className="nav_container_title">Admin</a>
       <div className="nav_menu_bar_div">
         <FontAwesomeIcon
           onClick={props.handler}
