@@ -3,7 +3,7 @@ import Chemical from "./chemical/Chemical";
 import Instrument from "./instrument/Instrument";
 import Glassware from "./glassware/Glassware";
 
-const Store = () => {
+const   Store = () => {
   const [table, setTable] = useState({
     chemical: true,
     instrument: false,

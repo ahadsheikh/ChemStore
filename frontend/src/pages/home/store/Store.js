@@ -136,7 +136,9 @@ const Store = () => {
                 <tr>
                   <th style={{ paddingLeft: "2rem" }}>#</th>
                   <th>Name</th>
+                  <th>CAS RN</th>
                   <th>Molecular Formula</th>
+                  <th>Molecular Weight</th>
                   <th>Purity</th>
                   <th>Amount</th>
                   <th>State</th>
@@ -187,7 +189,9 @@ const Store = () => {
                   <tr key={el.id}>
                     <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
                     <td>{el.name}</td>
+                    <td>{el.CAS_RN}</td>
                     <td>{el.molecular_formula}</td>
+                    <td>{el.molecular_weight}</td>
                     <td>{el.purity}</td>
                     <td>{el.quantity}</td>
                     <td>{el.state}</td>

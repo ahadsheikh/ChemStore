@@ -150,7 +150,6 @@ def fuzzy_util(objects, query, query_obj='None', limit=10, with_score=False):
 
     h_objects = []
     if query_obj == 'chemical':
-        print("Halallllllllllllllll")
         for obj in objects:
             h_objects.append((-fuzz.ratio(query, obj.name), obj))
             h_objects.append((-fuzz.ratio(query, obj.CAS_RN), obj))

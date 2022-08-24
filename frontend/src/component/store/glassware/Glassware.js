@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Table, Spinner, Modal } from "react-bootstrap";
 import axios from "../../../axios/axios";
+import axiosNoAuth from "../../../axios/axios_noauth";
 import GlasswareModal from "./GlasswareModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -39,7 +40,7 @@ const Glassware = () => {
     setGlassware([]);
     setError({ loading: true, message: "" });
     // setTable({ chemical: false, instrument: false, glassware: true });
-    axios
+    axiosNoAuth
       .get(`/api/management/glasswares/`)
       .then((res) => {
         setGlassware(res.data);

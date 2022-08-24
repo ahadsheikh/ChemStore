@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Table, Spinner, Modal } from "react-bootstrap";
 import axios from "../../../axios/axios";
+import axiosNoAuth from "../../../axios/axios_noauth";
 import ChemicalModal from "./ChemicalModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,6 +14,7 @@ const dummyChemical = {
   name: "",
   purity: "",
   molecular_formula: "",
+  molecular_weight: "",
   manufacturer: "",
   supplier: "",
   state: "",
@@ -48,7 +50,7 @@ const Chemical = () => {
 
   const getChemical = () => {
     setError({ loading: true, message: "" });
-    axios
+    axiosNoAuth
       .get(`/api/management/chemicals/`)
       .then((res) => {
         setChemical(res.data);
@@ -208,7 +210,9 @@ const Chemical = () => {
                   <tr>
                     <th style={{ paddingLeft: "2rem" }}>#</th>
                     <th>Name</th>
+                    <th>CAS RN</th>
                     <th>Molecular Formula</th>
+                    <th>Molecular Weight</th>
                     <th>Purity</th>
                     <th>Amount</th>
                     <th>State</th>
@@ -238,7 +242,9 @@ const Chemical = () => {
                       <tr key={el.id}>
                         <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
                         <td>{el.name}</td>
+                        <td>{el.CAS_RN}</td>
                         <td>{el.molecular_formula}</td>
+                        <td>{el.molecular_weight}</td>
                         <td>{el.purity}</td>
                         <td>{el.quantity}</td>
                         <td>{el.state}</td>

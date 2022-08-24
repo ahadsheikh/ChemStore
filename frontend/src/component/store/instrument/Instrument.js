@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Table, Spinner, Modal } from "react-bootstrap";
 import axios from "../../../axios/axios";
+import axiosNoAuth from "../../../axios/axios_noauth";
 import InstrumentModal from "./InstrumentModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -43,7 +44,7 @@ const Instrument = () => {
     setError({ loading: true, message: "" });
     // setTable({ chemical: false, instrument: true, glassware: false });
 
-    axios
+    axiosNoAuth
       .get(`/api/management/instruments/`)
       .then((res) => {
         setInstrument(res.data);
