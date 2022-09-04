@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt, faBars } from "@fortawesome/free-solid-svg-icons";
 import { removeTokenHandler } from "../redux/Auth";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const Navigation = (props) => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const Navigation = (props) => {
   };
   return (
     <nav className="nav_container">
-      <h2 className="nav_container_title">ChemStore</h2>
+      <Link to={"/"}><h2 className="nav_container_title">ChemStore</h2></Link>
       <div className="nav_menu_bar_div">
         <FontAwesomeIcon
           onClick={props.handler}
