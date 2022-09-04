@@ -2,10 +2,8 @@ import axios from "axios";
 
 export const cancelTokenSource = axios.CancelToken.source();
 
-const BASE_URL = "http://103.99.176.198"
-
 const instance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: process.env.REACT_APP_BASE_URL,
   cancelToken: cancelTokenSource.token,
 });
 
