@@ -22,7 +22,7 @@ from django.views.generic import TemplateView
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
-from administration.views.users import CustomTokenObtainPairView
+from account.views import CustomTokenObtainPairView
 
 urlpatterns = []
 if settings.DEBUG:
@@ -34,9 +34,9 @@ urlpatterns += [
     # JWT Auth
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/management/', include('administration.urls')),
-    path('api/filemanager/', include('filemanager.urls')),
+    # path('api/management/', include('administration.urls')),
+    # path('api/filemanager/', include('filemanager.urls')),
 
-    re_path(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
-    re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name='index.html'), name='index'),
+    # re_path(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
+    # re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name='index.html'), name='index'),
 ]

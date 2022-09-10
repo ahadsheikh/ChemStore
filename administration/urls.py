@@ -1,6 +1,4 @@
 from django.urls import path
-from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.decorators import login_required
 from rest_framework.routers import DefaultRouter
 
 from .views.base import (
@@ -15,10 +13,7 @@ from .views.base import (
 from .views import shipment, issue
 from .views.utils import consumer_store_types
 
-from .views.users import UserViewset
-
 router = DefaultRouter()
-router.register(r'users', UserViewset, basename='user')
 router.register(r'chemicals', ChemicalViewSet, basename='chemical')
 router.register(r'glasswares', GlasswareViewSet, basename='glassware')
 router.register(r'instruments', InstrumentViewSet, basename='instrument')

@@ -42,8 +42,9 @@ INSTALLED_APPS = [
     'django_extensions',  # For debugging url patterns
 
     # Project Apps
-    'administration.apps.AdministrationConfig',
-    'filemanager.apps.FilemanagerConfig',
+    # 'administration.apps.AdministrationConfig',
+    # 'filemanager.apps.FilemanagerConfig',
+    'account.apps.AccountConfig',
 ]
 
 MIDDLEWARE = [
@@ -148,7 +149,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "administration.User"
+AUTH_USER_MODEL = "account.User"
 
 # For cors control
 CORS_ORIGIN_ALLOW_ALL = True
