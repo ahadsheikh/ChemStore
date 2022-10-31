@@ -42,9 +42,10 @@ INSTALLED_APPS = [
     'django_extensions',  # For debugging url patterns
 
     # Project Apps
-    # 'administration.apps.AdministrationConfig',
+    'administration.apps.AdministrationConfig',
     # 'filemanager.apps.FilemanagerConfig',
     'account.apps.AccountConfig',
+    'storeobjects.apps.StoreobjectsConfig',
 ]
 
 MIDDLEWARE = [

@@ -1,88 +1,31 @@
 from django.db import models
 
+from storeobjects import models as store_models
 
-# class Chemical1:
-#     CAS_RN = models.CharField(max_length=10, unique=True)
-#     name = models.CharField(max_length=300)
-#     molecular_formula = models.CharField(max_length=300)
-#     molecular_weight = models.FloatField(blank=True)
-#
-#
-# class Purity:
-#     percentage = models.FloatField()
-#     solution_name = models.CharField(max_length=50, default='Water')
-#
-# class Manufacturer:
-#     name = models.CharField(max_length=50)
-#
-#
-# class Supplier:
-#     name = models.CharField(max_length=50)
-#
-#
-# class State:
-#     name = models.CharField(max_length=50)
-#
-#
-# class ChemObject:
-#     chemical = models.ForeignKey(Chemical1, on_delete=models.RESTRICT)
-
-
-class Chemical(models.Model):
-    STATES_CHOICES = (
-        ('SOLID', 'Solid'),
-        ('LIQUID', 'Liquid'),
-        ('GAS', 'Gas'),
+consumer_type_choices = (
+        ('PHYSICAL', 'Physical Lab'),
+        ('ORGANIC', 'Organic Lab'),
+        ('INORGANIC', 'Inorganic Lab'),
+        ('PERSONAL', 'Personal')
     )
-    CAS_RN = models.CharField(max_length=10, unique=True)
-    name = models.CharField(max_length=300)
-    molecular_formula = models.CharField(max_length=300)
-    molecular_weight = models.FloatField(blank=True)
-    purity = models.CharField(max_length=30, blank=True)
-    manufacturer = models.CharField(max_length=50)
-    supplier = models.CharField(max_length=50)
-    state = models.CharField(max_length=6, choices=STATES_CHOICES)
-    quantity = models.FloatField(default=0.0, blank=True)
+
+
+class Building(models.Model):
+    name = models.CharField(max_length=200)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name} - {self.quantity}"
-
-
-class Glassware(models.Model):
-    name = models.CharField(max_length=100)
-    manufacturer = models.CharField(max_length=50)
-    supplier = models.CharField(max_length=50)
-    size = models.CharField(max_length=50, blank=True)
-    material_type = models.CharField(max_length=50, default="Unknown", blank=True)
-    quantity = models.PositiveIntegerField(default=0, blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.name} - {self.quantity}"
-
-
-class Instrument(models.Model):
-    name = models.CharField(max_length=100)
-    manufacturer = models.CharField(max_length=50)
-    supplier = models.CharField(max_length=50)
-    quantity = models.PositiveIntegerField(default=0, blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.name} - {self.quantity}"
+        return self.name
 
 
 class Store(models.Model):
     name = models.CharField(max_length=30)
-    room_number = models.CharField(max_length=10)
-    building_name = models.CharField(max_length=100)
-    chemicals = models.ManyToManyField(Chemical)
-    glasswares = models.ManyToManyField(Glassware)
-    instruments = models.ManyToManyField(Instrument)
+    room_number = models.SmallIntegerField()
+    building = models.ForeignKey(Building, on_delete=models.RESTRICT)
+    chemicals = models.ManyToManyField(store_models.ChemicalObj)
+    glasswares = models.ManyToManyField(store_models.GlasswareObj)
+    instruments = models.ManyToManyField(store_models.InstrumentObj)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -99,6 +42,7 @@ shipment_choices = (
 
 class Shipment(models.Model):
     shipment_type = models.CharField(choices=shipment_choices, max_length=10, default='CHEMICAL')
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -106,7 +50,7 @@ class Shipment(models.Model):
 
 
 class ChemicalShipment(models.Model):
-    chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
+    chemical = models.ForeignKey(store_models.ChemicalObj, on_delete=models.PROTECT)
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
     old_total = models.FloatField()
     quantity = models.FloatField()
@@ -118,7 +62,7 @@ class ChemicalShipment(models.Model):
 
 
 class GlasswareShipment(models.Model):
-    glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
+    glassware = models.ForeignKey(store_models.GlasswareObj, on_delete=models.PROTECT)
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
     old_total = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
@@ -130,7 +74,7 @@ class GlasswareShipment(models.Model):
 
 
 class InstrumentShipment(models.Model):
-    instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
+    instrument = models.ForeignKey(store_models.InstrumentObj, on_delete=models.PROTECT)
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
     old_total = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
@@ -143,39 +87,31 @@ class InstrumentShipment(models.Model):
 
 # Model for Temporary Shipment data
 class ChemicalTempShipment(models.Model):
-    chemical = models.ForeignKey(Chemical, on_delete=models.PROTECT)
+    chemical = models.ForeignKey(store_models.ChemicalObj, on_delete=models.PROTECT)
     is_new_obj = models.BooleanField(default=False)
     quantity = models.FloatField()
 
 
 # Model for Temporary Shipment data
 class GlasswareTempShipment(models.Model):
-    glassware = models.ForeignKey(Glassware, on_delete=models.PROTECT)
+    glassware = models.ForeignKey(store_models.GlasswareObj, on_delete=models.PROTECT)
     is_new_obj = models.BooleanField(default=False)
     quantity = models.PositiveIntegerField()
 
 
 # Model for Temporary Shipment data
 class InstrumentTempShipment(models.Model):
-    instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
+    instrument = models.ForeignKey(store_models.InstrumentObj, on_delete=models.PROTECT)
     is_new_obj = models.BooleanField(default=False)
     quantity = models.PositiveIntegerField()
-
-
-consumer_type_choices = (
-        ('PHYSICAL', 'Physical Lab'),
-        ('ORGANIC', 'Organic Lab'),
-        ('INORGANIC', 'Inorganic Lab'),
-        ('PERSONAL', 'Personal')
-    )
 
 
 # This model is used for different types of Lab and Personal Researchers who used the system
 class StoreConsumer(models.Model):
     name = models.CharField(max_length=100)
     consumer_type = models.CharField(max_length=20, choices=consumer_type_choices)
-    room_number = models.CharField(max_length=10)
-    building_name = models.CharField(max_length=100)
+    room_number = models.SmallIntegerField()
+    building = models.ForeignKey(Building, on_delete=models.RESTRICT)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -193,10 +129,10 @@ class Issue(models.Model):
 
 
 object_type_choices = (
-    ('CHEMICAL', 'Chemical'),
-    ('GLASSWARE', 'Glassware'),
-    ('INSTRUMENT', 'Instrument'),
-)
+        ('CHEMICAL', 'Chemical'),
+        ('GLASSWARE', 'Glassware'),
+        ('INSTRUMENT', 'Instrument'),
+    )
 
 
 class IssueObject(models.Model):

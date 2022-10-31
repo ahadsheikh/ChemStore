@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
 from administration.models import ChemicalTempShipment, GlasswareTempShipment, InstrumentTempShipment
-from administration.serializers.serializers import ChemicalSerializer, GlasswareSerializer, InstrumentSerializer
+from storeobjects.serializers import ChemicalObjSerializer, GlasswareObjSerializer, InstrumentObjSerializer
 
 
 class ChemicalTempShipmentSerializer(serializers.ModelSerializer):
-    chemical = ChemicalSerializer()
+    chemical = ChemicalObjSerializer()
 
     class Meta:
         model = ChemicalTempShipment
@@ -36,7 +36,7 @@ class ChemicalTempShipmentCreateSerializer(serializers.ModelSerializer):
 
 
 class GlasswareTempShipmentSerializer(serializers.ModelSerializer):
-    glassware = GlasswareSerializer()
+    glassware = GlasswareObjSerializer()
 
     class Meta:
         model = GlasswareTempShipment
@@ -67,7 +67,7 @@ class GlasswareTempShipmentCreateSerializer(serializers.ModelSerializer):
 
 
 class InstrumentTempShipmentSerializer(serializers.ModelSerializer):
-    instrument = InstrumentSerializer()
+    instrument = InstrumentObjSerializer()
 
     class Meta:
         model = InstrumentTempShipment

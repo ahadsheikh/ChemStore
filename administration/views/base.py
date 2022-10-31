@@ -1,55 +1,33 @@
-from rest_framework.decorators import api_view, permission_classes
+from itertools import chain
+
+from django.shortcuts import get_object_or_404
+
+from rest_framework import serializers
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import status
-from rest_framework import serializers
-from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
 
 from thefuzz import fuzz
-from itertools import chain
-
-from administration.serializers.serializers import (
-    ChemicalSerializer,
-    GlasswareSerializer,
-    InstrumentSerializer,
-    StoreSerializer,
-    ChemicalCreateSerializer,
-    AddShipmentSerializer, ShipmentSerializer, StoreConsumerSerializer
-)
 
 from administration.models import (
-    Chemical, Glassware, Instrument, Store, Shipment,
-    ChemicalShipment,
-    GlasswareShipment,
-    InstrumentShipment, StoreConsumer
+    Building, Store, StoreConsumer
 )
-from core.utils import molar_mass
+from administration.serializers.serializers import (
+    BuildingSerializer, StoreSerializer, StoreConsumerSerializer
+)
+from storeobjects.models import (
+    Chemical, ChemicalObj, Glassware, GlasswareObj, Instrument, InstrumentObj
+)
+from storeobjects.serializers import (
+    ChemicalObjSerializer, GlasswareObjSerializer, InstrumentObjSerializer
+)
 
 
-class ChemicalViewSet(ModelViewSet):
+class BuildingViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
-    queryset = Chemical.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == 'create' or self.action == 'update':
-            return ChemicalCreateSerializer
-        else:
-            return ChemicalSerializer
-
-
-class GlasswareViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    queryset = Glassware.objects.all()
-    serializer_class = GlasswareSerializer
-
-
-class InstrumentViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    queryset = Instrument.objects.all()
-    serializer_class = InstrumentSerializer
+    queryset = Building.objects.all()
+    serializer_class = BuildingSerializer
 
 
 class StoreViewSet(ModelViewSet):
@@ -61,11 +39,10 @@ class StoreViewSet(ModelViewSet):
         """
         List all chemical in a store
         """
-        # store = get_object_or_404(Store, pk=pk)
-        # chemicals = store.chemicals.all()
-        chemicals = Chemical.objects.all()
+        store = get_object_or_404(Store, pk=pk)
+        chemicals = store.chemicals.all()
 
-        chem_datas = ChemicalSerializer(instance=chemicals, many=True)
+        chem_datas = ChemicalObjSerializer(instance=chemicals, many=True)
 
         return Response(chem_datas.data)
 
@@ -74,11 +51,10 @@ class StoreViewSet(ModelViewSet):
         """
         List all glassware in a store
         """
-        # store = get_object_or_404(Store, pk=pk)
-        # glasswares = store.glasswares.all()
-        glasswares = Glassware.objects.all()
+        store = get_object_or_404(Store, pk=pk)
+        glasswares = store.glasswares.all()
 
-        glass_datas = GlasswareSerializer(instance=glasswares, many=True)
+        glass_datas = GlasswareObjSerializer(instance=glasswares, many=True)
 
         return Response(glass_datas.data)
 
@@ -87,11 +63,10 @@ class StoreViewSet(ModelViewSet):
         """
         List all instrument in a store
         """
-        # store = get_object_or_404(Store, pk=pk)
-        # instruments = store.instruments.all()
-        instruments = Instrument.objects.all()
+        store = get_object_or_404(Store, pk=pk)
+        instruments = store.instruments.all()
 
-        instru_datas = InstrumentSerializer(instance=instruments, many=True)
+        instru_datas = InstrumentObjSerializer(instance=instruments, many=True)
 
         return Response(instru_datas.data)
 
@@ -134,45 +109,62 @@ def consumers_tree(request):
 
     return Response(res)
 
-
-def fuzzy_util(objects, query, query_obj='None', limit=10, with_score=False):
-    """
-    objects: list of objects to search
-    query: string to search for
-    query_key: key to search for in objects (default: name) [optional]
-                Example: name, CAS_RN, molecular_formula
-    limit: number of results to return (default: 10) [optional]
-    with_score: return a tuple of (object, score) if False(default)
-                otherwise return object with score and limit will be
-                ignored (default: False) [optional]
-    Returns a list of objects that match the given query.
-    """
-
+def chemical_fuzzy_sort(objects, query, limit=10, with_score=False):
     h_objects = []
-    if query_obj == 'chemical':
-        for obj in objects:
-            h_objects.append((-fuzz.ratio(query, obj.name), obj))
-            h_objects.append((-fuzz.ratio(query, obj.CAS_RN), obj))
-            h_objects.append((-fuzz.ratio(query, obj.molecular_formula), obj))
-    elif query_obj == 'glassware':
-        for obj in objects:
-            h_objects.append((-fuzz.ratio(query, obj.name), obj))
-    elif query_obj == 'instrument':
-        for obj in objects:
-            h_objects.append((-fuzz.ratio(query, obj.name), obj))
-    else:
-        return []
+    for obj in objects:
+        name_score = (-fuzz.ratio(query, obj.chemical.name), obj)
+        casrn_score = (-fuzz.ratio(query, obj.chemical.CAS_RN), obj)
+        formula_score = (-fuzz.ratio(query, obj.chemical.molecular_formula), obj)
+
+        h_objects.append(min(name_score, casrn_score, formula_score))
 
     h_objects = sorted(h_objects, key=lambda x: x[0])
 
-    # if with_score is True then return a tuple of (score, object)
     if with_score:
         return h_objects
 
     output = []
     for index, obj in enumerate(h_objects):
         output.append(obj[1])
-        if index == limit-1:
+        if index == limit - 1:
+            break
+
+    return output
+
+
+def glassware_fuzzy_sort(objects, query, limit=10, with_score=False):
+    h_objects = []
+    for obj in objects:
+        h_objects.append((-fuzz.ratio(query, obj.glassware.name), obj))
+
+    h_objects = sorted(h_objects, key=lambda x: x[0])
+
+    if with_score:
+        return h_objects
+
+    output = []
+    for index, obj in enumerate(h_objects):
+        output.append(obj[1])
+        if index == limit - 1:
+            break
+
+    return output
+
+
+def instrument_fuzzy_sort(objects, query, limit=10, with_score=False):
+    h_objects = []
+    for obj in objects:
+        h_objects.append((-fuzz.ratio(query, obj.instrument.name), obj))
+
+    h_objects = sorted(h_objects, key=lambda x: x[0])
+
+    if with_score:
+        return h_objects
+
+    output = []
+    for index, obj in enumerate(h_objects):
+        output.append(obj[1])
+        if index == limit - 1:
             break
 
     return output
@@ -189,44 +181,45 @@ def fuzzy_search(request):
     """
     query = request.GET.get('query')
     type_ = request.GET.get('type')
+    limit = 10
 
     if query:
-        serializer = None
-        limit = 10
         if type_ == 'chemical':
-            objects = Chemical.objects.all()
-            h_obj = fuzzy_util(objects, query, 'chemical', limit)
-            serializer = ChemicalSerializer(h_obj, many=True)
+            objects = ChemicalObj.objects.all()
+            h_obj = chemical_fuzzy_sort(objects, query)
+            serializer = ChemicalObjSerializer(h_obj, many=True)
         elif type_ == 'glassware':
-            objects = Glassware.objects.all()
-            h_obj = fuzzy_util(objects, query, 'glassware', limit)
-            serializer = GlasswareSerializer(h_obj, many=True)
+            objects = GlasswareObj.objects.all()
+            h_obj = glassware_fuzzy_sort(objects, query)
+            serializer = GlasswareObjSerializer(h_obj, many=True)
         elif type_ == 'instrument':
-            objects = Instrument.objects.all()
-            h_obj = fuzzy_util(objects, query, 'instrument', limit)
-            serializer = InstrumentSerializer(h_obj, many=True)
+            objects = InstrumentObj.objects.all()
+            h_obj = instrument_fuzzy_sort(objects, query)
+            serializer = InstrumentObjSerializer(h_obj, many=True)
         # search all material and join them in a list
         elif type_ is None:
-            chem = Chemical.objects.all()
-            h_chem = fuzzy_util(chem, query, limit=limit, with_score=True)
-            glass = Glassware.objects.all()
-            h_glass = fuzzy_util(glass, query, limit=limit, with_score=True)
-            instrument = Instrument.objects.all()
-            h_instrument = fuzzy_util(instrument, query, limit=limit, with_score=True)
+            chems = ChemicalObj.objects.all()
+            h_chem = chemical_fuzzy_sort(chems, query, with_score=True)
+
+            glass = GlasswareObj.objects.all()
+            h_glass = glassware_fuzzy_sort(glass, query, with_score=True)
+
+            instrument = InstrumentObj.objects.all()
+            h_instrument = instrument_fuzzy_sort(instrument, query, with_score=True)
+
             objects = list(chain(h_chem, h_glass, h_instrument))
             objects = sorted(objects, key=lambda x: x[0])
             data_l = []
             i = 0
             for obj in objects:
-
-                if isinstance(obj[1], Chemical):
-                    data_l.append(ChemicalSerializer(obj[1]).data)
+                if isinstance(obj[1], ChemicalObj):
+                    data_l.append(ChemicalObjSerializer(obj[1]).data)
                     data_l[-1]['type'] = 'CHEMICAL'
-                elif isinstance(obj[1], Glassware):
-                    data_l.append(GlasswareSerializer(obj[1]).data)
+                elif isinstance(obj[1], GlasswareObj):
+                    data_l.append(GlasswareObjSerializer(obj[1]).data)
                     data_l[-1]['type'] = 'GLASSWARE'
-                elif isinstance(obj[1], Instrument):
-                    data_l.append(InstrumentSerializer(obj[1]).data)
+                elif isinstance(obj[1], InstrumentObj):
+                    data_l.append(InstrumentObjSerializer(obj[1]).data)
                     data_l[-1]['type'] = 'INSTRUMENT'
 
                 i += 1
@@ -242,137 +235,137 @@ def fuzzy_search(request):
         return Response([])
 
 
-@api_view(['POST'])
-def add_shipment(request):
-    """
-    Return a shipment, Check Doc;
-    """
-    serializer = AddShipmentSerializer(data=request.data)
-    res = {
-        "errors": []
-    }
-
-    serializer.is_valid(raise_exception=True)
-
-    note = "Note not given."
-    if 'note' in serializer.validated_data:
-        note = serializer.validated_data['note']
-
-    shipment = Shipment.objects.create(
-        shipment_date=serializer.validated_data['shipment_date'],
-        note=note
-    )
-
-    # For chemicals
-    chem_error = []
-    for old in serializer.validated_data['chemical']['old']:
-        try:
-            chem = Chemical.objects.get(pk=old['id'])
-        except ObjectDoesNotExist:
-            er = {
-                "id": old['id'],
-                "message": "Not Found"
-            }
-            res['partial_update'] = True
-            chem_error.append(er)
-            continue
-
-        chem_shipment = ChemicalShipment.objects.create(
-            chemical=chem,
-            shipment=shipment,
-            old_quantity=chem.quantity,
-            new_quantity=chem.quantity+old['quantity']
-        )
-
-        chem.quantity += old['quantity']
-        chem.save()
-
-    if len(chem_error) > 0:
-        res['errors']['chemical'] = chem_error
-
-    for new in serializer.validated_data['chemical']['new']:
-        chem = Chemical(**new)
-        chem.molecular_weight = molar_mass(chem.molecular_formula)
-        chem.save()
-
-        chem_shipment = ChemicalShipment.objects.create(
-            chemical=chem,
-            shipment=shipment,
-            old_quantity=0,
-            new_quantity=chem.quantity
-        )
-
-    # For glassware
-    glass_error = []
-    for old in serializer.validated_data['glassware']['old']:
-        try:
-            glass = Glassware.objects.get(pk=old['id'])
-        except ObjectDoesNotExist:
-            er = {
-                "id": old['id'],
-                "message": "Not Found"
-            }
-            res['partial_update'] = True
-            glass_error.append(er)
-            continue
-
-        glass_shipment = GlasswareShipment.objects.create(
-            glassware=glass,
-            shipment=shipment,
-            old_quantity=glass.quantity,
-            new_quantity=glass.quantity + old['quantity']
-        )
-        glass.quantity += old['quantity']
-        glass.save()
-
-    if len(glass_error) > 0:
-        res['errors']['glassware'] = glass_error
-
-    for new in serializer.validated_data['glassware']['new']:
-        glass = Glassware.objects.create(**new)
-        glass_shipment = GlasswareShipment.objects.create(
-            glassware=glass,
-            shipment=shipment,
-            old_quantity=0,
-            new_quantity=glass.quantity
-        )
-
-    # For instrument
-    inst_error = []
-    for old in serializer.validated_data['instrument']['old']:
-        try:
-            inst = Instrument.objects.get(pk=old['id'])
-        except ObjectDoesNotExist:
-            er = {
-                "id": old['id'],
-                "message": "Not Found"
-            }
-            res['partial_update'] = True
-            inst_error.append(er)
-            continue
-
-        inst_shipment = InstrumentShipment.objects.create(
-            instrument=inst,
-            shipment=shipment,
-            old_quantity=inst.quantity,
-            new_quantity=inst.quantity + old['quantity']
-        )
-
-        inst.quantity += old['quantity']
-        inst.save()
-
-    if len(inst_error) > 0:
-        res['errors']['instrument'] = inst_error
-
-    for new in serializer.validated_data['instrument']['new']:
-        inst = Instrument.objects.create(**new)
-        inst_shipment = InstrumentShipment.objects.create(
-            instrument=inst,
-            shipment=shipment,
-            old_quantity=0,
-            new_quantity=inst.quantity
-        )
-
-    res['shipment'] = ShipmentSerializer(shipment).data
-
-    return Response(res)
+# @api_view(['POST'])
+# def add_shipment(request):
+#     """
+#     Return a shipment, Check Doc;
+#     """
+#     serializer = AddShipmentSerializer(data=request.data)
+#     res = {
+#         "errors": []
+#     }
+#
+#     serializer.is_valid(raise_exception=True)
+#
+#     note = "Note not given."
+#     if 'note' in serializer.validated_data:
+#         note = serializer.validated_data['note']
+#
+#     shipment = Shipment.objects.create(
+#         shipment_date=serializer.validated_data['shipment_date'],
+#         note=note
+#     )
+#
+#     # For chemicals
+#     chem_error = []
+#     for old in serializer.validated_data['chemical']['old']:
+#         try:
+#             chem = Chemical.objects.get(pk=old['id'])
+#         except ObjectDoesNotExist:
+#             er = {
+#                 "id": old['id'],
+#                 "message": "Not Found"
+#             }
+#             res['partial_update'] = True
+#             chem_error.append(er)
+#             continue
+#
+#         chem_shipment = ChemicalShipment.objects.create(
+#             chemical=chem,
+#             shipment=shipment,
+#             old_quantity=chem.quantity,
+#             new_quantity=chem.quantity+old['quantity']
+#         )
+#
+#         chem.quantity += old['quantity']
+#         chem.save()
+#
+#     if len(chem_error) > 0:
+#         res['errors']['chemical'] = chem_error
+#
+#     for new in serializer.validated_data['chemical']['new']:
+#         chem = Chemical(**new)
+#         chem.molecular_weight = molar_mass(chem.molecular_formula)
+#         chem.save()
+#
+#         chem_shipment = ChemicalShipment.objects.create(
+#             chemical=chem,
+#             shipment=shipment,
+#             old_quantity=0,
+#             new_quantity=chem.quantity
+#         )
+#
+#     # For glassware
+#     glass_error = []
+#     for old in serializer.validated_data['glassware']['old']:
+#         try:
+#             glass = Glassware.objects.get(pk=old['id'])
+#         except ObjectDoesNotExist:
+#             er = {
+#                 "id": old['id'],
+#                 "message": "Not Found"
+#             }
+#             res['partial_update'] = True
+#             glass_error.append(er)
+#             continue
+#
+#         glass_shipment = GlasswareShipment.objects.create(
+#             glassware=glass,
+#             shipment=shipment,
+#             old_quantity=glass.quantity,
+#             new_quantity=glass.quantity + old['quantity']
+#         )
+#         glass.quantity += old['quantity']
+#         glass.save()
+#
+#     if len(glass_error) > 0:
+#         res['errors']['glassware'] = glass_error
+#
+#     for new in serializer.validated_data['glassware']['new']:
+#         glass = Glassware.objects.create(**new)
+#         glass_shipment = GlasswareShipment.objects.create(
+#             glassware=glass,
+#             shipment=shipment,
+#             old_quantity=0,
+#             new_quantity=glass.quantity
+#         )
+#
+#     # For instrument
+#     inst_error = []
+#     for old in serializer.validated_data['instrument']['old']:
+#         try:
+#             inst = Instrument.objects.get(pk=old['id'])
+#         except ObjectDoesNotExist:
+#             er = {
+#                 "id": old['id'],
+#                 "message": "Not Found"
+#             }
+#             res['partial_update'] = True
+#             inst_error.append(er)
+#             continue
+#
+#         inst_shipment = InstrumentShipment.objects.create(
+#             instrument=inst,
+#             shipment=shipment,
+#             old_quantity=inst.quantity,
+#             new_quantity=inst.quantity + old['quantity']
+#         )
+#
+#         inst.quantity += old['quantity']
+#         inst.save()
+#
+#     if len(inst_error) > 0:
+#         res['errors']['instrument'] = inst_error
+#
+#     for new in serializer.validated_data['instrument']['new']:
+#         inst = Instrument.objects.create(**new)
+#         inst_shipment = InstrumentShipment.objects.create(
+#             instrument=inst,
+#             shipment=shipment,
+#             old_quantity=0,
+#             new_quantity=inst.quantity
+#         )
+#
+#     res['shipment'] = ShipmentSerializer(shipment).data
+#
+#     return Response(res)

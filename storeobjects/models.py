@@ -78,7 +78,7 @@ class ChemicalObj(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.chemical.name} - {self.quantity}"
+        return f"{self.state} - {self.chemical.name} - {self.manufacturer} - {self.supplier} - {self.quantity}ML"
 
     class Meta:
         unique_together = ('chemical', 'purity', 'manufacturer', 'supplier', 'state')
@@ -96,7 +96,7 @@ class GlasswareObj(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.glassware.name} - {self.quantity}"
+        return f"{self.size}ml - {self.glassware.name} - {self.manufacturer} - {self.supplier} - {self.quantity} pieces"
 
     class Meta:
         unique_together = ('glassware', 'manufacturer', 'supplier', 'size', 'material_type')
@@ -112,7 +112,7 @@ class InstrumentObj(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.instrument.name} - {self.quantity}"
+        return f"{self.instrument.name} - {self.manufacturer} - {self.supplier} - {self.quantity} pieces"
 
     class Meta:
         unique_together = ('instrument', 'manufacturer', 'supplier')
