@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
   chemical: false,
@@ -33,12 +33,9 @@ export const Container = createSlice({
   },
 });
 
-export const { openModal, closeModal } = Container.actions;
+export const {openModal, closeModal} = Container.actions;
 
 export default Container.reducer;
-
-
-
 
 
 // import { createSlice } from "@reduxjs/toolkit";

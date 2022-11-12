@@ -3,8 +3,8 @@ import Header from "../../../component/add/Header";
 
 const LocationHeader = (props) => {
   return (
-    <div style={{ display: props.isShow ? "block" : "none" }}>
-      <Header text="Location" />
+    <div style={{display: props.isShow ? "block" : "none"}}>
+      <Header text="Location"/>
     </div>
   );
 };

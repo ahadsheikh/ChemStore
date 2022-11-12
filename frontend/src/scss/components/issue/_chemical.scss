@@ -5,30 +5,37 @@
     padding: 01rem;
     margin-bottom: 1.6rem;
   }
+
   &_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: $color-white;
+
     p {
       margin-bottom: 0;
       text-transform: uppercase;
     }
   }
+
   &_delete {
     transition: 0.2s all ease-out;
+
     &:hover {
       color: red;
       cursor: pointer;
     }
   }
+
   &_amount_wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     &_input {
       width: 68%;
     }
+
     &_select {
       width: 24%;
     }
@@ -50,6 +57,7 @@
 
   li {
     padding: 0.5rem 0;
+
     &:hover {
       color: #4e5659;
       cursor: pointer;

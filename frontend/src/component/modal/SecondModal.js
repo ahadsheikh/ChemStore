@@ -1,6 +1,6 @@
-import { Modal, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import {Modal, Spinner} from "react-bootstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTimes, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 
 const SecondModal = (props) => {
   return (
@@ -10,7 +10,7 @@ const SecondModal = (props) => {
           <div className="second_modal_header_container">
             <div>
               <h4>
-                <FontAwesomeIcon icon={faInfoCircle} />{" "}
+                <FontAwesomeIcon icon={faInfoCircle}/>{" "}
                 <span className="second_modal_header_container_title">
                   {props.title}
                 </span>
@@ -31,8 +31,8 @@ const SecondModal = (props) => {
               className="second_modal_btn color_primary3"
               onClick={props.submitHandler}
             >
-              {props.loading && <Spinner animation="border" variant="light" />}
-              <span style={{ paddingLeft: ".8rem" }}>{props.btn_text}</span>
+              {props.loading && <Spinner animation="border" variant="light"/>}
+              <span style={{paddingLeft: ".8rem"}}>{props.btn_text}</span>
             </button>
           </div>
         </div>

@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, {useState, useEffect} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   faChevronRight,
   faFolderOpen,
 } from "@fortawesome/free-solid-svg-icons";
-import { Collapse } from "react-bootstrap";
-import { issueLabHandler } from "../../../redux/StoreManagment";
-import { useDispatch } from "react-redux";
+import {Collapse} from "react-bootstrap";
+import {issueLabHandler} from "../../../redux/StoreManagment";
+import {useDispatch} from "react-redux";
 import axios from "../../../axios/axios_noauth";
 import LocationHeader from "./LocationHeader";
 import SpecficIssue from "./SpecficIssue";
-import { ToastContainer, toast } from "react-toastify";
+import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Location = ({ isShow = true }) => {
+const Location = ({isShow = true}) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState({
     PhysicalLab: false,
@@ -26,7 +26,7 @@ const Location = ({ isShow = true }) => {
   const [seletedLab, setSelectedLab] = useState(-1);
   const [storeType, setStoreType] = useState({});
   const [storeTypeFlag, setStoreTypeFlag] = useState(false);
-  const [show, setShow] = useState({ create: false });
+  const [show, setShow] = useState({create: false});
   const [isError, setIssError] = useState(false);
   const [specficLabContent, setSpecficLabContent] = useState({
     content: [],
@@ -48,10 +48,10 @@ const Location = ({ isShow = true }) => {
   }, [show.create]);
 
   const handleCollapse = (name) => {
-    setOpen({ ...open, [name]: !open[name] });
+    setOpen({...open, [name]: !open[name]});
   };
   const showModalHandler = (name) => {
-    setShow({ ...show, [name]: !show[name] });
+    setShow({...show, [name]: !show[name]});
   };
 
   const specficLabHandler = (id) => {
@@ -60,25 +60,25 @@ const Location = ({ isShow = true }) => {
     dispatch(issueLabHandler(id));
     setSelectedLab(id);
     setLoading(true);
-    setSpecficLabContent({ content: [], loading: true });
+    setSpecficLabContent({content: [], loading: true});
     axios
       .get(`/api/management/issues/${id}/`)
       .then((res) => {
         setLoading(false);
         setFlag(true);
-        setSpecficLabContent({ content: res.data, loading: false });
+        setSpecficLabContent({content: res.data, loading: false});
       })
       .catch((err) => {
         setLoading(false);
         setIssError(true);
         (() => toast(`Something Went Wrong.`))();
-        setSpecficLabContent({ content: [], loading: false });
+        setSpecficLabContent({content: [], loading: false});
       });
   };
 
   return (
     <>
-      {isError && <ToastContainer />}
+      {isError && <ToastContainer/>}
 
       {/* HEADER  */}
 
@@ -94,7 +94,7 @@ const Location = ({ isShow = true }) => {
             margin: isShow ? "4rem 1rem" : "1rem .5rem",
           }}
         >
-          <LocationHeader showModalHandler={showModalHandler} isShow={isShow} />
+          <LocationHeader showModalHandler={showModalHandler} isShow={isShow}/>
 
           {/* FOR RENDERING LAB CATEGORY */}
 
@@ -105,7 +105,7 @@ const Location = ({ isShow = true }) => {
                 onClick={() => handleCollapse("PhysicalLab")}
               >
                 {" "}
-                <FontAwesomeIcon icon={faFolderOpen} /> Physical Lab
+                <FontAwesomeIcon icon={faFolderOpen}/> Physical Lab
               </p>
               <Collapse in={open.PhysicalLab}>
                 <div className="location_title_item">
@@ -118,7 +118,7 @@ const Location = ({ isShow = true }) => {
                         key={el.id}
                         onClick={() => specficLabHandler(el.id)}
                       >
-                        <FontAwesomeIcon icon={faChevronRight} /> {el.name}
+                        <FontAwesomeIcon icon={faChevronRight}/> {el.name}
                       </p>
                     ))}
                 </div>
@@ -130,7 +130,7 @@ const Location = ({ isShow = true }) => {
                 onClick={() => handleCollapse("OrganicLab")}
               >
                 {" "}
-                <FontAwesomeIcon icon={faFolderOpen} /> Organic Lab
+                <FontAwesomeIcon icon={faFolderOpen}/> Organic Lab
               </p>
               <Collapse in={open.OrganicLab}>
                 <div className="location_title_item">
@@ -143,7 +143,7 @@ const Location = ({ isShow = true }) => {
                         key={el.id}
                         onClick={() => specficLabHandler(el.id)}
                       >
-                        <FontAwesomeIcon icon={faChevronRight} /> {el.name}
+                        <FontAwesomeIcon icon={faChevronRight}/> {el.name}
                       </p>
                     ))}
                 </div>
@@ -155,7 +155,7 @@ const Location = ({ isShow = true }) => {
                 onClick={() => handleCollapse("InorganicLab")}
               >
                 {" "}
-                <FontAwesomeIcon icon={faFolderOpen} /> Inorganic Lab
+                <FontAwesomeIcon icon={faFolderOpen}/> Inorganic Lab
               </p>
               <Collapse in={open.InorganicLab}>
                 <div className="location_title_item">
@@ -168,7 +168,7 @@ const Location = ({ isShow = true }) => {
                         key={el.id}
                         onClick={() => specficLabHandler(el.id)}
                       >
-                        <FontAwesomeIcon icon={faChevronRight} /> {el.name}
+                        <FontAwesomeIcon icon={faChevronRight}/> {el.name}
                       </p>
                     ))}
                 </div>
@@ -179,7 +179,7 @@ const Location = ({ isShow = true }) => {
                 className="location_title"
                 onClick={() => handleCollapse("Personal")}
               >
-                <FontAwesomeIcon icon={faFolderOpen} /> Personal
+                <FontAwesomeIcon icon={faFolderOpen}/> Personal
               </p>
               <Collapse in={open.Personal}>
                 <div className="location_title_item">
@@ -192,7 +192,7 @@ const Location = ({ isShow = true }) => {
                         key={el.id}
                         onClick={() => specficLabHandler(el.id)}
                       >
-                        <FontAwesomeIcon icon={faChevronRight} /> {el.name}
+                        <FontAwesomeIcon icon={faChevronRight}/> {el.name}
                       </p>
                     ))}
                 </div>
@@ -204,7 +204,7 @@ const Location = ({ isShow = true }) => {
           <div className="location_specfic_message">
             <div
               className="spinner-border text-light"
-              style={{ width: "5rem", height: "5rem" }}
+              style={{width: "5rem", height: "5rem"}}
               role="status"
             >
               <span className="visually-hidden text-center">Loading...</span>
@@ -213,7 +213,7 @@ const Location = ({ isShow = true }) => {
         )}
         {isShow && flag && specficLabContent.content.length === 0 && (
           <div className="location_specfic_message">
-            <h1 style={{ textAlign: "center" }}>Nothing Found</h1>
+            <h1 style={{textAlign: "center"}}>Nothing Found</h1>
           </div>
         )}
         {isShow && (
@@ -221,7 +221,7 @@ const Location = ({ isShow = true }) => {
             <div>
               {specficLabContent.content.length > 0 &&
                 specficLabContent.content.map((el, i) => (
-                  <SpecficIssue key={i} item={el} />
+                  <SpecficIssue key={i} item={el}/>
                 ))}
             </div>
           </div>

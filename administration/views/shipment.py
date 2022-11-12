@@ -1,11 +1,12 @@
-import rest_framework.serializers
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
+from django.db import transaction
+
 from rest_framework.decorators import action, api_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 from administration.models import ChemicalTempShipment, GlasswareTempShipment, InstrumentTempShipment, Shipment, \
-                                    ChemicalShipment, GlasswareShipment, InstrumentShipment
+    ChemicalShipment, GlasswareShipment, InstrumentShipment
 from administration.serializers.shipment import (
     ChemicalTempShipmentSerializer, ChemicalTempShipmentCreateSerializer,
     GlasswareTempShipmentSerializer, GlasswareTempShipmentCreateSerializer,
@@ -25,6 +26,7 @@ class ChemicalTempShipmentViewSet(ModelViewSet):
         else:
             return ChemicalTempShipmentSerializer
 
+    @transaction.atomic()
     @action(detail=False, methods=['POST'])
     def merge(self, request):
         """
@@ -34,6 +36,7 @@ class ChemicalTempShipmentViewSet(ModelViewSet):
 
         temp_shipments = ChemicalTempShipment.objects.all()
         shipment = Shipment.objects.create(shipment_type=shipment_choices[0])
+
         for temp_shipment in temp_shipments:
             ChemicalShipment.objects.create(
                 chemical=temp_shipment.chemical,
@@ -60,6 +63,7 @@ class GlasswareTempShipmentViewSet(ModelViewSet):
         else:
             return GlasswareTempShipmentSerializer
 
+    @transaction.atomic()
     @action(detail=False, methods=['POST'])
     def merge(self, request):
         """
@@ -95,6 +99,7 @@ class InstrumentTempShipmentViewSet(ModelViewSet):
         else:
             return InstrumentTempShipmentSerializer
 
+    @transaction.atomic()
     @action(detail=False, methods=['POST'])
     def merge(self, request):
         """
@@ -122,6 +127,7 @@ class InstrumentTempShipmentViewSet(ModelViewSet):
 def shipments(request):
     type_ = request.GET.get('type')
     res = []
+
     if type_ == 'chemical':
         shipments = Shipment.objects.filter(shipment_type='CHEMICAL').order_by('-created_at')
         for shipment in shipments:
@@ -133,13 +139,13 @@ def shipments(request):
             chem_shipments = ChemicalShipment.objects.filter(shipment=shipment)
             for obj_shipment in chem_shipments:
                 chem = {
-                    'CAS_RN': obj_shipment.chemical.CAS_RN,
-                    'name': obj_shipment.chemical.name,
-                    'molecular_formula': obj_shipment.chemical.molecular_formula,
-                    'molecular_weight': obj_shipment.chemical.molecular_weight,
+                    'CAS_RN': obj_shipment.chemical.chemical.CAS_RN,
+                    'name': obj_shipment.chemical.chemical.name,
+                    'molecular_formula': obj_shipment.chemical.chemical.molecular_formula,
+                    'molecular_weight': obj_shipment.chemical.chemical.molecular_weight,
                     'purity': obj_shipment.chemical.purity,
-                    'manufacturer': obj_shipment.chemical.manufacturer,
-                    'supplier': obj_shipment.chemical.supplier,
+                    'manufacturer': obj_shipment.chemical.manufacturer.name,
+                    'supplier': obj_shipment.chemical.supplier.name,
                     'state': obj_shipment.chemical.state,
                     'old_total': obj_shipment.old_total,
                     'added_quantity': obj_shipment.quantity
@@ -160,9 +166,9 @@ def shipments(request):
             glass_shipments = GlasswareShipment.objects.filter(shipment=shipment)
             for obj_shipment in glass_shipments:
                 glass = {
-                    'name': obj_shipment.glassware.name,
-                    'manufacturer': obj_shipment.glassware.manufacturer,
-                    'supplier': obj_shipment.glassware.supplier,
+                    'name': obj_shipment.glassware.glassware.name,
+                    'manufacturer': obj_shipment.glassware.manufacturer.name,
+                    'supplier': obj_shipment.glassware.supplier.name,
                     'size': obj_shipment.glassware.size,
                     'material_type': obj_shipment.glassware.material_type,
                     'old_total': obj_shipment.old_total,
@@ -184,15 +190,17 @@ def shipments(request):
             chem_shipments = InstrumentShipment.objects.filter(shipment=shipment)
             for obj_shipment in chem_shipments:
                 chem = {
-                    'name': obj_shipment.instrument.name,
-                    'manufacturer': obj_shipment.instrument.manufacturer,
-                    'supplier': obj_shipment.instrument.supplier,
+                    'name': obj_shipment.instrument.instrument.name,
+                    'manufacturer': obj_shipment.instrument.manufacturer.name,
+                    'supplier': obj_shipment.instrument.supplier.name,
                     'old_total': obj_shipment.old_total,
                     'added_quantity': obj_shipment.quantity
                 }
                 obj['instruments'].append(chem)
 
             res.append(obj)
+
+            print(res)
         return Response(res)
 
     else:

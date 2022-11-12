@@ -1,6 +1,6 @@
 from django.db import models
 
-from administration.models import Chemical
+from storeobjects.models import Chemical
 
 
 class Category(models.Model):

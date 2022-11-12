@@ -43,7 +43,7 @@ INSTALLED_APPS = [
 
     # Project Apps
     'administration.apps.AdministrationConfig',
-    # 'filemanager.apps.FilemanagerConfig',
+    'filemanager.apps.FilemanagerConfig',
     'account.apps.AccountConfig',
     'storeobjects.apps.StoreobjectsConfig',
 ]

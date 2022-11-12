@@ -1,6 +1,6 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import Header from "./Header";
 import Input from "../input/Input";
 
@@ -12,7 +12,7 @@ const AddInstrument = (props) => {
           className="central_header_remove_btn"
           onClick={props.removeHandler}
         >
-          <FontAwesomeIcon icon={faTrashAlt} /> <span>Remove</span>
+          <FontAwesomeIcon icon={faTrashAlt}/> <span>Remove</span>
         </button>
       </Header>
       <div className="add_chemical_input_container">

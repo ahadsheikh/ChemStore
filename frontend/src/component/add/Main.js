@@ -1,14 +1,14 @@
-import { useState } from "react";
+import {useState} from "react";
 import Modal from "../modal/Modal";
 import ChemicalModal from "./ChemicalModal";
 import AddChemical from "./AddChemical";
 import AddInstrument from "./AddInstrument";
 import AddGlassWare from "./AddGlassWare";
-import { useDispatch, useSelector } from "react-redux";
-import { closeModal } from "../../redux/Container";
+import {useDispatch, useSelector} from "react-redux";
+import {closeModal} from "../../redux/Container";
 import axios from "../../axios/axios";
 import Textarea from "../input/Textarea";
-import { ToastContainer, toast } from 'react-toastify';
+import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {} from "../..";
 
@@ -68,7 +68,7 @@ const Main = (props) => {
 
   ///// MAKE SERVER REQUEST
   const fuzzySearchHandler = (value, name) => {
-    setFuzzySearch({ options: [], isProcessing: true });
+    setFuzzySearch({options: [], isProcessing: true});
     let url = ``;
     if (name === "chemical")
       url = `/api/management/fuzzysearch/?type=chemical&query=${value}`;
@@ -78,7 +78,7 @@ const Main = (props) => {
     axios
       .get(url)
       .then((res) => {
-        setFuzzySearch({ options: res.data, isProcessing: false });
+        setFuzzySearch({options: res.data, isProcessing: false});
       })
       .catch((err) => {
         console.log(err.response);
@@ -98,9 +98,9 @@ const Main = (props) => {
 
   ///////HANDLE USER INPUT
   const inputHandler = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     fuzzySearchHandler(value, name);
-    setChemicalCredential({ ...chemicalCredential, [name]: value });
+    setChemicalCredential({...chemicalCredential, [name]: value});
   };
 
   //////IF ELEMENT EAIST THEN THEN CONSITIONALLY ADD THAT TYPE OF CREDENTIAL
@@ -109,7 +109,7 @@ const Main = (props) => {
     const copyCredential = [...credential];
 
     if (type === "chemical" && isNew) {
-      copyCredential.push({ ...el, type: "chemical", isNew });
+      copyCredential.push({...el, type: "chemical", isNew});
     } else if (type === "chemical" && !isNew) {
       copyCredential.push({
         ...dummyChemical,
@@ -118,7 +118,7 @@ const Main = (props) => {
         isNew,
       });
     } else if (type === "instrument" && isNew) {
-      copyCredential.push({ ...el, type: "instrument", isNew });
+      copyCredential.push({...el, type: "instrument", isNew});
     } else if (type === "instrument" && !isNew) {
       copyCredential.push({
         ...dummyInstrument,
@@ -127,7 +127,7 @@ const Main = (props) => {
         isNew,
       });
     } else if (type === "glassWare" && isNew) {
-      copyCredential.push({ ...el, type: "glassware", isNew });
+      copyCredential.push({...el, type: "glassware", isNew});
     } else if (type === "glassWare" && !isNew) {
       copyCredential.push({
         ...dummyGlassware,
@@ -153,7 +153,7 @@ const Main = (props) => {
   const inputDataHandler = (e, index) => {
     let copyCredential = [...credential];
     let editCredential = copyCredential[index];
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     editCredential[name] = value;
     copyCredential[index] = editCredential;
     setCredential(copyCredential);
@@ -243,26 +243,27 @@ const Main = (props) => {
     try {
       delete finalObj.new;
       delete finalObj.old;
-    } catch {}
+    } catch {
+    }
 
     setTimeout(() => {
 
-   
-    axios
-      .post(`/api/management/add-shipment/`, finalObj)
-      .then((res) => {
-        setIsError({error: true, message: `Successfully Added Shipment`})
-        if(res.data?.errors.length === 0)
-          (() => toast(`Successfully Added Shipment`))() 
-        setCredential([])
-        setLoading(false)
-      })
-      .catch((err) => {
-        if(err.response.data?.errors.length>0) 
-          (() => toast(`Please provide Valid Data.`))()
-        setLoading(false)
-        setIsError({error: true, message: "Please provide Valid Data."})
-      });
+
+      axios
+        .post(`/api/management/add-shipment/`, finalObj)
+        .then((res) => {
+          setIsError({error: true, message: `Successfully Added Shipment`})
+          if (res.data?.errors.length === 0)
+            (() => toast(`Successfully Added Shipment`))()
+          setCredential([])
+          setLoading(false)
+        })
+        .catch((err) => {
+          if (err.response.data?.errors.length > 0)
+            (() => toast(`Please provide Valid Data.`))()
+          setLoading(false)
+          setIsError({error: true, message: "Please provide Valid Data."})
+        });
     }, 1000)
   };
 
@@ -270,7 +271,7 @@ const Main = (props) => {
 
   return (
     <>
-    {isError.error && <ToastContainer />}
+      {isError.error && <ToastContainer/>}
       {/* MODAL FOR ADDING CHEMICAL */}
       {/* <button onClick={checkDataHandler}>Check</button>
       <button onClick={submitShipmentHandler}>Submit</button> */}

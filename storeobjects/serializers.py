@@ -40,6 +40,8 @@ class SupplierSerializer(serializers.ModelSerializer):
 
 class ChemicalObjSerializer(serializers.ModelSerializer):
     chemical = ChemicalSerializer()
+    manufacturer = ManufacturerSerializer()
+    supplier = SupplierSerializer()
 
     class Meta:
         model = models.ChemicalObj
@@ -49,6 +51,8 @@ class ChemicalObjSerializer(serializers.ModelSerializer):
 
 class GlasswareObjSerializer(serializers.ModelSerializer):
     glassware = GlasswareSerializer()
+    manufacturer = ManufacturerSerializer()
+    supplier = SupplierSerializer()
 
     class Meta:
         model = models.GlasswareObj
@@ -57,6 +61,8 @@ class GlasswareObjSerializer(serializers.ModelSerializer):
 
 class InstrumentObjSerializer(serializers.ModelSerializer):
     instrument = InstrumentSerializer()
+    manufacturer = ManufacturerSerializer()
+    supplier = SupplierSerializer()
 
     class Meta:
         model = models.InstrumentObj

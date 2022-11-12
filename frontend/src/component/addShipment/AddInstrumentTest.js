@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Table, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import React, {useState, useEffect} from "react";
+import {Table, Button} from "react-bootstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import Header from "../add/Header";
 import ShipmentInput from "./ShipmentInput";
 import axios from "../../axios/axios";
-import { ToastContainer, toast } from "react-toastify";
+import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { msgFormater } from "../../utils/utils";
+import {msgFormater} from "../../utils/utils";
 
 const dummyInstrument = {
   name: "",
@@ -18,11 +18,11 @@ const dummyInstrument = {
 
 const AddInstrumentTest = (props) => {
   const [searchInput, setSearchInput] = useState("");
-  const [tempShipment, setTempShipment] = useState({ data: [], flag: false });
+  const [tempShipment, setTempShipment] = useState({data: [], flag: false});
   const [fuzzySearchResult, setFuzzySearchResult] = useState([]);
   const [chemicalCredential, setChemicalCredential] = useState({});
   const [showChemicalElement, setShowChemicalElement] = useState(false);
-  const [type, setType] = useState({ create: false, edit: false });
+  const [type, setType] = useState({create: false, edit: false});
   const [tempShipmentLoading, setTempShipmentLoading] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -36,7 +36,7 @@ const AddInstrumentTest = (props) => {
     axios
       .get(`/api/management/instrument-temp-shipment/`)
       .then((res) => {
-        setTempShipment({ data: res.data, flag: true });
+        setTempShipment({data: res.data, flag: true});
         setTempShipmentLoading(false);
       })
       .catch((err) => {
@@ -74,25 +74,25 @@ const AddInstrumentTest = (props) => {
 
   const foundInstrumentHandler = (chemical, isNew) => {
     if (isNew) {
-      chemical = { ...chemical, name: searchInput, quantity: 0 };
+      chemical = {...chemical, name: searchInput, quantity: 0};
     } else {
-      chemical = { ...chemical, newQuantity: "" };
+      chemical = {...chemical, newQuantity: ""};
     }
     console.log(chemical, isNew);
-    setChemicalCredential({ ...chemical, isNew });
+    setChemicalCredential({...chemical, isNew});
     setSearchInput("");
     setShowChemicalElement(true);
-    setType({ create: true, edit: false });
+    setType({create: true, edit: false});
   };
 
   const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setChemicalCredential({ ...chemicalCredential, [name]: value });
+    const {name, value} = e.target;
+    setChemicalCredential({...chemicalCredential, [name]: value});
   };
 
   const addTemporaryHandler = () => {
     setAddLoading(true);
-    let copyCredential = { ...chemicalCredential };
+    let copyCredential = {...chemicalCredential};
     copyCredential.quantity = 0;
     delete copyCredential.newQuantity;
     delete copyCredential.type;
@@ -178,15 +178,15 @@ const AddInstrumentTest = (props) => {
 
   ///// FOR DELETE A INSTRUMENT
   const deleteFromTempShipmentHandler = (id) => {
-    setDeleteLoading({ id, loading: true });
+    setDeleteLoading({id, loading: true});
     axios
       .delete(`/api/management/instrument-temp-shipment/${id}/`)
       .then((res) => {
         getTempShipmentHandler();
-        setDeleteLoading({ id: null, loading: false });
+        setDeleteLoading({id: null, loading: false});
       })
       .catch((err) => {
-        setDeleteLoading({ id: null, loading: false });
+        setDeleteLoading({id: null, loading: false});
         setIsError(true);
         (() => {
           toast(msgFormater(err));
@@ -204,7 +204,7 @@ const AddInstrumentTest = (props) => {
     };
     setShowChemicalElement(true);
     setChemicalCredential(dummyInstrument);
-    setType({ create: false, edit: true });
+    setType({create: false, edit: true});
   };
 
   const submitHandler = () => {
@@ -229,7 +229,7 @@ const AddInstrumentTest = (props) => {
 
   return (
     <>
-      {isError && <ToastContainer />}
+      {isError && <ToastContainer/>}
 
       <div className="chemical_add_wrapper">
         <div className="chemical_add_container">
@@ -238,7 +238,7 @@ const AddInstrumentTest = (props) => {
               <div className="col">
                 <input
                   className="form-control"
-                  style={{ fontSize: "1.6rem" }}
+                  style={{fontSize: "1.6rem"}}
                   name="instrument"
                   placeholder="Instrument"
                   value={searchInput}
@@ -248,8 +248,8 @@ const AddInstrumentTest = (props) => {
               <div className="col-auto">
                 <button
                   className="btn btn-light"
-                  style={{ fontSize: "1.6rem" }}
-                  onClick={() => foundInstrumentHandler(dummyInstrument, true)}
+                  style={{fontSize: "1.6rem"}}
+                  // onClick={() => foundInstrumentHandler(dummyInstrument, true)}
                 >
                   Create
                 </button>
@@ -267,7 +267,7 @@ const AddInstrumentTest = (props) => {
                       key={el.id}
                       onClick={() => foundInstrumentHandler(el, false)}
                     >
-                      {el.name}
+                      {el.size} - {el.instrument.name} - {el.quantity} pieces - {el.manufacturer.name} - {el.supplier.name}
                     </li>
                   ))
                 )}
@@ -282,7 +282,7 @@ const AddInstrumentTest = (props) => {
                 className="central_header_remove_btn"
                 onClick={removeHandler}
               >
-                <FontAwesomeIcon icon={faTrashAlt} /> <span>Remove</span>
+                <FontAwesomeIcon icon={faTrashAlt}/> <span>Remove</span>
               </button>
             </Header>
             <div className="add_chemical_input_container">
@@ -296,7 +296,7 @@ const AddInstrumentTest = (props) => {
                         placeholder="Name"
                         bckColor="color_black "
                         name="name"
-                        value={chemicalCredential.name}
+                        value={chemicalCredential.instrument.name}
                         handler={inputHandler}
                         readOnly={!chemicalCredential.isNew}
                       />
@@ -312,7 +312,7 @@ const AddInstrumentTest = (props) => {
                         placeholder="Manufacturer"
                         bckColor="color_black "
                         name="manufacturer"
-                        value={chemicalCredential.manufacturer}
+                        value={chemicalCredential.manufacturer.name}
                         handler={inputHandler}
                         readOnly={!chemicalCredential.isNew}
                       />
@@ -324,7 +324,7 @@ const AddInstrumentTest = (props) => {
                         placeholder="Supplier"
                         bckColor="color_black "
                         name="supplier"
-                        value={chemicalCredential.supplier}
+                        value={chemicalCredential.supplier.name}
                         handler={inputHandler}
                         readOnly={!chemicalCredential.isNew}
                       />
@@ -352,14 +352,14 @@ const AddInstrumentTest = (props) => {
                         <Button
                           onClick={addTemporaryHandler}
                           variant="primary"
-                          style={{ fontSize: "1.6rem" }}
+                          style={{fontSize: "1.6rem"}}
                           disabled={addLoading}
                         >
                           {addLoading && (
                             <div
                               className="spinner-border me-2"
                               role="status"
-                              style={{ width: "1.4rem", height: "1.4rem" }}
+                              style={{width: "1.4rem", height: "1.4rem"}}
                             >
                               <span className="visually-hidden">
                                 Loading...
@@ -381,7 +381,7 @@ const AddInstrumentTest = (props) => {
             <div
               className="spinner-border mt-5"
               role="status"
-              style={{ width: "5rem", height: "5rem" }}
+              style={{width: "5rem", height: "5rem"}}
             >
               <span className="visually-hidden">Loading...</span>
             </div>
@@ -390,64 +390,64 @@ const AddInstrumentTest = (props) => {
         {!tempShipmentLoading && tempShipment.data.length > 0 && (
           <>
             <div className="border mt-5"></div>
-            <div className="container mt-5" style={{ overflowX: "scroll" }}>
+            <div className="container mt-5" style={{overflowX: "scroll"}}>
               <Table striped bordered hover variant="dark">
                 <thead>
-                  <tr>
-                    <th style={{ paddingLeft: "2rem" }}>#</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Manufacturer</th>
-                    <th>Supplier</th>
-                    <th>New Quantity</th>
-                    <th>Action</th>
-                  </tr>
+                <tr>
+                  <th style={{paddingLeft: "2rem"}}>#</th>
+                  <th>Name</th>
+                  <th>Quantity</th>
+                  <th>Manufacturer</th>
+                  <th>Supplier</th>
+                  <th>New Quantity</th>
+                  <th>Action</th>
+                </tr>
                 </thead>
                 <tbody>
-                  {tempShipment.flag &&
-                    tempShipment.data.map((el, i) => (
-                      <tr key={el.id}>
-                        <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                        <td>{el.instrument.name}</td>
-                        <td>{el.instrument.quantity}</td>
-                        <td>{el.instrument.manufacturer}</td>
-                        <td>{el.instrument.supplier}</td>
-                        <td>{el.quantity}</td>
-                        <td>
-                          <div>
-                            <Button
-                              onClick={() => editInstrumentHandler(el)}
-                              variant="primary"
-                            >
-                              Edit
-                            </Button>{" "}
-                            <Button
-                              variant="danger"
-                              onClick={() =>
-                                deleteFromTempShipmentHandler(el.id)
-                              }
-                              disabled={
-                                el.id === deleteLoading.id &&
-                                deleteLoading.loading
-                              }
-                            >
-                              {el.id === deleteLoading.id &&
-                                deleteLoading.loading && (
-                                  <div
-                                    className="spinner-border spinner-border-sm me-2"
-                                    role="status"
-                                  >
+                {tempShipment.flag &&
+                  tempShipment.data.map((el, i) => (
+                    <tr key={el.id}>
+                      <td style={{paddingLeft: "2rem"}}>{i + 1}</td>
+                      <td>{el.instrument.instrument.name}</td>
+                      <td>{el.instrument.quantity}</td>
+                      <td>{el.instrument.manufacturer.name}</td>
+                      <td>{el.instrument.supplier.name}</td>
+                      <td>{el.quantity}</td>
+                      <td>
+                        <div>
+                          <Button
+                            onClick={() => editInstrumentHandler(el)}
+                            variant="primary"
+                          >
+                            Edit
+                          </Button>{" "}
+                          <Button
+                            variant="danger"
+                            onClick={() =>
+                              deleteFromTempShipmentHandler(el.id)
+                            }
+                            disabled={
+                              el.id === deleteLoading.id &&
+                              deleteLoading.loading
+                            }
+                          >
+                            {el.id === deleteLoading.id &&
+                              deleteLoading.loading && (
+                                <div
+                                  className="spinner-border spinner-border-sm me-2"
+                                  role="status"
+                                >
                                     <span className="visually-hidden">
                                       Loading...
                                     </span>
-                                  </div>
-                                )}
-                              Delete
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                                </div>
+                              )}
+                            Delete
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </Table>
             </div>

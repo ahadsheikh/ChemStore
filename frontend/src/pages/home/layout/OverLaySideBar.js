@@ -5,7 +5,7 @@ function OverLaySideBar(props) {
   return (
     <>
       <div
-        style={{ display: props.isShow ? "block" : "none" }}
+        style={{display: props.isShow ? "block" : "none"}}
         onClick={props.hanlder}
         className="backModal"
       ></div>

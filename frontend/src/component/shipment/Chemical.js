@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import ChemicalTable from "./ChemicalTable";
 import axios from "../../axios/axios";
-import { ToastContainer, toast } from "react-toastify";
+import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Chemical = () => {
@@ -29,12 +29,12 @@ const Chemical = () => {
   }, []);
   return (
     <div>
-      {error && <ToastContainer />}
+      {error && <ToastContainer/>}
       {loading ? (
         <div className="d-flex justify-content-center mt-5">
           <div
             className="spinner-border"
-            style={{ width: "5rem", height: "5rem" }}
+            style={{width: "5rem", height: "5rem"}}
             role="status"
           >
             <span className="visually-hidden">Loading...</span>
@@ -47,7 +47,7 @@ const Chemical = () => {
           ) : (
             <>
               {chemical.map((el) => (
-                <ChemicalTable key={el.id} item={el} flag={flag} />
+                <ChemicalTable key={el.id} item={el} flag={flag}/>
               ))}
             </>
           )}

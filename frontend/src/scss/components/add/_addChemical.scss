@@ -12,6 +12,7 @@
       margin: 1rem 0;
     }
   }
+
   &_header_container {
     display: flex;
     justify-content: space-between;
@@ -20,6 +21,7 @@
       color: black;
       font-size: 1.8rem;
     }
+
     &_remove_btn {
       padding: 0.8rem 1rem;
       background-color: crimson;
@@ -31,12 +33,14 @@
       cursor: pointer;
       transition: all 0.2s ease-out;
       border-radius: 0.4rem;
+
       &:hover {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
-          rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+        rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
       }
     }
   }
+
   &_input_container {
     padding: 1rem;
   }
@@ -50,6 +54,7 @@
   &_left_div {
     width: 68%;
   }
+
   &_right_div {
     width: 28%;
   }

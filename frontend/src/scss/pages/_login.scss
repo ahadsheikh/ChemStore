@@ -35,6 +35,7 @@ $background-color: #d7ccc8;
   padding: 8% 0 0;
   width: 365px;
   margin: auto;
+
   &_form {
     position: relative;
     z-index: 1;
@@ -42,8 +43,10 @@ $background-color: #d7ccc8;
     margin: 0 auto 100px;
     padding: 45px;
     background: #ffffff;
+
     &_input {
       @include input;
+
       ::placeholder {
         color: #90a4ae;
       }

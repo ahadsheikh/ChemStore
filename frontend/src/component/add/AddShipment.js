@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import AddChemicalTest from "../addShipment/AddChemicalTest";
 import AddInstrumentTest from "../addShipment/AddInstrumentTest";
@@ -16,9 +16,9 @@ const AddShipment = (props) => {
     <>
       <div className="add_credential_container">
         <div className="add_credential_element_container">
-          {chemicalModal && <AddChemicalTest />}
-          {instrumentModal && <AddInstrumentTest />}
-          {glassWare && <AddGlasswareTest />}
+          {chemicalModal && <AddChemicalTest/>}
+          {instrumentModal && <AddInstrumentTest/>}
+          {glassWare && <AddGlasswareTest/>}
         </div>
       </div>
     </>

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
   activeStore: 1,
@@ -24,6 +24,6 @@ export const StoreManagment = createSlice({
   },
 });
 
-export const { storeHandler, issueLabHandler } = StoreManagment.actions;
+export const {storeHandler, issueLabHandler} = StoreManagment.actions;
 
 export default StoreManagment.reducer;

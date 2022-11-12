@@ -20,6 +20,7 @@
 
 .specfic_issue_item_container {
   display: flex;
+
   &_title {
     font-size: 1.8rem;
   }
@@ -42,6 +43,7 @@
   margin-right: 1rem;
   margin-bottom: 1rem;
   background-color: var(--color-primary-2);
+
   &_amount {
     padding-top: 1rem;
     border-top-right-radius: 10rem;
@@ -50,6 +52,7 @@
     padding-right: 2rem;
     background-color: $color-black;
   }
+
   p {
     margin-bottom: 0;
   }
@@ -97,7 +100,7 @@
 
 /* Create two unequal columns that floats next to each other */
 /* Left column */
-.leftcolumn {   
+.leftcolumn {
   float: left;
   width: 25%;
 }

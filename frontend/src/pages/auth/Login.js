@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import axios from "../../axios/axios";
-import { ToastContainer, toast } from "react-toastify";
+import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { setTokenHandler } from "../../redux/Auth";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {setTokenHandler} from "../../redux/Auth";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -23,8 +23,8 @@ const Login = () => {
   }, []);
 
   const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setAdminLoginCredential({ ...adminLoginCredential, [name]: value });
+    const {name, value} = e.target;
+    setAdminLoginCredential({...adminLoginCredential, [name]: value});
   };
 
   const adminLoginHandler = (e) => {
@@ -62,7 +62,7 @@ const Login = () => {
 
   return (
     <>
-      {error && <ToastContainer />}
+      {error && <ToastContainer/>}
       <div className="login_container">
         <div className="login_container_form">
           <form onSubmit={adminLoginHandler} className="login-form">

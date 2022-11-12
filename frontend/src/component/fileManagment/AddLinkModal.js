@@ -1,4 +1,5 @@
-import { Modal } from "react-bootstrap";
+import {Modal} from "react-bootstrap";
+
 const AddLinkModal = (props) => {
   return (
     <>
@@ -17,7 +18,7 @@ const AddLinkModal = (props) => {
           <div>
             <input
               className="form-control"
-              style={{ fontSize: "1.6rem" }}
+              style={{fontSize: "1.6rem"}}
               placeholder="Search"
               onChange={props.inputHandler}
               value={props.value}

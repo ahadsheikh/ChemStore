@@ -31,17 +31,17 @@ class OldData(serializers.Serializer):
     quantity = serializers.FloatField()
 
 
-class ChemicalShipment(serializers.Serializer):
+class ChemicalObjShipment(serializers.Serializer):
     old = OldData(many=True)
     new = ChemicalObjSerializer(many=True)
 
 
-class GlasswareShipment(serializers.Serializer):
+class GlasswareObjShipment(serializers.Serializer):
     old = OldData(many=True)
     new = GlasswareObjSerializer(many=True)
 
 
-class InstrumentShipment(serializers.Serializer):
+class InstrumentObjShipment(serializers.Serializer):
     old = OldData(many=True)
     new = InstrumentObjSerializer(many=True)
 
@@ -49,9 +49,9 @@ class InstrumentShipment(serializers.Serializer):
 class AddShipmentSerializer(serializers.Serializer):
     shipment_date = serializers.DateField()
     note = serializers.CharField(max_length=200, required=False)
-    chemical = ChemicalShipment()
-    glassware = GlasswareShipment()
-    instrument = InstrumentShipment()
+    chemical = ChemicalObjSerializer()
+    glassware = GlasswareObjShipment()
+    instrument = InstrumentObjShipment()
 
 
 class StoreConsumerSerializer(serializers.ModelSerializer):

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import axios from "../../axios/axios";
 import InstrumentTable from "./InstrumentTable";
-import { ToastContainer, toast } from "react-toastify";
+import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Instrument = () => {
@@ -29,12 +29,12 @@ const Instrument = () => {
   }, []);
   return (
     <div>
-      {error && <ToastContainer />}
+      {error && <ToastContainer/>}
       {loading ? (
         <div className="d-flex justify-content-center mt-5">
           <div
             className="spinner-border"
-            style={{ width: "5rem", height: "5rem" }}
+            style={{width: "5rem", height: "5rem"}}
             role="status"
           >
             <span className="visually-hidden">Loading...</span>
@@ -47,7 +47,7 @@ const Instrument = () => {
           ) : (
             <>
               {chemical.map((el) => (
-                <InstrumentTable key={el.id} item={el} flag={flag} />
+                <InstrumentTable key={el.id} item={el} flag={flag}/>
               ))}
             </>
           )}

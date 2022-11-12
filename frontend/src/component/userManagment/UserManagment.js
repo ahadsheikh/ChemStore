@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import axios from "../../axios/axios";
-import { Table, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {Table, Spinner} from "react-bootstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   faTimes,
   faLock,
@@ -31,8 +31,8 @@ const UserManagment = () => {
     loading: false,
     error: false,
   });
-  const [response, setRespose] = useState({ loading: false });
-  const [users, setUsers] = useState({ user: [], loading: false });
+  const [response, setRespose] = useState({loading: false});
+  const [users, setUsers] = useState({user: [], loading: false});
   const [user, setUser] = useState({});
 
   const handleClose = () => {
@@ -47,48 +47,48 @@ const UserManagment = () => {
 
   //// FOR SHOW MODAL
   const handleShow = (name, id, first_name, last_name, email) => {
-    setUser({ id, first_name, last_name, email });
-    setShow({ ...show, [name]: !show[name] });
+    setUser({id, first_name, last_name, email});
+    setShow({...show, [name]: !show[name]});
   };
 
   const getUserFirstTimeHandler = () => {
     axios
-      .get("/api/management/users/")
+      .get("/api/account/users/")
       .then((res) => {
-        setUsers({ user: res.data, loading: false });
+        setUsers({user: res.data, loading: false});
       })
       .catch((err) => {
         alert("Something Went Wrong.");
-        setUsers({ user: [], loading: false });
+        setUsers({user: [], loading: false});
       });
   };
 
   ///// FETCH DATA FOR THE VERY FIRST TIME
   useEffect(() => {
-    setUsers({ user: [], loading: true });
+    setUsers({user: [], loading: true});
     getUserFirstTimeHandler();
   }, []);
 
   //// FOR TAKING INPUT FROM USER
   const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    const {name, value} = e.target;
+    setUser({...user, [name]: value});
   };
 
   const newUserInputHandler = (e) => {
-    const { name, value } = e.target;
-    setNewUser({ ...newUser, [name]: value });
+    const {name, value} = e.target;
+    setNewUser({...newUser, [name]: value});
   };
 
   ///// FOR UPDATEING USER
   const updateUserHandler = () => {
-    setResp({ message: "", loading: true, error: false });
+    setResp({message: "", loading: true, error: false});
     axios
-      .patch(`/api/management/users/${user.id}/`, user)
+      .patch(`/api/account/users/${user.id}/`, user)
       .then((res) => {
         getUserFirstTimeHandler();
         handleClose();
-        setResp({ message: "", loading: false, error: false });
+        setResp({message: "", loading: false, error: false});
       })
       .catch((err) => {
         setResp({
@@ -102,13 +102,13 @@ const UserManagment = () => {
 
   //// FOR DELETE A USER
   const deleteUserHandler = () => {
-    setResp({ message: "", loading: true, error: false });
+    setResp({message: "", loading: true, error: false});
     axios
-      .delete(`/api/management/users/${user.id}/`)
+      .delete(`/api/account/users/${user.id}/`)
       .then((res) => {
         getUserFirstTimeHandler();
         handleClose();
-        setResp({ message: "", loading: false, error: false });
+        setResp({message: "", loading: false, error: false});
       })
       .catch((err) => {
         console.log(err);
@@ -121,15 +121,15 @@ const UserManagment = () => {
   };
 
   const createNewUserHandler = () => {
-    setResp({ message: "", loading: true, error: false });
-    console.log(newUser);
+    setResp({message: "", loading: true, error: false});
+
     axios
-      .post(`/api/management/users/`, { newUser })
+      .post(`/api/account/users/`, newUser)
       .then((res) => {
         getUserFirstTimeHandler();
         console.log(res);
         handleClose();
-        setResp({ message: "", loading: false, error: false });
+        setResp({message: "", loading: false, error: false});
       })
       .catch((err) => {
         setResp({
@@ -306,12 +306,12 @@ const UserManagment = () => {
         loading={resp.loading}
       >
         <div className="second_modal_main_container">
-          <p style={{ marginBottom: "0", textAlign: "center" }}>
+          <p style={{marginBottom: "0", textAlign: "center"}}>
             {user.first_name} {user.last_name} ({user.email})
           </p>
         </div>
       </SecondModal>
-      <div style={{ overflowX: "scroll" }}>
+      <div style={{overflowX: "scroll"}}>
         <div className="user_managment_table_wrapper">
           <div>
             <Header text="User Accounts">
@@ -319,7 +319,7 @@ const UserManagment = () => {
                 className="central_header_remove_btn"
                 onClick={() => handleShow("newUser")}
               >
-                <FontAwesomeIcon icon={faUserAlt} /> <span> New User </span>
+                <FontAwesomeIcon icon={faUserAlt}/> <span> New User </span>
               </button>
             </Header>
           </div>
@@ -327,97 +327,97 @@ const UserManagment = () => {
           <div>
             <Table striped bordered hover variant="dark">
               <thead>
-                <tr>
-                  <th style={{ paddingLeft: "1rem" }}>First Name</th>
-                  <th>Last Name</th>
-                  <th>Email</th>
-                  <th>Action</th>
-                </tr>
+              <tr>
+                <th style={{paddingLeft: "1rem"}}>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Action</th>
+              </tr>
               </thead>
 
               <tbody>
-                {users.loading && (
-                  <tr className="user_managment_table_loading_div">
-                    <td colSpan={4} className="text-center">
-                      <Spinner
-                        animation="border"
-                        variant="light"
-                        style={{
-                          fontSize: "1rem",
-                          height: "5rem",
-                          width: "5rem",
-                        }}
-                      />
+              {users.loading && (
+                <tr className="user_managment_table_loading_div">
+                  <td colSpan={4} className="text-center">
+                    <Spinner
+                      animation="border"
+                      variant="light"
+                      style={{
+                        fontSize: "1rem",
+                        height: "5rem",
+                        width: "5rem",
+                      }}
+                    />
+                  </td>
+                </tr>
+              )}
+              {!users.loading &&
+                users.user.map((el) => (
+                  <tr className="user_managment_table_body_row" key={el.id}>
+                    <td
+                      className="user_managment_table_body_row_data"
+                      style={{paddingLeft: "1rem"}}
+                    >
+                      {el.first_name}
+                    </td>
+                    <td className="user_managment_table_body_row_data">
+                      {el.last_name}
+                    </td>
+                    <td className="user_managment_table_body_row_data">
+                      {el.email}
+                    </td>
+                    <td className="user_managment_table_body_row_data">
+                      <div className="user_managment_btn_container">
+                        <button
+                          disabled={el.is_superuser}
+                          className="user_managment_action_btn detail"
+                          onClick={() => handleShow("password")}
+                        >
+                          <FontAwesomeIcon
+                            style={{fontSize: "1.1rem"}}
+                            icon={faLock}
+                          />
+                        </button>
+                        <button
+                          disabled={el.is_superuser}
+                          className="user_managment_action_btn detail"
+                          onClick={() =>
+                            handleShow(
+                              "edit",
+                              el.id,
+                              el.first_name,
+                              el.last_name,
+                              el.email
+                            )
+                          }
+                        >
+                          <FontAwesomeIcon
+                            style={{fontSize: "1.1rem"}}
+                            icon={faPencilAlt}
+                          />
+                        </button>
+                        <button
+                          disabled={el.is_superuser}
+                          className="user_managment_action_btn delete"
+                          onClick={() =>
+                            handleShow(
+                              "delete",
+                              el.id,
+                              el.first_name,
+                              el.last_name,
+                              el.email
+                            )
+                          }
+                        >
+                          <FontAwesomeIcon
+                            style={{fontSize: "1.1rem"}}
+                            icon={faTimes}
+                          />
+                        </button>
+                      </div>
                     </td>
                   </tr>
-                )}
-                {!users.loading &&
-                  users.user.map((el) => (
-                    <tr className="user_managment_table_body_row" key={el.id}>
-                      <td
-                        className="user_managment_table_body_row_data"
-                        style={{ paddingLeft: "1rem" }}
-                      >
-                        {el.first_name}
-                      </td>
-                      <td className="user_managment_table_body_row_data">
-                        {el.last_name}
-                      </td>
-                      <td className="user_managment_table_body_row_data">
-                        {el.email}
-                      </td>
-                      <td className="user_managment_table_body_row_data">
-                        <div className="user_managment_btn_container">
-                          <button
-                            disabled={el.is_superuser}
-                            className="user_managment_action_btn detail"
-                            onClick={() => handleShow("password")}
-                          >
-                            <FontAwesomeIcon
-                              style={{ fontSize: "1.1rem" }}
-                              icon={faLock}
-                            />
-                          </button>
-                          <button
-                            disabled={el.is_superuser}
-                            className="user_managment_action_btn detail"
-                            onClick={() =>
-                              handleShow(
-                                "edit",
-                                el.id,
-                                el.first_name,
-                                el.last_name,
-                                el.email
-                              )
-                            }
-                          >
-                            <FontAwesomeIcon
-                              style={{ fontSize: "1.1rem" }}
-                              icon={faPencilAlt}
-                            />
-                          </button>
-                          <button
-                            disabled={el.is_superuser}
-                            className="user_managment_action_btn delete"
-                            onClick={() =>
-                              handleShow(
-                                "delete",
-                                el.id,
-                                el.first_name,
-                                el.last_name,
-                                el.email
-                              )
-                            }
-                          >
-                            <FontAwesomeIcon
-                              style={{ fontSize: "1.1rem" }}
-                              icon={faTimes}
-                            />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                ))}
               </tbody>
             </Table>
           </div>

@@ -12,7 +12,7 @@ const ShipmentInput = (props) => {
         value={props.value}
         onChange={props.handler}
         readOnly={props.readOnly}
-        style={{color: props.readOnly ? "#9e9898": "white"}}
+        style={{color: props.readOnly ? "#9e9898" : "white"}}
       />
     </div>
   );

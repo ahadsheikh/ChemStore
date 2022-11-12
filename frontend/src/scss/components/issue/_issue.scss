@@ -11,16 +11,20 @@
     //   margin: 4rem auto;
     // }
   }
+
   &_header_container {
     background-color: var(--color-primary-3);
     color: $color-white;
     padding: 1rem;
+
     p {
       margin-bottom: 0;
     }
   }
+
   &_content_container {
     padding: 1rem;
+
     &_top {
       &_input {
         border: none;
@@ -30,6 +34,7 @@
         background-color: var(--color-primary-2);
         margin: 1rem 0;
         color: $color-white;
+
         &::placeholder {
           color: $color-white;
         }
@@ -43,6 +48,7 @@
   padding: 0.8rem 1rem;
   color: $color-white;
 }
+
 #dropdown-basic {
   //   display: none;
 }

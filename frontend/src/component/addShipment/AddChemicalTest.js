@@ -52,14 +52,10 @@ const AddChemicalTest = (props) => {
         setIsError(true);
         (() => {
           toast(msgFormater(err));
+          console.log("Has Something")
         })();
       });
   };
-
-  useEffect(() => {
-    setTempShipmentLoading(true);
-    getTempShipmentHandler();
-  }, []);
 
   ///// FUZZY SEARCH
   const fuzzySearchHandler = (value) => {
@@ -248,6 +244,11 @@ const AddChemicalTest = (props) => {
     setShowChemicalElement(false);
   };
 
+  useEffect(() => {
+    setTempShipmentLoading(true);
+    getTempShipmentHandler();
+  }, []);
+
   //// RENDER TO UI
   return (
     <>
@@ -270,7 +271,7 @@ const AddChemicalTest = (props) => {
                 <button
                   className="btn btn-light"
                   style={{ fontSize: "1.6rem" }}
-                  onClick={() => foundChemicalHandler(dummyChemical, true)}
+                  // onClick={() => foundChemicalHandler(dummyChemical, true)}
                 >
                   Create
                 </button>
@@ -288,7 +289,7 @@ const AddChemicalTest = (props) => {
                       key={el.id}
                       onClick={() => foundChemicalHandler(el, false)}
                     >
-                      {el.name}
+                      {el.purity}% - {el.chemical.name} - {el.quantity}ml - {el.manufacturer.name} - {el.supplier.name}
                     </li>
                   ))
                 )}
@@ -317,7 +318,7 @@ const AddChemicalTest = (props) => {
                         placeholder="Name"
                         bckColor="color_black "
                         name="name"
-                        value={chemicalCredential.name}
+                        value={chemicalCredential.chemical.name}
                         handler={inputHandler}
                         readOnly={!chemicalCredential.isNew}
                       />
@@ -333,7 +334,7 @@ const AddChemicalTest = (props) => {
                         placeholder="CAS RN"
                         bckColor="color_black "
                         name="CAS_RN"
-                        value={chemicalCredential.CAS_RN}
+                        value={chemicalCredential.chemical.CAS_RN}
                         handler={inputHandler}
                         readOnly={!chemicalCredential.isNew}
                       />
@@ -345,7 +346,7 @@ const AddChemicalTest = (props) => {
                         placeholder="Moliqular Formula"
                         bckColor="color_black "
                         name="molecular_formula"
-                        value={chemicalCredential.molecular_formula}
+                        value={chemicalCredential.chemical.molecular_formula}
                         handler={inputHandler}
                         readOnly={!chemicalCredential.isNew}
                       />
@@ -369,7 +370,7 @@ const AddChemicalTest = (props) => {
                         placeholder="Manufacturer"
                         bckColor="color_black "
                         name="manufacturer"
-                        value={chemicalCredential.manufacturer}
+                        value={chemicalCredential.name}
                         handler={inputHandler}
                         readOnly={!chemicalCredential.isNew}
                       />
@@ -381,7 +382,7 @@ const AddChemicalTest = (props) => {
                         placeholder="Supplier"
                         bckColor="color_black "
                         name="supplier"
-                        value={chemicalCredential.supplier}
+                        value={chemicalCredential.supplier.name}
                         handler={inputHandler}
                         readOnly={!chemicalCredential.isNew}
                       />
@@ -484,14 +485,14 @@ const AddChemicalTest = (props) => {
                     tempShipment.data.map((el, i) => (
                       <tr key={el.id}>
                         <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                        <td>{el.chemical.name}</td>
-                        <td>{el.chemical.molecular_formula}</td>
-                        <td>{el.chemical.molecular_weight}</td>
+                        <td>{el.chemical.chemical.name}</td>
+                        <td>{el.chemical.chemical.molecular_formula}</td>
+                        <td>{el.chemical.chemical.molecular_weight}</td>
                         <td>{el.chemical.purity}</td>
                         <td>{el.chemical.quantity}</td>
                         <td>{el.chemical.state}</td>
-                        <td>{el.chemical.manufacturer}</td>
-                        <td>{el.chemical.supplier}</td>
+                        <td>{el.chemical.manufacturer.name}</td>
+                        <td>{el.chemical.supplier.name}</td>
                         <td>{el.quantity}</td>
                         <td>
                           <div>

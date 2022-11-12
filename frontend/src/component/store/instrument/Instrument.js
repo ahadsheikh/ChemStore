@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Header from "../../add/Header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faPencilAlt,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { Table, Spinner, Modal } from "react-bootstrap";
+import {Table, Spinner, Modal} from "react-bootstrap";
 import axios from "../../../axios/axios";
 import axiosNoAuth from "../../../axios/axios_noauth";
 import InstrumentModal from "./InstrumentModal";
-import { ToastContainer, toast } from "react-toastify";
+import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const dummyInstrument = {
@@ -21,10 +21,12 @@ const dummyInstrument = {
   newQuantity: "",
 };
 
+const URL = '/api/storeobjects/instrumentobjs/'
+
 const Instrument = () => {
   const [instrumentCredential, setInstrumentCredential] =
     useState(dummyInstrument);
-  const [error, setError] = useState({ loading: false, message: "" });
+  const [error, setError] = useState({loading: false, message: ""});
   const [instrument, setInstrument] = useState([]);
   const [flag, setFlag] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -41,43 +43,43 @@ const Instrument = () => {
 
   const getInstrument = () => {
     setInstrument([]);
-    setError({ loading: true, message: "" });
+    setError({loading: true, message: ""});
     // setTable({ chemical: false, instrument: true, glassware: false });
 
     axiosNoAuth
-      .get(`/api/management/instruments/`)
+      .get(`${URL}`)
       .then((res) => {
         setInstrument(res.data);
-        setError({ loading: false, message: "" });
+        setError({loading: false, message: ""});
         setFlag(true);
       })
       .catch((err) => {
-        setError({ loading: false, message: "Something Went Wrong" });
+        setError({loading: false, message: "Something Went Wrong"});
       });
   };
 
   useEffect(() => {
-    setError({ loading: true, message: "" });
+    setError({loading: true, message: ""});
     getInstrument();
   }, []);
 
   const showHandler = (name) => {
     setInstrumentCredential(dummyInstrument);
-    setShow({ ...show, [name]: true });
+    setShow({...show, [name]: true});
   };
 
   const onHideHandler = () => {
-    setShow({ create: false, edit: false, delete: false });
+    setShow({create: false, edit: false, delete: false});
   };
 
   const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setInstrumentCredential({ ...instrumentCredential, [name]: value });
+    const {name, value} = e.target;
+    setInstrumentCredential({...instrumentCredential, [name]: value});
   };
   const submitHandler = () => {
     setSubmitLoading(true);
     axios
-      .post(`/api/management/instruments/`, {
+      .post(`${URL}`, {
         ...instrumentCredential,
         quantity: instrumentCredential.newQuantity,
       })
@@ -107,13 +109,13 @@ const Instrument = () => {
       ...instrument,
       newQuantity: instrument.quantity,
     });
-    setShow({ create: false, edit: true, delete: false });
+    setShow({create: false, edit: true, delete: false});
   };
 
   const submitEditHandler = () => {
     setSubmitLoading(true);
     axios
-      .put(`/api/management/instruments/${instrumentCredential.id}/`, {
+      .put(`${URL}${instrumentCredential.id}/`, {
         ...instrumentCredential,
         quantity: instrumentCredential.newQuantity,
       })
@@ -139,15 +141,15 @@ const Instrument = () => {
   };
 
   const deleteChemical = (id) => {
-    setDeleteLoading({ id, loading: true });
+    setDeleteLoading({id, loading: true});
     axios
-      .delete(`/api/management/instruments/${id}/`)
+      .delete(`${URL}${id}/`)
       .then((res) => {
         getInstrument();
-        setDeleteLoading({ id: null, loading: false });
+        setDeleteLoading({id: null, loading: false});
       })
       .catch((err) => {
-        setDeleteLoading({ id: null, loading: false });
+        setDeleteLoading({id: null, loading: false});
         setIsError(true);
         const key = Object.keys(err.response.data);
         if (key.length > 0) {
@@ -163,7 +165,7 @@ const Instrument = () => {
   };
   return (
     <>
-      {isError && <ToastContainer />}
+      {isError && <ToastContainer/>}
       <Modal
         size="xl"
         show={show.create}
@@ -194,7 +196,7 @@ const Instrument = () => {
           submitLoading={submitLoading}
         />
       </Modal>
-      <div className="container-md mt-3" style={{ overflowX: "scroll" }}>
+      <div className="container-md mt-3" style={{overflowX: "scroll"}}>
         <div className="user_managment_table_wrapper">
           <div>
             <Header text="Instrument">
@@ -202,7 +204,7 @@ const Instrument = () => {
                 className="central_header_remove_btn"
                 onClick={() => showHandler("create")}
               >
-                <FontAwesomeIcon icon={faPlus} /> <span> New Instrument</span>
+                <FontAwesomeIcon icon={faPlus}/> <span> New Instrument</span>
               </button>
             </Header>
           </div>
@@ -210,72 +212,72 @@ const Instrument = () => {
           <div>
             <Table striped bordered hover variant="dark">
               <thead>
-                <tr>
-                  <th style={{ paddingLeft: "2rem" }}>#</th>
-                  <th>Name</th>
-                  <th>Quantity</th>
-                  <th>Manufacturer</th>
-                  <th>Supplier</th>
-                  <th>Action</th>
-                </tr>
+              <tr>
+                <th style={{paddingLeft: "2rem"}}>#</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Manufacturer</th>
+                <th>Supplier</th>
+                <th>Action</th>
+              </tr>
               </thead>
               <tbody>
-                {error.loading && (
-                  <tr className="user_managment_table_loading_div">
-                    <td colSpan="100%" className="text-center">
-                      <Spinner
-                        animation="border"
-                        variant="light"
-                        style={{
-                          fontSize: "1rem",
-                          height: "5rem",
-                          width: "5rem",
-                        }}
-                      />
-                    </td>
-                  </tr>
-                )}
-                {!error.loading &&
-                  instrument.map((el, i) => (
-                    <tr key={el.id}>
-                      <td style={{ paddingLeft: "2rem" }}>{i + 1}</td>
-                      <td>{el.name}</td>
-                      <td>{el.quantity}</td>
-                      <td>{el.manufacturer}</td>
-                      <td>{el.supplier}</td>
-                      <td>
-                        <>
-                          <button
-                            onClick={() => editHandler(el)}
-                            className="btn btn-primary btn-sm me-2"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => deleteChemical(el.id)}
-                            className="btn btn-danger btn-sm"
-                            disabled={
-                              // el.id === deleteLoading.id &&
-                              deleteLoading.loading
-                            }
-                          >
-                            {el.id === deleteLoading.id &&
-                              deleteLoading.loading && (
-                                <div
-                                  className="spinner-border spinner-border-sm me-2"
-                                  role="status"
-                                >
+              {error.loading && (
+                <tr className="user_managment_table_loading_div">
+                  <td colSpan="100%" className="text-center">
+                    <Spinner
+                      animation="border"
+                      variant="light"
+                      style={{
+                        fontSize: "1rem",
+                        height: "5rem",
+                        width: "5rem",
+                      }}
+                    />
+                  </td>
+                </tr>
+              )}
+              {!error.loading &&
+                instrument.map((el, i) => (
+                  <tr key={el.id}>
+                    <td style={{paddingLeft: "2rem"}}>{i + 1}</td>
+                    <td>{el.instrument.name}</td>
+                    <td>{el.quantity}</td>
+                    <td>{el.manufacturer.name}</td>
+                    <td>{el.supplier.name}</td>
+                    <td>
+                      <>
+                        <button
+                          onClick={() => editHandler(el)}
+                          className="btn btn-primary btn-sm me-2"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => deleteChemical(el.id)}
+                          className="btn btn-danger btn-sm"
+                          disabled={
+                            // el.id === deleteLoading.id &&
+                            deleteLoading.loading
+                          }
+                        >
+                          {el.id === deleteLoading.id &&
+                            deleteLoading.loading && (
+                              <div
+                                className="spinner-border spinner-border-sm me-2"
+                                role="status"
+                              >
                                   <span className="visually-hidden">
                                     Loading...
                                   </span>
-                                </div>
-                              )}
-                            Delete
-                          </button>
-                        </>
-                      </td>
-                    </tr>
-                  ))}
+                              </div>
+                            )}
+                          Delete
+                        </button>
+                      </>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </div>

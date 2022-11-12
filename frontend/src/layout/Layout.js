@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Navigation from "./Navigation";
 import Sidebar from "./Sidebar";
 import Store from "../component/store/Store";
@@ -20,15 +20,15 @@ const Layout = () => {
   const [id, setId] = useState(0);
   const [storeList, setStoreList] = useState([]);
   let arr = [
-    <Search />,
-    <AddShipment />,
-    <Store />,
-    <Location />,
-    <Issue />,
-    <UserManagment />,
-    <Main />,
-    <FileManagment />,
-    <CategoryMain />,
+    <Search/>,
+    <AddShipment/>,
+    <Store/>,
+    <Location/>,
+    <Issue/>,
+    <UserManagment/>,
+    <Main/>,
+    <FileManagment/>,
+    <CategoryMain/>,
   ];
 
   const sideDrawerHandler = () => {
@@ -60,7 +60,7 @@ const Layout = () => {
           storeList={storeList}
         />
       </OverLaySideBar>
-      <Navigation handler={sideDrawerHandler} />
+      <Navigation handler={sideDrawerHandler}/>
       <div className="layout">
         <Sidebar
           isShow={showBackModal}

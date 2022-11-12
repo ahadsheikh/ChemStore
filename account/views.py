@@ -46,7 +46,8 @@ class UserViewset(ModelViewSet):
             return UserSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = UserCreateSerializer(data=request.POST)
+        print(request.data)
+        serializer = UserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = User.objects.create(
             email=serializer.validated_data['email'],

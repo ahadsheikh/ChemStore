@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import { Button, Modal } from "react-bootstrap";
+import {useState, useEffect} from "react";
+import {Button, Modal} from "react-bootstrap";
 import axios from "../../axios/axios";
-import { setFlagHandler } from "../../redux/FileManagment";
-import { useDispatch } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
+import {setFlagHandler} from "../../redux/FileManagment";
+import {useDispatch} from "react-redux";
+import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { msgFormater } from "../../utils/utils";
+import {msgFormater} from "../../utils/utils";
 
 const UtilsModal = (props) => {
   const dispatch = useDispatch();
@@ -112,7 +112,7 @@ const UtilsModal = (props) => {
   };
   return (
     <>
-      {error && <ToastContainer />}
+      {error && <ToastContainer/>}
       <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Upload File</Modal.Title>
@@ -134,7 +134,7 @@ const UtilsModal = (props) => {
                   {el.name}
                   <span
                     className="ms-3"
-                    style={{ cursor: "pointer" }}
+                    style={{cursor: "pointer"}}
                     onClick={() => removeCategoriesHandler(i)}
                   >
                     {" "}
@@ -165,7 +165,7 @@ const UtilsModal = (props) => {
                     <span
                       onClick={() => removeChemicalHandler(i)}
                       className="ms-3"
-                      style={{ cursor: "pointer" }}
+                      style={{cursor: "pointer"}}
                     >
                       X
                     </span>
@@ -176,7 +176,7 @@ const UtilsModal = (props) => {
             <div className="issue_fuzzy_search_container">
               <input
                 className=" file_managment_chemical issue_content_container_top_input border"
-                style={{ backgroundColor: "white", color: "black" }}
+                style={{backgroundColor: "white", color: "black"}}
                 type="text"
                 placeholder="Chemical Name"
                 name="carrier_name"
@@ -199,13 +199,13 @@ const UtilsModal = (props) => {
             </div>
           </div>
           <div>
-            <input type="file" onChange={fileUploadHandler} />
+            <input type="file" onChange={fileUploadHandler}/>
           </div>
         </Modal.Body>
         <Modal.Footer>
           <Button
             variant="secondary"
-            style={{ fontSize: "1.6rem" }}
+            style={{fontSize: "1.6rem"}}
             onClick={props.handleClose}
           >
             Cancel

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from administration.serializers.serializers import ChemicalSerializer
+from storeobjects.serializers import ChemicalSerializer
 from .models import Category, File
 
 

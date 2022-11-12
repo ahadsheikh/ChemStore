@@ -1,8 +1,8 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faBars } from "@fortawesome/free-solid-svg-icons";
-import { removeTokenHandler } from "../redux/Auth";
-import { useDispatch } from "react-redux";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSignOutAlt, faBars} from "@fortawesome/free-solid-svg-icons";
+import {removeTokenHandler} from "../redux/Auth";
+import {useDispatch} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
 
 const Navigation = (props) => {
@@ -32,7 +32,7 @@ const Navigation = (props) => {
         <button
           className="btn btn-warning"
           onClick={logoutHandler}
-          style={{ fontSize: "1.6rem" }}
+          style={{fontSize: "1.6rem"}}
         >
           Logout
         </button>

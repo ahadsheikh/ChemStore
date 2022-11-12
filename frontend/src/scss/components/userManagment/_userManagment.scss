@@ -11,14 +11,17 @@
       margin: 4rem auto;
     }
   }
+
   &_main_header {
     background-color: var(--color-primary-3);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
+
     &_main_title {
       line-height: 0;
+
       span {
         padding-left: 0.5rem;
       }
@@ -39,6 +42,7 @@
     cursor: not-allowed;
     background-color: var(--color-Grey-light-4);
   }
+
   &:hover:disabled {
     cursor: not-allowed;
     background-color: var(--color-Grey-light-4);
@@ -47,12 +51,15 @@
 
 .detail {
   background-color: #4e5659;
+
   &:hover {
     background-color: darken(#4e5659, 2%);
   }
 }
+
 .delete {
   background-color: #d36a5f;
+
   &:hover {
     background-color: darken(#d36a5f, 2%);
   }
@@ -62,10 +69,12 @@
   display: flex;
   align-items: center;
 }
+
 .user_managment_table {
   &_body {
     &_row {
       height: 5rem;
+
       &_data {
         height: inherit;
         display: table-cell;

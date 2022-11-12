@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
   flag: false,
@@ -23,6 +23,6 @@ export const FileManagment = createSlice({
   },
 });
 
-export const { setFlagHandler, removeTokenHandler } = FileManagment.actions;
+export const {setFlagHandler, removeTokenHandler} = FileManagment.actions;
 
 export default FileManagment.reducer;

@@ -1,55 +1,55 @@
 
 .utils_modal_categories_container {
-    position: relative;
+  position: relative;
 
-    p {
-        display: inline;
+  p {
+    display: inline;
 
-        span {
-            cursor: pointer;
-        }
+    span {
+      cursor: pointer;
     }
+  }
 }
 
 .utils_modal_categories_list {
-    position: absolute;
-    left: 0;
-    top: 4.9rem;
-    width: 95.5%;
-    list-style: none;
-    background-color: white;
-    z-index: 200;
-    margin-left: 1.1rem;
-    // margin: auto;
+  position: absolute;
+  left: 0;
+  top: 4.9rem;
+  width: 95.5%;
+  list-style: none;
+  background-color: white;
+  z-index: 200;
+  margin-left: 1.1rem;
+  // margin: auto;
 }
 
 .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 14rem;
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 14rem;
+  color: black;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  // padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.file_managment_chemical {
+  &::placeholder {
     color: black;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    // padding: 12px 16px;
-    z-index: 1;
   }
-  
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
+}
 
-  .file_managment_chemical {
-    &::placeholder {
-      color: black;
-    }
-  }
-
-  .util_modal_chemical {
-    background-color: var(--color-Grey-light-1);
-    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
-  }
+.util_modal_chemical {
+  background-color: var(--color-Grey-light-1);
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}

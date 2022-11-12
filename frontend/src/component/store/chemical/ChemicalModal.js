@@ -1,12 +1,13 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import ShipmentInput from "../../addShipment/ShipmentInput";
+
 const ChemicalModal = (props) => {
   return (
     <>
       <div
         className="add_chemical_input_container"
-        style={{ background: "#333" }}
+        style={{background: "#333"}}
       >
         <div className="test">
           <div className="container-fluid">
@@ -129,21 +130,21 @@ const ChemicalModal = (props) => {
                   <button
                     onClick={props.onClose}
                     className="btn btn-dark me-3"
-                    style={{ fontSize: "1.6rem" }}
+                    style={{fontSize: "1.6rem"}}
                   >
                     Close
                   </button>
                   <Button
                     onClick={props.submitHandler}
                     variant="primary"
-                    style={{ fontSize: "1.6rem" }}
+                    style={{fontSize: "1.6rem"}}
                     disabled={props.submitLoading}
                   >
                     {props.submitLoading && (
                       <div
                         className="spinner-border me-2"
                         role="status"
-                        style={{ width: "1.4rem", height: "1.4rem" }}
+                        style={{width: "1.4rem", height: "1.4rem"}}
                       >
                         <span className="visually-hidden">Loading...</span>
                       </div>

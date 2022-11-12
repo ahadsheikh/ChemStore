@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Header from "../add/Header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faPencilAlt,
@@ -9,10 +9,10 @@ import {
 import SecondModal from "../modal/SecondModal";
 import Input from "../input/Input";
 import axios from "../../axios/axios";
-import { Table, Spinner } from "react-bootstrap";
-import { ToastContainer, toast } from "react-toastify";
+import {Table, Spinner} from "react-bootstrap";
+import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { msgFormater } from "../../utils/utils";
+import {msgFormater} from "../../utils/utils";
 
 const Main = () => {
   const [show, setShow] = useState({
@@ -25,26 +25,26 @@ const Main = () => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [firstLoading, setFirstLoading] = useState(true);
-  const [credential, setCredential] = useState({ id: null, name: "" });
+  const [credential, setCredential] = useState({id: null, name: ""});
 
   const handleShow = (name) => {
-    setShow({ ...show, [name]: true });
+    setShow({...show, [name]: true});
   };
 
   const deleteHandleShow = (name, id, cateName) => {
-    setCredential({ id, name: cateName });
-    setShow({ ...show, [name]: true });
+    setCredential({id, name: cateName});
+    setShow({...show, [name]: true});
   };
 
   const handleClose = () =>
-    setShow({ create: false, update: false, delete: false });
+    setShow({create: false, update: false, delete: false});
 
   const inputHandler = (e) => {
     setName(e.target.value);
   };
 
   const editInputHandler = (e) => {
-    setCredential({ id: credential.id, name: e.target.value });
+    setCredential({id: credential.id, name: e.target.value});
   };
 
   const getCategoriesHandler = () => {
@@ -78,7 +78,7 @@ const Main = () => {
     }
     setLoading(true);
     axios
-      .post(`/api/filemanager/categories/`, { name })
+      .post(`/api/filemanager/categories/`, {name})
       .then((res) => {
         setLoading(false);
         handleClose();
@@ -132,7 +132,7 @@ const Main = () => {
 
   return (
     <>
-      {isError && <ToastContainer />}
+      {isError && <ToastContainer/>}
       <SecondModal
         show={show.create}
         handleClose={handleClose}
@@ -184,12 +184,12 @@ const Main = () => {
         loading={loading}
       >
         <div className="second_modal_main_container">
-          <p style={{ marginBottom: "0", textAlign: "center" }}>
+          <p style={{marginBottom: "0", textAlign: "center"}}>
             {credential.name}
           </p>
         </div>
       </SecondModal>
-      <div style={{ overflowX: "scroll" }}>
+      <div style={{overflowX: "scroll"}}>
         <div className="user_managment_table_wrapper">
           <div>
             <Header text="Categories">
@@ -197,7 +197,7 @@ const Main = () => {
                 className="central_header_remove_btn"
                 onClick={() => handleShow("create")}
               >
-                <FontAwesomeIcon icon={faPlus} /> <span> New Category</span>
+                <FontAwesomeIcon icon={faPlus}/> <span> New Category</span>
               </button>
             </Header>
           </div>
@@ -205,69 +205,69 @@ const Main = () => {
           <div>
             <Table striped bordered hover variant="dark">
               <thead>
-                <tr>
-                  <th style={{ paddingLeft: "1rem" }}>Serial NO.</th>
-                  <th>Name</th>
-                  <th>Action</th>
-                </tr>
+              <tr>
+                <th style={{paddingLeft: "1rem"}}>Serial NO.</th>
+                <th>Name</th>
+                <th>Action</th>
+              </tr>
               </thead>
 
               <tbody>
-                {firstLoading && (
-                  <tr className="user_managment_table_loading_div">
-                    <td colSpan={4} className="text-center">
-                      <Spinner
-                        animation="border"
-                        variant="light"
-                        style={{
-                          fontSize: "1rem",
-                          height: "5rem",
-                          width: "5rem",
-                        }}
-                      />
+              {firstLoading && (
+                <tr className="user_managment_table_loading_div">
+                  <td colSpan={4} className="text-center">
+                    <Spinner
+                      animation="border"
+                      variant="light"
+                      style={{
+                        fontSize: "1rem",
+                        height: "5rem",
+                        width: "5rem",
+                      }}
+                    />
+                  </td>
+                </tr>
+              )}
+              {!firstLoading &&
+                categories.map((el, i) => (
+                  <tr className="user_managment_table_body_row" key={el.id}>
+                    <td
+                      className="user_managment_table_body_row_data"
+                      style={{paddingLeft: "1rem"}}
+                    >
+                      {i + 1}
+                    </td>
+                    <td className="user_managment_table_body_row_data">
+                      {el.name}
+                    </td>
+                    <td className="user_managment_table_body_row_data">
+                      <div className="user_managment_btn_container">
+                        <button
+                          className="user_managment_action_btn detail"
+                          onClick={() =>
+                            deleteHandleShow("edit", el.id, el.name)
+                          }
+                        >
+                          <FontAwesomeIcon
+                            style={{fontSize: "1.1rem"}}
+                            icon={faPencilAlt}
+                          />
+                        </button>
+                        <button
+                          className="user_managment_action_btn delete"
+                          onClick={() =>
+                            deleteHandleShow("delete", el.id, el.name)
+                          }
+                        >
+                          <FontAwesomeIcon
+                            style={{fontSize: "1.1rem"}}
+                            icon={faTimes}
+                          />
+                        </button>
+                      </div>
                     </td>
                   </tr>
-                )}
-                {!firstLoading &&
-                  categories.map((el, i) => (
-                    <tr className="user_managment_table_body_row" key={el.id}>
-                      <td
-                        className="user_managment_table_body_row_data"
-                        style={{ paddingLeft: "1rem" }}
-                      >
-                        {i + 1}
-                      </td>
-                      <td className="user_managment_table_body_row_data">
-                        {el.name}
-                      </td>
-                      <td className="user_managment_table_body_row_data">
-                        <div className="user_managment_btn_container">
-                          <button
-                            className="user_managment_action_btn detail"
-                            onClick={() =>
-                              deleteHandleShow("edit", el.id, el.name)
-                            }
-                          >
-                            <FontAwesomeIcon
-                              style={{ fontSize: "1.1rem" }}
-                              icon={faPencilAlt}
-                            />
-                          </button>
-                          <button
-                            className="user_managment_action_btn delete"
-                            onClick={() =>
-                              deleteHandleShow("delete", el.id, el.name)
-                            }
-                          >
-                            <FontAwesomeIcon
-                              style={{ fontSize: "1.1rem" }}
-                              icon={faTimes}
-                            />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                ))}
               </tbody>
             </Table>
           </div>

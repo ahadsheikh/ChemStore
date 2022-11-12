@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
   chemical: true,
@@ -36,6 +36,6 @@ export const Shipment = createSlice({
   },
 });
 
-export const { currentTab, closeModal } = Shipment.actions;
+export const {currentTab, closeModal} = Shipment.actions;
 
 export default Shipment.reducer;

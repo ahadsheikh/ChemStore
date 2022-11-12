@@ -1,19 +1,19 @@
 import React, {useLayoutEffect} from 'react';
 
-import { ToastContainer, toast } from 'react-toastify';
+import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Error = (props) => {
 
-    useLayoutEffect(() => {
-        notify()
-    }, [])
+  useLayoutEffect(() => {
+    notify()
+  }, [])
   const notify = () => toast.error(props.message);
 
   return (
     <div>
       {/* <button onClick={notify}>Notify!</button> */}
-      <ToastContainer />
+      <ToastContainer/>
     </div>
   );
 }

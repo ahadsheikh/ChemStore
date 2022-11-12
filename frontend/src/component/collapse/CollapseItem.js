@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Collapse, Button } from "react-bootstrap";
+import {useState} from "react";
+import {Collapse, Button} from "react-bootstrap";
+
 const CollapseItem = (props) => {
   const [open, setOpen] = useState(false);
 

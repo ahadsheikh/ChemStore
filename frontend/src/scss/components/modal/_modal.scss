@@ -21,10 +21,12 @@
     transform: translate(-50%, -50%) scale(0);
     transition: all 0.1s 0.1s;
   }
+
   &__question {
     padding: 2.5rem 5rem 2rem 1rem;
     font-size: 1.8rem;
   }
+
   &__button {
     padding-bottom: 1rem;
     display: inline-block;
@@ -40,6 +42,7 @@
     font-weight: 700;
     cursor: pointer;
     padding: 0.4rem 1.6rem;
+
     &:not(:last-of-type) {
       margin-right: 1rem;
     }

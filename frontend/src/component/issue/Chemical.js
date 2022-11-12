@@ -1,9 +1,9 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import ShipmentInput from "../addShipment/ShipmentInput";
 import Header from "../add/Header";
-import { Button } from "react-bootstrap";
+import {Button} from "react-bootstrap";
 
 const Chemical = (props) => {
   return (
@@ -13,7 +13,7 @@ const Chemical = (props) => {
           className="central_header_remove_btn"
           onClick={props.removeHandler}
         >
-          <FontAwesomeIcon icon={faTrashAlt} /> <span>Remove</span>
+          <FontAwesomeIcon icon={faTrashAlt}/> <span>Remove</span>
         </button>
       </Header>
       <div className="add_chemical_input_container">
@@ -27,7 +27,7 @@ const Chemical = (props) => {
                   placeholder="Name"
                   bckColor="color_black "
                   name="name"
-                  value={props.data.name}
+                  value={props.data.chemical.name}
                   handler={props.inputHandler}
                   readOnly={true}
                 />
@@ -43,7 +43,7 @@ const Chemical = (props) => {
                   placeholder="CAS RN"
                   bckColor="color_black "
                   name="CAS_RN"
-                  value={props.data.CAS_RN}
+                  value={props.data.chemical.CAS_RN}
                   handler={props.inputHandler}
                   readOnly={true}
                 />
@@ -55,7 +55,7 @@ const Chemical = (props) => {
                   placeholder="Moliqular Formula"
                   bckColor="color_black "
                   name="molecular_formula"
-                  value={props.data.molecular_formula}
+                  value={props.data.chemical.molecular_formula}
                   handler={props.inputHandler}
                   readOnly={true}
                 />
@@ -79,7 +79,7 @@ const Chemical = (props) => {
                   placeholder="Manufacturer"
                   bckColor="color_black "
                   name="manufacturer"
-                  value={props.data.manufacturer}
+                  value={props.data.manufacturer.name}
                   handler={props.inputHandler}
                   readOnly={true}
                 />
@@ -91,7 +91,7 @@ const Chemical = (props) => {
                   placeholder="Supplier"
                   bckColor="color_black "
                   name="supplier"
-                  value={props.data.supplier}
+                  value={props.data.supplier.name}
                   handler={props.inputHandler}
                   readOnly={true}
                 />
@@ -138,14 +138,14 @@ const Chemical = (props) => {
                   <Button
                     onClick={props.submitHandler}
                     variant="primary"
-                    style={{ fontSize: "1.6rem" }}
+                    style={{fontSize: "1.6rem"}}
                     disabled={props.submitLoading}
                   >
                     {props.submitLoading && (
                       <div
                         className="spinner-border me-2"
                         role="status"
-                        style={{ width: "1.4rem", height: "1.4rem" }}
+                        style={{width: "1.4rem", height: "1.4rem"}}
                       >
                         <span className="visually-hidden">Loading...</span>
                       </div>

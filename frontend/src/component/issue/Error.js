@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 
-import { ToastContainer, toast } from "react-toastify";
+import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Error = (props) => {
@@ -12,7 +12,7 @@ const Error = (props) => {
   return (
     <div>
       {/* <button onClick={notify}>Notify!</button> */}
-      <ToastContainer />
+      <ToastContainer/>
     </div>
   );
 };

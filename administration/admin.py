@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
 
 from .models import (
     Building,
@@ -8,6 +7,9 @@ from .models import (
     ChemicalShipment,
     GlasswareShipment,
     InstrumentShipment,
+    ChemicalTempShipment,
+    GlasswareTempShipment,
+    InstrumentTempShipment,
     StoreConsumer,
     Issue,
     IssueObject,
@@ -20,6 +22,9 @@ admin.site.register(Shipment)
 admin.site.register(ChemicalShipment)
 admin.site.register(GlasswareShipment)
 admin.site.register(InstrumentShipment)
+admin.site.register(ChemicalTempShipment)
+admin.site.register(GlasswareTempShipment)
+admin.site.register(InstrumentTempShipment)
 admin.site.register(StoreConsumer)
 admin.site.register(Issue)
 admin.site.register(IssueObject)

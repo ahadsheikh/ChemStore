@@ -8,18 +8,21 @@
   top: 0px;
   position: sticky;
   z-index: 2;
+
   &_title {
     padding-left: 2rem;
     @media (max-width: 800px) {
       display: none;
     }
   }
+
   &_logout {
     margin-right: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 0.8rem;
+
     &_btn {
       border: none;
       outline: none;
@@ -28,16 +31,19 @@
       font-size: 1.6rem;
       background-color: transparent;
     }
+
     &_icon {
       //   padding: 0 0.5rem;
       border: 1px solid transparent;
       font-size: 2rem;
+
       &:hover {
         border: 1px solid black;
       }
     }
   }
 }
+
 // .nav_menu_icon
 .nav_menu {
   &_bar_div {
@@ -46,6 +52,7 @@
       display: none;
     }
   }
+
   &_icon {
     font-size: 3rem;
     cursor: pointer;

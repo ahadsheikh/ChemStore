@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Navigation from "./Navigation";
 import Sidebar from "./Sidebar";
 import Search from "../../../component/search/Search";
@@ -12,7 +12,7 @@ const HomeLayout = () => {
   const [showBackModal, setShowBlockModal] = useState(false);
   const [id, setId] = useState(0);
   const [storeList, setStoreList] = useState([]);
-  let arr = [<Search />, <Store />, <Location />, <FileManagment />];
+  let arr = [<Search/>, <Store/>, <Location/>, <FileManagment/>];
 
   const sideDrawerHandler = () => {
     setShowBlockModal((preState) => !preState);
@@ -43,7 +43,7 @@ const HomeLayout = () => {
           storeList={storeList}
         />
       </OverLaySideBar>
-      <Navigation handler={sideDrawerHandler} />
+      <Navigation handler={sideDrawerHandler}/>
       <div className="layout">
         <Sidebar
           isShow={showBackModal}

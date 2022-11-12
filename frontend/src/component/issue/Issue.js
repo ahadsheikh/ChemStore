@@ -1,24 +1,24 @@
-import React, { useState, useLayoutEffect, useEffect } from "react";
+import React, {useState, useLayoutEffect, useEffect} from "react";
 import Chemical from "./Chemical";
 import Instrument from "./Instrument";
 import GlassWare from "./GlassWare";
 import Location from "../location/Location";
 import axios from "../../axios/axios";
 import Header from "../add/Header";
-import { issueLabHandler } from "../../redux/StoreManagment";
-import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
+import {issueLabHandler} from "../../redux/StoreManagment";
+import {useDispatch, useSelector} from "react-redux";
+import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ChemicalTable from "./ChemicalTable";
 import InstrumentTable from "./InstrumentTable";
 import GlasswareTable from "./GlasswareTable";
-import { msgFormater } from "../../utils/utils";
+import {msgFormater} from "../../utils/utils";
 
 const Issue = (props) => {
   const dispatch = useDispatch();
-  const { issueLab } = useSelector((state) => state.StoreManagment);
+  const {issueLab} = useSelector((state) => state.StoreManagment);
   const [searchInput, setSearchInput] = useState("");
-  const [isError, setIssError] = useState({ message: "", error: false });
+  const [isError, setIssError] = useState({message: "", error: false});
   const [fuzzyResult, setFuzzyResult] = useState([]);
   const [Credential, setCredential] = useState({});
   const [listChemical, setListChemical] = useState([]);
@@ -62,11 +62,11 @@ const Issue = (props) => {
         setFirstLoading(false);
       })
       .catch((err) => {
-        setDeleteLoading({ id: null, loading: false });
+        setDeleteLoading({id: null, loading: false});
         (() => {
           toast(`Something Went Wrong.`);
         })();
-        setIssError({ message: "Something Went Wrong.", error: true });
+        setIssError({message: "Something Went Wrong.", error: true});
         setFirstLoading(false);
       });
   };
@@ -92,7 +92,7 @@ const Issue = (props) => {
         (() => {
           toast(`Something Went Wrong.`);
         })();
-        setIssError({ message: "Something Went Wrong.", error: true });
+        setIssError({message: "Something Went Wrong.", error: true});
       });
   };
 
@@ -134,7 +134,7 @@ const Issue = (props) => {
           (() => {
             toast(msgFormater(err));
           })();
-          setIssError({ message: "Issue Date is Required", error: true });
+          setIssError({message: "Issue Date is Required", error: true});
         });
 
       //// FOR EDIT
@@ -156,7 +156,7 @@ const Issue = (props) => {
           (() => {
             toast(msgFormater(err));
           })();
-          setIssError({ message: "Issue Date is Required", error: true });
+          setIssError({message: "Issue Date is Required", error: true});
           setSubmitLoading(false);
         });
     }
@@ -181,19 +181,19 @@ const Issue = (props) => {
 
   //// FOR DELETING A CHEMICAL, INSTRUMENT OR GLASS WARE FROM TEMP ISSUE
   const deleteHandler = (id) => {
-    setDeleteLoading({ id, loading: true });
+    setDeleteLoading({id, loading: true});
     axios
       .delete(`/api/management/issue-cart/${id}/`)
       .then((res) => {
         getListHandler();
-        setDeleteLoading({ id: null, loading: false });
+        setDeleteLoading({id: null, loading: false});
       })
       .catch((err) => {
-        setDeleteLoading({ id: null, loading: false });
+        setDeleteLoading({id: null, loading: false});
         (() => {
           toast(msgFormater(err));
         })();
-        setIssError({ message: "Issue Date is Required", error: true });
+        setIssError({message: "Issue Date is Required", error: true});
       });
   };
 
@@ -201,7 +201,7 @@ const Issue = (props) => {
   const mergeHandlerHandler = () => {
     if (issueLab === null || issueLab === "") {
       (() => toast(`Please Select a Location.`))();
-      setIssError({ message: "Please Select a Location.", error: true });
+      setIssError({message: "Please Select a Location.", error: true});
       return;
     }
     setMergeLoading(true);
@@ -224,16 +224,25 @@ const Issue = (props) => {
             toast(`Something Went Wrong.`);
           })();
         }
-        setIssError({ message: "Issue Date is Required", error: true });
+        setIssError({message: "Issue Date is Required", error: true});
         setMergeLoading(false);
       });
   };
 
+  const getGenericObject = (e) => {
+    if('chemical' in e) {
+      return e['chemical'];
+    } else if('glassware' in e) {
+      return e['glassware'];
+    } else {
+      return e['instrument'];
+    }
+  }
   return (
     <>
-      {isError.error && <ToastContainer />}
+      {isError.error && <ToastContainer/>}
       <div className="issue_container">
-        <Header text="Create An Issue" />
+        <Header text="Create An Issue"/>
         <div className="issue_content_container">
           <div className="issue_content_container_top">
             <div className="issue_fuzzy_search_container">
@@ -248,7 +257,7 @@ const Issue = (props) => {
               <ul className="issue_fuzzy_result">
                 {fuzzyResult.map((el, i) => (
                   <li key={i} onClick={() => foundCredentialHandler(el)}>
-                    {el.name}
+                    <b>{getGenericObject(el).name}</b> - {el.quantity} {el.type === "CHEMICAL" ? 'ml' : 'pieces'} - manufactured by <b>{el.manufacturer.name}</b> - supplied by <b>{el.supplier.name}</b>
                   </li>
                 ))}
               </ul>
@@ -261,7 +270,7 @@ const Issue = (props) => {
                 overflowX: "hidden",
               }}
             >
-              <Location isShow={false} />
+              <Location isShow={false}/>
             </div>
 
             {/* <button
@@ -315,7 +324,7 @@ const Issue = (props) => {
 
       <div className="container">
         {firstLoading ? (
-          <div style={{ width: "100%" }}>
+          <div style={{width: "100%"}}>
             <div
               className="spinner-border text-light"
               style={{
